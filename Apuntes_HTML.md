@@ -109,5 +109,68 @@
 ### Ejercicio 3
 
 ```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
+        <meta name = "keywords" content = "TDW, HTML">
+        <meta name = "author" content = "Rufo">
+        <base href = "https://www.nike.com/es" target = "blank">
+    </head>
+    <body>
+        <h1>
+            Tablas del Rufo
+        </h1>
+        <table>
+            <caption>Tabla del Rufini</caption>
+            <thead><tr><th>Alumno</th><th>Practica</th><th>Examen</th><th>Total</th></tr></thead>
+            <tbody>
+            <tr><td>Rufo 1</td><td>2</td><td>3</td><td>5</td></tr>
+            <tr><td>Rufo 2</td><td>5</td><td>5</td><td>10</td></tr>
+            <tr><td>Rufo 3</td><td>1</td><td>2</td><td>3</td></tr>
+            <tr><td>Rufo 4</td><td>4</td><td>1</td><td>5</td></tr>
+            <tr><td>Rufo 5</td><td>4</td><td>4</td><td>8</td></tr>
+            </tbody>
+            <tfoot><tr><th>Media</th><td>3.3</td><td>3</td><td>6.3</td></tr></tfoot>
+        </table>
+    </body>
+</html>
+```
+
+### Ejercicio 4
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
+        <meta name = "keywords" content = "TDW, HTML">
+        <meta name = "author" content = "Rufo">
+        <base href = "https://www.nike.com/es" target = "blank">
+    </head>
+    <body>
+        <h1>
+            Horario del Rufo
+        </h1>
+        <table border = "5", cellspacing = "5", cellpadding = "5". bgcolor = "#00EEFD">
+            <caption>Horario del Rufini</caption>
+            <thead><tr><th></th><th>Lunes</th><th>Martes</th><th>Miercoles</th><th>Jueves</th><th>Viernes</th></tr></thead>
+            <tbody>
+            <tr><th>9:00 - 10:00</th><td>Reventa</td><td>Zapatillas</td><td>Recreo</td><td>Ingles</td><td rowspan="2">Judaismo 2</td></tr>
+            <tr><th>10:00 - 11:00</th><td>RA</td><td>Jetoven</td><td>Recreo</td><td>Logica</td></tr>
+            <tr><th>11:00 - 12:00</th><td>SSR</td><td>Ñema</td><td>Libre</td><td>Recreo</td><td>Algebra</td></tr>
+            <tr><th>12:00 - 13:00</th><td>AGBD</td><td>TP</td><td>Judaismo 3</td><td>Analisis</td><td>Economia</td></tr>
+            <tr><th>13:00 - 14:00</th><td>TDW</td><td>TLP</td><td colspan="3">BBDD</td></tr>
+            </tbody>
+        </table>
+    </body>
+</html>
+```
+
+### Ejercicio 5
+
+```html
 
 ```
