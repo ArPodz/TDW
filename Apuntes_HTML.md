@@ -6,6 +6,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>TDW</title>
+        <html lang = "es">
         <meta charset = "UTF-8">
         <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
         <meta name = "keywords" content = "TDW, HTML">
@@ -26,6 +28,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>TDW</title>
+        <html lang = "es">
         <meta charset = "UTF-8">
         <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
         <meta name = "keywords" content = "TDW, HTML">
@@ -64,6 +68,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>TDW</title>
+        <html lang = "es">
         <meta charset = "UTF-8">
         <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
         <meta name = "keywords" content = "TDW, HTML">
@@ -112,6 +118,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>TDW</title>
+        <html lang = "es">
         <meta charset = "UTF-8">
         <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
         <meta name = "keywords" content = "TDW, HTML">
@@ -144,6 +152,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>TDW</title>
+        <html lang = "es">
         <meta charset = "UTF-8">
         <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
         <meta name = "keywords" content = "TDW, HTML">
