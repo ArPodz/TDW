@@ -182,5 +182,113 @@
 ### Ejercicio 5
 
 ```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TDW</title>
+        <html lang = "es">
+        <meta charset = "UTF-8">
+        <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
+        <meta name = "keywords" content = "TDW, HTML">
+        <meta name = "author" content = "Rufo">
+        <base href = "https://www.nike.com/es" target = "blank">
+    </head>
+    <body>
+        <div align = "center">
+            <h1>
+                P&aacute;gina Web de Tecnolog&iacute;as para el Desarrollo Web
+            </h1>
+        </div>
+        <p>
+            Este proyecto final consiste en el desarrollo de una página académica estructurada mediante HTML semántico, 
+            donde se sintetiza toda la información de una asignatura en un único archivo técnico. <br>
+            El objetivo principal es demostrar el dominio de la jerarquía de contenidos y la correcta implementación de etiquetas específicas,
+            desde la organización de temarios y planes de trabajo hasta la creación de tablas de evaluación detalladas y glosarios de términos. <br>
+            A través de este ejercicio, se valida la capacidad para manejar entidades especiales y secciones de contacto,
+            asegurando que la información sea accesible y legible para los navegadores. <br>
+            En esencia, la asignatura proporciona los cimientos esenciales del desarrollo web, enfocándose en que la estructura del documento sea lógica,
+            profesional y cumpla con los estándares actuales de la industria antes de avanzar hacia el diseño visual o la programación.
+        </p>
+        <hr>
+        <h3>
+            Temario de la Asignatura
+        </h3>
+        <ul>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>JavaScript</li>
+            <li>JSON y Ajax</li>
+            <li>PHP</li>
+        </ul>
+        <hr>
+        <h3>
+            Plan de Trabajo de la Asignatura
+        </h3>
+        <ol>
+            <li>Desarrollo del lado Cliente (Frontend)</li>
+            <ol>
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JavaScript</li>
+            </ol>
+            <li>Desarrollo del lado Servidor (Backend)</li>
+            <ol>
+                <li>NodeJS Y Express</li>
+                <li>BBDD NoSQL &gt; MongoDB</li>
+            </ol>
+        </ol>
+        <hr>
+        <h3>
+            Ejemplo de Glosario
+        </h3>
+        <dt>
+            TDW
+        </dt>
+        <dd>
+            Tecnologias de Desarrollo Web
+        </dd>
+        <dt>
+            HTML
+        </dt>
+        <dd>
+            HyperText Markup Language
+        </dd>
+        <hr>
+        <h3>
+            Ejemplo de Tabla
+        </h3>
+        <table border =  "20", cellspacing = "5", cellpadding = "20", width = "50%", height = "100", bgcolor = "F2BC49">
+            <caption>Tabla de Evaluación TDW</caption>
+            <thead><tr><th>Descripcion</th><th>Peso de la Nota</th><th>Nota Mínima</th><th>Duracion</th></tr></thead>
+            <tbody>
+                <tr><td>Practica HTML, CSS &amp; JS</td><td>35 %</td><td>4/10</td><td>0:00</td></tr>
+                <tr><td>Practica Desarrollo PHP</td><td>20 %</td><td>4/10</td><td>0:00</td></tr>
+                <tr><td>Proyecto Final</td><td>45 %</td><td>5/10</td><td>2:00</td></tr>
+            </tbody>
+            <tfoot><tr><th>Total Evaluacion</th><td>100 %</td><td>5/10</td><td>2:00</td></tr></tfoot>
+        </table>
+        <hr>
+        <h3>
+            Ejemplo de Cita
+        </h3>
+        <blockquote cite = "https://moodle.upm.es/titulaciones/oficiales/pluginfile.php/13178148/mod_resource/content/16/GA_61IW_615001065_2S_2025-26.pdf">
+            &quot;Para el c&aacute;lculo de los valores totales, se&nbsp;estima que por cada credito ECTS el alumno dedicara entre 26 y 27 horas de trabajo presencial y no presencial.&quot;
+        </blockquote>
+        <hr>
+        <h3>
+            Ejemplo de Address
+        </h3>
+        <address>
+            Javier Alegre Landaburu <br>
+            javier.alegre.landaburu@upm.es <br>
+            D-1114
+        </address>
+    </body>
+</html>
+```
+
+### Ejercicio Montaje de Fotografías
+
+```html
 
 ```
