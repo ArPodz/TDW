@@ -1,5 +1,7 @@
 # Apuntes HTML TDW 2026
 
+## Ejercicios HTML Parte I
+
 ### Ejercicio 0 
 
 ```html
@@ -310,3 +312,5 @@
     </body>
 </html>
 ```
+
+<hr>
