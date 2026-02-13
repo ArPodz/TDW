@@ -316,3 +316,75 @@
 <hr>
 
 ## Ejercicios HTML Parte II
+
+### Ejercicio 1
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TDW</title>
+        <html lang = "es">
+        <meta charset = "UTF-8">
+        <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
+        <meta name = "keywords" content = "TDW, HTML">
+        <meta name = "author" content = "Rufo">
+    </head>
+    <body>
+        <h2>Persona</h2>
+        <label for = "NombrePersona">Nombre</label>
+        <input id = "NombrePersona" type = "text" name = "NombrePersona" value = "" maxlength = "20">
+        <hr>
+        <label for = "FechaPersona">Fecha de Nacimiento</label>
+        <input id = "FechaPersona" type = "date" name = "FechaPersona">
+        <hr>
+        <label for = "AliasPersona">Alias</label>
+        <input id = "AliasPersona" type = "text" name = "AliasPersona" value = "" maxlength = "15">
+        <hr>
+        <label for = "AvatarPersona">Avatar</label>
+        <input id = "AvatarPersona" type = "image" name = "AvatarPersona">
+        <h2>Datos</h2>
+        <h2>Registro</h2>
+        <label for = "EmailRegistro">Email</label>
+        <input id = "EmailRegistro" type = "email" name = "EmailRegistro">
+        <hr>
+        <label for = "PasswordRegistro">Password</label>
+        <input id = "PasswordRegistro" type = "password" name = "PasswordRegistro">
+
+    </body>
+</html>
+```
+
+### Ejercicio 2
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TDW</title>
+        <html lang = "es">
+        <meta charset = "UTF-8">
+        <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
+        <meta name = "keywords" content = "TDW, HTML">
+        <meta name = "author" content = "Rufo">
+    </head>
+    <body>
+        <table>
+        <caption> Mensaje </caption>
+            <tr>
+            <td bgcolor="#green"><font size="8" face="Times New Roman" color="#00AAAA">R</font></td>
+            <td bgcolor="#113573"><font size="4" face="Comic sans MS" color="#FFAA00">U</font></td>
+            <td bgcolor="#663322"><font size="5" face="Georgia" color="#FF00AA">F</font></td>
+            <td bgcolor="#000211"><font size="9" face="Sans serif" color="#BBBBBB">O</font></td>
+            </tr>
+            <tr>
+            <td bgcolor="#FF4040"><font size="6" face="Elegant" color="#0FFAAA">J</td>
+            <td bgcolor="#FF40FF"><font size="8" face="Times New Roman" color="#00AFFA">U</td>
+            <td bgcolor="#404040"><font size="5" face="Arial" color="#FFAAFF">D</td>
+            <td bgcolor="#AA8839"><font size="7" face="Comic sans MS" color="#EEDD81">I</td>
+            <td bgcolor="#104FF0"><font size="12" face="Impact" color="99AAEE">O</td>
+            </tr>
+        </table>
+    </body>
+</html>
+```
