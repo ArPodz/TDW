@@ -331,26 +331,60 @@
         <meta name = "author" content = "Rufo">
     </head>
     <body>
-        <h2>Persona</h2>
-        <label for = "NombrePersona">Nombre</label>
-        <input id = "NombrePersona" type = "text" name = "NombrePersona" value = "" maxlength = "20">
-        <hr>
-        <label for = "FechaPersona">Fecha de Nacimiento</label>
-        <input id = "FechaPersona" type = "date" name = "FechaPersona">
-        <hr>
-        <label for = "AliasPersona">Alias</label>
-        <input id = "AliasPersona" type = "text" name = "AliasPersona" value = "" maxlength = "15">
-        <hr>
-        <label for = "AvatarPersona">Avatar</label>
-        <input id = "AvatarPersona" type = "image" name = "AvatarPersona">
-        <h2>Datos</h2>
-        <h2>Registro</h2>
-        <label for = "EmailRegistro">Email</label>
-        <input id = "EmailRegistro" type = "email" name = "EmailRegistro">
-        <hr>
-        <label for = "PasswordRegistro">Password</label>
-        <input id = "PasswordRegistro" type = "password" name = "PasswordRegistro">
+        <form action = "#" method = "post">
+            <fieldset>
+                <legend>Persona</legend>
+                <label for = "NombrePersona">Nombre</label>
+                <input id = "NombrePersona" type = "text" name = "NombrePersona" value = "" maxlength = "20" size = "25">
+                <br><br>
+                <label for = "FechaPersona">Fecha de Nacimiento</label>
+                <input id = "FechaPersona" type = "date" name = "FechaPersona">
+                <br><br>
+                <label for = "AliasPersona">Alias</label>
+                <input id = "AliasPersona" type = "text" name = "AliasPersona" value = "" maxlength = "15" size = "25">
+                <br><br>
+                <label for = "AvatarPersona">Avatar</label>
+                <input id = "AvatarPersona" type = "file" name = "AvatarPersona"  accept = "image/*">
+            </fieldset>
+            <br><br>
+            <fieldset>
+                <legend>Datos</legend>
+                <label for = "CentroDatos">Centro</label>
+                <input id = "CentroDatos" type = "text" name = "CentroDatos" value = "ETSISI" maxlenght = "50" size = "30">
+                <br><br>
+                <label for = "DescripcionDatos">Descripcion</label>
+                <textarea id = "DescripcionDatos" rows = "5" cols = "30" name = "DescripcionDatos"></textarea>
+                <br><br>
+                <label for = "CursoDatos">Curso</label>
+                <input id = "CursoDatos" list = "cursos" name = "CursoDatos">
+                    <datalist id = "cursos">
+                        <option value = "1º"></option>
+                        <option value = "2º"></option>
+                        <option value = "3º"></option>
+                        <option value = "4º"></option>
+                    </datalist>
+                <br><br>
+                <label for = "ResistenciaDatos">Resistencia</label>
+                <input id = "ResistenciaDatos" type = "number" value = "0" min= "1" max = "10" name = "ResistenciaDatos">
+                <br><br>
+                <label for = "InteligenciaDatos">Resistencia</label>
+                <input id = "InteligenciaDatos" type = "number" value = "10" min= "1" max = "10" name = "InteligenciaDatos">
+            </fieldset>
+            <br><br>
+            <fieldset>
+                <legend>Registro</legend>
+                <input type = "submit" name = "Registrar" value = "Registrar">
+                <input type = "reset" name = "Reset" value = "Reset">
+                <input type= "image" id = "image" alt = "Send Button" src = "send.png" height = "30" width = "30">
 
+                <br><br>
+                <label for = "EmailRegistro">Email</label>
+                <input id = "EmailRegistro" type = "email" name = "EmailRegistro" value = "" maxlength= "30" size = "35">
+                <br><br>
+                <label for = "PasswordRegistro">Password</label>
+                <input id = "PasswordRegistro" type = "password" name = "PasswordRegistro" value = "" maxlength= "20" size = "25">
+            </fieldset>
+        </form>
     </body>
 </html>
 ```
@@ -382,9 +416,30 @@
             <td bgcolor="#FF40FF"><font size="8" face="Times New Roman" color="#00AFFA">U</td>
             <td bgcolor="#404040"><font size="5" face="Arial" color="#FFAAFF">D</td>
             <td bgcolor="#AA8839"><font size="7" face="Comic sans MS" color="#EEDD81">I</td>
-            <td bgcolor="#104FF0"><font size="12" face="Impact" color="99AAEE">O</td>
+            <td bgcolor="#104FF0"><font size="12" face="Impact" color="#99AAEE">O</td>
             </tr>
         </table>
+    </body>
+</html>
+```
+
+### Ejercicio 3
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TDW</title>
+        <html lang = "es">
+        <meta charset = "UTF-8">
+        <meta name = "TDW HTML" content = "Ejercicio 0 TDW 2026">
+        <meta name = "keywords" content = "TDW, HTML">
+        <meta name = "author" content = "Rufo">
+    </head>
+    <body>
+        <h1>Capitulo 1: El Comienzo</h1>
+        <a href = "">Aceptar el Desafio y seguir el cartel</a>
+        <a href = "">Ignorar el cartel y seguir al aula</a>
     </body>
 </html>
 ```
