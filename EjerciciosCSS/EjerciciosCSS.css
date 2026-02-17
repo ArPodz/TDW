@@ -1,0 +1,41 @@
+
+body {
+    background-image: linear-gradient(254deg, rgba(131, 58, 180, 1) 0%, rgba(65, 224, 195, 1) 0%, rgba(252, 176, 69, 1) 100%);
+    
+    h1 {
+        color:#65159e;
+        font-size: larger;
+        font: Impact;
+    }
+
+    h3, h2 {
+        color: #308219;
+        font-family: "Times New Roman";
+    }
+
+    p {
+        color: #833AB4;
+        font-family: "Helvetica", "Arial", sans-serif;
+    }
+
+    table {
+        background-color: #FF7D63;
+        border-color: #df3f39;
+        border-radius: 35px;
+        border-width: 20px;
+
+        caption {
+            font-size: 140;
+            font-family: fantasy;
+            color:#210706
+        }
+
+        th, td {
+            font-size: 80;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            color: #570502;
+            border-color: #230504c1;
+            border-width: 5px;
+        }
+    }
+}

@@ -443,3 +443,10 @@
     </body>
 </html>
 ```
+
+## Ejercicios HTML Parte III
+
+### Ejercicio 1
+
+```html
+```
