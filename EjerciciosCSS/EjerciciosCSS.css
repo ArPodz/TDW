@@ -1,42 +1,118 @@
+/* 1. Reset y Variables de Color */
+:root {
+    --primary: #2563eb;       /* Azul moderno */
+    --accent: #06b6d4;        /* Cian para detalles */
+    --text-main: #1e293b;     /* Gris muy oscuro para texto */
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.4);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 body {
-    background-image: linear-gradient(254deg, rgba(131, 58, 180, 1) 0%, rgba(65, 224, 195, 1) 0%, rgba(252, 176, 69, 1) 100%);
-    
-    h1 {
-        color:#65159e;
-        font-size: larger;
-        font: Impact;
-    }
+    /* Fondo más profundo y elegante */
+    background: radial-gradient(circle at top left, #e0e7ff, #f8fafc);
+    background-attachment: fixed;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text-main);
+    padding: 50px 15%;
+    line-height: 1.8;
+}
 
-    h3, h2 {
-        color: #308219;
-        font-family: "Times New Roman";
-    }
+/* 2. Encabezados con Estilo */
+h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    text-align: center;
+    background: linear-gradient(to right, #1e3a8a, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 50px;
+}
 
-    p {
-        color: #833AB4;
-        font-family: "Helvetica", "Arial", sans-serif;
-    }
+h3 {
+    font-size: 1.25rem;
+    color: #334155;
+    margin: 40px 0 20px;
+    display: flex;
+    align-items: center;
+}
 
-    table {
-        background-color: #FF7D63;
-        border-color: #df3f39;
-        border-radius: 35px;
-        border-width: 20px;
+h3::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #cbd5e1;
+    margin-left: 20px;
+}
 
-        caption {
-            font-size: 140;
-            font-family: fantasy;
-            color:#210706
-        }
+/* 3. Contenedores con Efecto Cristal */
+p, ul, ol, dl, blockquote {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px); /* Desenfoque del fondo */
+    border: 1px solid var(--glass-border);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+}
 
-        th, td {
-            font-size: 80;
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-            color: #570502;
-            border-color: #230504c1;
-            border-width: 5px;
-            border-style: groove;
-        }
-    }
+/* 4. Tabla de Alto Nivel */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden; /* Corta las esquinas de las celdas */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    margin: 40px 0;
+}
+
+caption {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #475569;
+}
+
+th {
+    background-color: #1e293b; /* Encabezado oscuro profesional */
+    color: white;
+    font-weight: 500;
+    padding: 18px;
+    text-align: left;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+td {
+    padding: 18px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Fila de suma (tfoot) */
+tfoot tr {
+    background-color: #f8fafc;
+    font-weight: 700;
+}
+
+/* Interacción */
+tbody tr:hover {
+    background-color: #f1f5f9;
+    transition: background 0.3s ease;
+}
+
+/* 5. Detalles de Contacto (Address) */
+address {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #f8fafc;
+    padding: 30px;
+    border-radius: 16px;
+    font-style: normal;
+    border-left: 6px solid var(--accent);
 }
