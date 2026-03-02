@@ -64,3 +64,14 @@ ul {
   list-style: disc;
   padding-left: var(--space);
 }
+
+.container {
+  margin-inline: auto; 
+  
+  max-width: 800px; 
+  
+  padding-inline: var(--space); 
+  
+  
+  border: 1px solid red;
+}
