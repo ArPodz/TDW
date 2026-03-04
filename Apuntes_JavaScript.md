@@ -189,3 +189,22 @@ rufo.describe();
 antirufo.describe();
 antirufo.sendAnnouncement("Odio a Rufo");
 ```
+
+### Ejercicio 2 Clases y Objetos
+
+```js
+class Wallet {
+    constructor(owner, initial_balance = 0)
+    this.owner = owner;
+    this.initial_balance = initial_balance;
+
+
+    addFunds(amount){
+        this.balance += amount;
+    }
+
+    pay(amount, concept = ""){
+        
+    }
+}
+```
