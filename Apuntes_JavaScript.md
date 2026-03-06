@@ -331,5 +331,132 @@ console.log("Saldo Asier: " + walletAsier.summary());
 ### Ejercicio 4 Clases y Objetos
 
 ```js
+class Wallet {
+    constructor(owner, initial_balance = 0){
+        this.owner = owner;
+        this.balance = initial_balance;
+    }
+
+    addFunds(amount){
+        this.balance += amount;
+    }
+
+    pay(amount, concept = ""){
+        if(amount > this.balance){
+            console.log("Saldo Insuficiente");
+            return false;
+        } else {
+            this.balance -= amount;
+            return true;
+        }
+    }
+
+    getBalance(){
+        return this.balance;
+    }
+
+    summary(){
+        return `@${this.owner} | balance: ${this.balance.toFixed(2)}€`;
+    }
+}
+
+class PremiumWallet extends Wallet {
+    constructor(owner, initial_balance = 0, cashbackRate = 0.02){
+        super(owner, initial_balance);
+        this.cashbackRate = cashbackRate;
+    }
+
+    pay(amount, concept = ""){
+        if(super.pay(amount, concept)){
+            const cashback = amount * this.cashbackRate;
+            this.addFunds(cashback);
+            console.log(`Cashback de ${cashback.toFixed(2)}€ aplicado`);
+            return true;
+        }        return false;
+    }
+
+    summary() {
+        return `@${this.owner} | balance: ${this.balance.toFixed(2)}€ | cashback rate: ${(this.cashbackRate * 100).toFixed(2)}%`;
+    }
+}
+
+class StudentWallet extends Wallet {
+    constructor (owner, initial_balance = 0, monthlyLimit = 120){
+        super(owner, initial_balance);
+        this.monthlyLimit = monthlyLimit;
+        this.spentThisMonth = 0;
+    }
+
+    pay(amount, concept){
+        super.pay(amount, concept);
+        if(amount > this.monthlyLimit){
+            console.log("No se puede pagar, supera límite mensuela");
+            return false;
+        } else if (amount + this.spentThisMonth > this.monthlyLimit){
+            console.log("No se puede pagar, supera límite mensual");
+            return false;
+        } else {
+            console.log("Pago realizado con éxito");
+            this.spentThisMonth += amount;
+            return true;
+        }
+    }
+
+    resetMonth(){
+        this.spentThisMonth = 0;
+    }
+
+    summary() {
+        return `${super.summary()} | student (spent: ${this.spentThisMonth.toFixed(2)}/${this.monthlyLimit.toFixed(2)}€)`;
+    }
+}
+
+walletRufo = new Wallet("Rufo", 300);
+walletJudia = new Wallet("Judia", 500);
+walletVini = new Wallet("Mono", );
+
+console.log("Saldo Rufo " + walletRufo.summary());
+console.log("Saldo Judio: " + walletJudia.summary());
+console.log("Saldo Mono: " + walletVini.summary());
+
+walletRufo.addFunds(300);
+walletJudia.addFunds(1000);
+
+console.log("Saldo Rufo " + walletRufo.summary());
+console.log("Saldo Judio: " + walletJudia.summary());
+
+walletJudia.pay(200, "Compra de comida");
+walletRufo.pay(100, "Compra de comida");    
+
+console.log("Saldo Rufo " + walletRufo.summary());
+console.log("Saldo Judio: " + walletJudia.summary());
+
+walletJudia.pay(2000, "Compra de coche");
+
+console.log("Saldo Rufo " + walletRufo.summary());
+console.log("Saldo Judio: " + walletJudia.summary());
+
+walletAsier = new PremiumWallet("Asier", 1000, 0.05);
+console.log("Saldo Asier: " + walletAsier.summary());
+
+walletAsier.pay(200, "Compra de comida");
+console.log("Saldo Asier: " + walletAsier.summary());
+
+walletStudent = new StudentWallet("Pedri", 2000, 300);
+console.log("Saldo Pedri: " + walletStudent.summary());
+
+walletStudent.pay(100, "Compra de comida");
+console.log("Saldo Pedri: " + walletStudent.summary());
+
+walletStudent.pay(250, "Compra de ropa");
+console.log("Saldo Pedri: " + walletStudent.summary());
+
+walletStudent.pay(5000, "Compra de libros");  
+console.log("Saldo Pedri: " + walletStudent.summary());
+```
+
+### Ejercicio 1 
+
+```js
 
 ```
