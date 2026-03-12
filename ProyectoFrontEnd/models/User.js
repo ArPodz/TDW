@@ -1,12 +1,11 @@
-export class Usuario {
+export class User {
     constructor(email, password, rol){
-        if(this.validarPassword(password) && this.validarEmail(email) && this.validarRol(rol));
         this.email = email;
         this.password = password;
         this.rol = rol;
     }
 
-    setPassword(password){
+    validPassword(password){
         if(password.length() < 8){
             throw new Error("Password debe tener al menos 8 carácteres");
         } else if (!/\d/.test(password)){
@@ -16,7 +15,7 @@ export class Usuario {
         }
     }
 
-    setEmail(email){
+    validEmail(email){
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(regex.test(email)){
             this.email = email;
@@ -25,7 +24,7 @@ export class Usuario {
         }
     }
 
-    setRol(rol){
+    validRol(rol){
         const rolMayusculas = rol.trim().toUpperCase();
 
         if(rolMayusculas === "PUBLICO" || rolMayusculas === "GESTOR"){
@@ -42,5 +41,4 @@ export class Usuario {
             throw new Error("Contraseña o usuario incorrecto");
         }
     }
-
 }
