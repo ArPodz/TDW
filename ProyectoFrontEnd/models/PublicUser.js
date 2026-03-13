@@ -3,7 +3,4 @@ export class PublicUser extends User(){
         super(email, password, rol);
     }
 
-    showUsers(){
-        
-    }
 }
