@@ -1,5 +1,3 @@
-import { ulid } from 'ulid';
-
 export class Booking {
     constructor(operationId, type, direction, origin, destination, scheduledTime, estimatedTime, state, operatorId, pointId) {
         this.operationId = operationId;
@@ -13,4 +11,22 @@ export class Booking {
         this.operatorId = operatorId;
         this.pointId = pointId;
     }
+
+    getOperationId() {
+        return this.operationId;
+    }
+
+    setOperationId(operationId) {
+        this.operationId = operationId;
+    }  
+
+    setEstimatedTime(estimatedTime) {
+        this.estimatedTime = estimatedTime;
+    }
+
+    setState(state) {
+        this.state = state;
+    }   
+
+    
 }
