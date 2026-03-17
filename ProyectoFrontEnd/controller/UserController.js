@@ -2,7 +2,8 @@ import { UserFactory } from "../model/UserFactory.js";
 
 export class UserController {
     constructor() {
-        
+        // Crear el Usuario del Singleton
+        // tener el registro de usuarios
     }
 
     validPassword(password){
@@ -11,14 +12,14 @@ export class UserController {
         } else if (!/\d/.test(password)){
             throw new Error("Password debe contener al menos un número");
         } else {
-            return password;
+            return true;
         }
     }
 
     validEmail(email){
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(regex.test(email)){
-            return email;
+            return true;
         } else {
             throw new Error("Email no valido");
         }
@@ -28,7 +29,7 @@ export class UserController {
         const rolMayusculas = rol.trim().toUpperCase();
 
         if(rolMayusculas === "PUBLICO" || rolMayusculas === "GESTOR"){
-            return rol;
+            return true;
         } else {
             throw new Error("Rol tiene que ser PUBLICO O GESTOR");
         }
@@ -45,11 +46,13 @@ export class UserController {
     }
 
     createUser(email, password, rol){
-        if(this.validEmail(email) && this.validPassword(password) && this.validRol(rol)){
-            const newUser = UserFactory(email, password, rol);
-            return newUser;
-        } else {
-            throw new Error("Error al crear el usuario");
-        }
+        this.validEmail(email);
+        this.validPassword(password);
+        this.validRol(rol);
+
+        const newUser = UserFactory(email, password, rol);
+        // añadir el nuevo usuario a la base de datos o lista de usuarios
+        return newUser;
     }
 }
+
