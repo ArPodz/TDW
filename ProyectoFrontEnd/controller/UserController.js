@@ -1,9 +1,11 @@
 import { UserFactory } from "../model/UserFactory.js";
+import { UsersRepository } from "../models/UsersRepository.js";
+import { Session } from "../models/Session.js";
 
 export class UserController {
     constructor() {
-        // Crear el Usuario del Singleton
-        // tener el registro de usuarios
+        this.managerSession = Session.getSessionInstance();
+        this.users = new UsersRepository();
     }
 
     validPassword(password){
@@ -35,15 +37,6 @@ export class UserController {
         }
     }
 
-    login(email, password){
-        if(this.validEmail(email) && this.validPassword(password)){
-            if((email === "") && password === "admin123"){
-                return new User(email, password, "GESTOR");
-            } else {
-                return new User(email, password, "PUBLICO");
-            }
-        }
-    }
 
     createUser(email, password, rol){
         this.validEmail(email);
@@ -51,7 +44,7 @@ export class UserController {
         this.validRol(rol);
 
         const newUser = UserFactory(email, password, rol);
-        // añadir el nuevo usuario a la base de datos o lista de usuarios
+        this.users.addUser(newUser);
         return newUser;
     }
 }

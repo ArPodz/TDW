@@ -1,5 +1,5 @@
-import { PublicUser } from "./PublicUser";
-import { ManageUser } from "./ManageUser";
+import { PublicUser } from "./PublicUser.js";
+import { ManageUser } from "./ManageUser.js";
 
 export function UserFactory(email, password, rol){
     switch(rol){
