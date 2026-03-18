@@ -1,0 +1,24 @@
+{
+  "usuarios": [
+    {
+      "nombre": "alejandro.garcia@example.com",
+      "contrasena": "Admin2026!",
+      "rol": "GESTOR"
+    },
+    {
+      "nombre": "maria.lopez88@webmail.es",
+      "contrasena": "Mar1a_Segura",
+      "rol": "PÚBLICO"
+    },
+    {
+      "nombre": "soporte_tecnico@empresa.org",
+      "contrasena": "T3cnoPass_99",
+      "rol": "GESTOR"
+    },
+    {
+      "nombre": "usuario.invitado@gmail.com",
+      "contrasena": "Inv1tado.2024",
+      "rol": "PÚBLICO"
+    }
+  ]
+}
