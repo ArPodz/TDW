@@ -1,4 +1,4 @@
-import { UserFactory } from "../model/UserFactory.js";
+import { UserFactory } from "../models/UserFactory.js";
 import { UsersRepository } from "../models/UsersRepository.js";
 import { Session } from "../models/Session.js";
 
@@ -47,5 +47,30 @@ export class UserController {
         this.users.addUser(newUser);
         return newUser;
     }
+
+    upateRol(email, rol){
+        // const user = this.users.findUserByEmail(email);
+        const rolMayusculas = rol.trim().toUpperCase();
+
+        if(!user){
+            throw new Error("Usuario no encontrado");
+        }        
+        
+        if(user.rol === "GESTOR" && rolMayusculas === "PUBLICO"){
+            const numGestores = this.users.getUsers().filter(u => u.rol === "GESTOR").length;
+            if(numGestores <= 1){
+                throw new Error("No se puede cambiar el rol. Al menos debe haber un gestor.");
+            }
+        }
+
+        if(rolMayusculas === "PUBLICO" || rolMayusculas === "GESTOR"){
+            return true;
+            user.rol = rolMayusculas;
+            this.users.updateUser(user);
+        } else {
+            throw new Error("Rol tiene que ser PUBLICO O GESTOR");
+        }
+    }
 }
+
 

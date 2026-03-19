@@ -1,33 +1,28 @@
-import fs from 'fs';
-
 export class UsersRepository {
     constructor() {
-        this.filePath = '../data.json';
-        this.users = this.loadFromFile();
+        this.key = 'usuarios_proyecto'; // Nombre de la "llave" en el navegador
+        this.users = this.loadFromStorage();
     }
 
-    // Método privado para cargar los datos al iniciar
-    loadFromFile() {
+    // Carga los datos desde el almacenamiento del navegador
+    loadFromStorage() {
         try {
-            if (fs.existsSync(this.filePath)) {
-                const data = fs.readFileSync(this.filePath, 'utf-8');
-                return JSON.parse(data);
-            }
-            return []; // Si el archivo no existe, empezamos con lista vacía
+            const data = localStorage.getItem(this.key);
+            return data ? JSON.parse(data) : []; 
         } catch (error) {
-            console.error("Error leyendo data.json:", error);
+            console.error("Error leyendo localStorage:", error);
             return [];
         }
     }
 
-    // Guarda el estado actual de la lista en el archivo
-    saveToFile() {
-        fs.writeFileSync(this.filePath, JSON.stringify(this.users, null, 2));
+    // Guarda los datos en el navegador
+    saveToStorage() {
+        localStorage.setItem(this.key, JSON.stringify(this.users, null, 2));
     }
 
     addUser(user) {
         this.users.push(user);
-        this.saveToFile(); // Persistimos en el JSON
+        this.saveToStorage(); // Se guarda instantáneamente
     }
 
     getUsers() {
@@ -35,6 +30,6 @@ export class UsersRepository {
     }
 
     findUserByEmail(email) {
-        return this.users.find(u => u.nombre === email);
+        return this.users.find(u => u.email === email); // Corregido: u.email
     }
 }

@@ -33,6 +33,15 @@ try {
     console.error("❌ Error esperado en validación:", error.message);
 }
 
+try {
+    // 5. Prueba de Validación: Password corto
+    console.log("\nProbando validación de password sin número...");
+    controller.createUser("test@test.com", "dgdrfghdrfgdrdgrg", "PUBLICO");
+} catch (error) {
+    console.error("❌ Error esperado en validación:", error.message);
+}
+
+
 // 6. Verificación del Repositorio
 console.log("\n--- Estado del Repositorio ---");
 const todosLosUsuarios = controller.users.getUsers();
