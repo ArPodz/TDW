@@ -12,11 +12,7 @@ export class ManageUser extends User {
     }
 
     updateRol(email, rol){
-        const rolMayusculas = rol.trim().toUpperCase();
-
-        if(!user){
-            throw new Error("Usuario no encontrado");
-        }        
+        const rolMayusculas = rol.trim().toUpperCase();    
         
         if(user.rol === "GESTOR" && rolMayusculas === "PUBLICO"){
             const numGestores = this.users.getUsers().filter(u => u.rol === "GESTOR").length;

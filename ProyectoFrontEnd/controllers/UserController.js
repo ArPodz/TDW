@@ -48,7 +48,7 @@ export class UserController {
         return newUser;
     }
 
-    upateRol(email, rol){
+    updateRol(email, rol){
         // const user = this.users.findUserByEmail(email);
         const rolMayusculas = rol.trim().toUpperCase();
 
