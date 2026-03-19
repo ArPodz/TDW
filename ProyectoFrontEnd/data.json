@@ -1,24 +1,34 @@
 {
-  "usuarios": [
+  "users": [
     {
-      "nombre": "alejandro.garcia@example.com",
-      "contrasena": "Admin2026!",
+      "email": "alejandro.garcia@example.com",
+      "password": "Admin2026!",
       "rol": "GESTOR"
     },
     {
-      "nombre": "maria.lopez88@webmail.es",
-      "contrasena": "Mar1a_Segura",
-      "rol": "PÚBLICO"
+      "email": "maria.lopez88@webmail.es",
+      "password": "Mar1a_Segura",
+      "rol": "PUBLICO"
     },
     {
-      "nombre": "soporte_tecnico@empresa.org",
-      "contrasena": "T3cnoPass_99",
+      "email": "soporte_tecnico@empresa.org",
+      "password": "T3cnoPass_99",
       "rol": "GESTOR"
     },
     {
-      "nombre": "usuario.invitado@gmail.com",
-      "contrasena": "Inv1tado.2024",
-      "rol": "PÚBLICO"
+      "email": "usuario.invitado@gmail.com",
+      "password": "Inv1tado.2024",
+      "rol": "PUBLICO"
+    },
+    {
+      "email": "pedro@gmail.com",
+      "password": "RUFOO3OOO",
+      "rol": "GESTOR"
+    },
+    {
+      "email": "rufo@gmail.com",
+      "password": "aaaaaaaaaaaa9",
+      "rol": "PUBLICO"
     }
   ]
 }

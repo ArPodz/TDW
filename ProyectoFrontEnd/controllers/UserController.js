@@ -28,10 +28,14 @@ export class UserController {
     }
 
     validRol(rol){
-        const rolMayusculas = rol.trim().toUpperCase();
+        const auxRol = rol
+        .trim()
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
 
-        if(rolMayusculas === "PUBLICO" || rolMayusculas === "GESTOR"){
-            return true;
+        if(auxRol === "PUBLICO" || auxRol === "GESTOR"){
+            return auxRol;
         } else {
             throw new Error("Rol tiene que ser PUBLICO O GESTOR");
         }
@@ -41,34 +45,25 @@ export class UserController {
     createUser(email, password, rol){
         this.validEmail(email);
         this.validPassword(password);
-        this.validRol(rol);
+        const normalizedRol = this.validRol(rol);
 
-        const newUser = UserFactory(email, password, rol);
+        const newUser = UserFactory(email, password, normalizedRol);
         this.users.addUser(newUser);
         return newUser;
     }
 
-    updateRol(email, rol){
-        // const user = this.users.findUserByEmail(email);
-        const rolMayusculas = rol.trim().toUpperCase();
+    updateUserRol(email, newRol){
+        try {
+            const normalizedRol = this.validRol(newRol);
+            this.users.updateRolPossible(email, normalizedRol);
 
-        if(!user){
-            throw new Error("Usuario no encontrado");
-        }        
-        
-        if(user.rol === "GESTOR" && rolMayusculas === "PUBLICO"){
-            const numGestores = this.users.getUsers().filter(u => u.rol === "GESTOR").length;
-            if(numGestores <= 1){
-                throw new Error("No se puede cambiar el rol. Al menos debe haber un gestor.");
-            }
-        }
+            const oldUser = this.users.findUserByEmail(email);
+            const updatedUser = UserFactory(oldUser.email, oldUser.password, normalizedRol);
 
-        if(rolMayusculas === "PUBLICO" || rolMayusculas === "GESTOR"){
-            return true;
-            user.rol = rolMayusculas;
-            this.users.updateUser(user);
-        } else {
-            throw new Error("Rol tiene que ser PUBLICO O GESTOR");
+            this.users.updateRol(email, updatedUser);
+        } catch (error) {
+            console.error("Error al actualizar el rol:", error.message);
+            throw error;
         }
     }
 }

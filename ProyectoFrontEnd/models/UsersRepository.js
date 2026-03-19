@@ -1,28 +1,33 @@
 export class UsersRepository {
-    constructor() {
-        this.key = 'usuarios_proyecto'; // Nombre de la "llave" en el navegador
-        this.users = this.loadFromStorage();
+    constructor(persistence) {
+        this.persistence = persistence; // Objeto de persistencia (JsonRepository)
+        this.users = []; // Array para almacenar los usuarios en memoria
     }
 
-    // Carga los datos desde el almacenamiento del navegador
-    loadFromStorage() {
+    async initialize(defaultData = []) {
         try {
-            const data = localStorage.getItem(this.key);
-            return data ? JSON.parse(data) : []; 
+            const data = await this.persistence.load();
+            
+            // Ajuste para leer la estructura { users: [...] } de tu consola
+            // Si data.users existe, lo usamos; si no, vemos si data ya es un array
+            const list = (data && data.users) ? data.users : (Array.isArray(data) ? data : []);
+            this.users = list;
+            
+            // Si el LocalStorage está vacío, cargamos la semilla (Seed) 
+            if (this.users.length === 0 && defaultData.length > 0) {
+                console.log("📦 El storage estaba vacío. Guardando semilla inicial...");
+                this.users = defaultData;
+                await this.persistence.save(this.users); // Aquí es donde se escribe en Application
+            }
         } catch (error) {
-            console.error("Error leyendo localStorage:", error);
-            return [];
+            console.error("Error al inicializar repositorio:", error);
+            this.users = defaultData; 
         }
     }
 
-    // Guarda los datos en el navegador
-    saveToStorage() {
-        localStorage.setItem(this.key, JSON.stringify(this.users, null, 2));
-    }
-
-    addUser(user) {
+    async addUser(user) {
         this.users.push(user);
-        this.saveToStorage(); // Se guarda instantáneamente
+        await this.persistence.save(this.users);
     }
 
     getUsers() {
@@ -32,4 +37,29 @@ export class UsersRepository {
     findUserByEmail(email) {
         return this.users.find(u => u.email === email); // Corregido: u.email
     }
+
+    updateRolPossible(email, newRol) {
+        const user = this.findUserByEmail(email);
+        if (!user) {
+            throw new Error("Usuario no encontrado");
+        }
+
+        if(user.rol === "GESTOR" && newRol === "PUBLICO"){
+            const numGestores = this.users.filter(u => u.rol === "GESTOR").length;
+            if(numGestores <= 1){
+                throw new Error("No se puede cambiar el rol. Al menos debe haber un gestor.");
+            } else {
+                return true;
+            }
+        }
+    }
+
+    async updateRol(email, newUserRol) {
+        const index = this.users.findIndex(u => u.email === email);
+        if (index !== -1) {
+            this.users[index] = newUserRol;
+            await this.persistence.save(this.users);
+        }
+    }
 }
+
