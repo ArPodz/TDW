@@ -1,6 +1,6 @@
 import { UsersRepository } from "./models/UsersRepository.js";
-import { JsonRepository } from "./models/JsonRepository.js"; 
-import { StorageRepo } from "./models/StorageRepo.js"; 
+import { JsonRepository } from "./repositories/JsonRepository.js"; 
+import { StorageRepo } from "./repositories/StorageRepo.js"; 
 import { UserController } from "./controllers/UserController.js";
 
 /*
@@ -180,6 +180,10 @@ async function runningTests() {
         userController.users.persistence = storage; 
         await userController.users.initialize(seedData.users || []);
 
+        // --- TEST 0: ESTADO INICIAL ---
+        console.log("\n--- TEST 0: Estado Inicial ---");
+        console.table(userController.users.getUsers());
+
         // --- TEST 1: VALIDACIÓN DE FORMATOS (Email y Password) ---
         console.log("\n--- TEST 1: Validaciones de Formato ---");
         try {
@@ -193,8 +197,14 @@ async function runningTests() {
         try {
             // Enviamos "público" con tilde y minúscula
             const u = userController.createUser("test_normalizar@web.com", "Password123", "público");
+            const u2 = userController.createUser("raphina1r@gmail.com", "Pass3wfw23", "pubLico");
             console.log(`✔ Rol normalizado correctamente: ${u.rol}`); // Debería salir "PUBLICO"
+            console.log(`✔ Rol normalizado correctamente: ${u2.rol}`); // Debería salir "PUBLICO"
         } catch (e) { console.error("❌ Falló la normalización:", e.message); }
+
+        // --- TEST 2.5: NORMALIZACIÓN DE ROLES (Tildes y Mayúsculas) ---
+        console.log("\n--- TEST 2.5: Estado Medio ---");
+        console.table(userController.users.getUsers());
 
         // --- TEST 3: BLOQUEO DE ROLES INVENTADOS ('rufoooooo') ---
         console.log("\n--- TEST 3: Bloqueo de Roles no definidos ---");

@@ -29,6 +29,11 @@
       "email": "rufo@gmail.com",
       "password": "aaaaaaaaaaaa9",
       "rol": "PUBLICO"
+    },
+    {
+      "email": "rufofake@gmail.com",
+      "password": "aaaaaaaaaaaa11",
+      "rol": "GESTOR"
     }
   ]
 }
