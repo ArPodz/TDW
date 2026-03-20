@@ -4,7 +4,7 @@ import { Session } from "../models/Session.js";
 
 export class UserController {
     constructor() {
-        this.managerSession = Session.getSessionInstance();
+        this.activeSession = Session.getSessionInstance();
         this.users = new UsersRepository();
     }
 

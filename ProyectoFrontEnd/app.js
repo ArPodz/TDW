@@ -1,4 +1,3 @@
-// 1. Asegúrate de que las rutas sean las correctas en tu PC
 import { UsersRepository } from "./models/UsersRepository.js";
 import { JsonRepository } from "./models/JsonRepository.js"; 
 import { StorageRepo } from "./models/StorageRepo.js"; 
@@ -249,3 +248,5 @@ async function runningTests() {
 }
 
 runningTests();
+
+// controller.init(); Tenemos que arrancar desde el controlador 
