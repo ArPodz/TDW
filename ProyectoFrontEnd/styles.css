@@ -1,106 +1,149 @@
-/* 1. Reset y cuerpo para permitir centrado total */
+/* --- Variables Globales --- */
+:root {
+    --primary-color: #2563eb;       /* Azul aviación */
+    --primary-hover: #1d4ed8;
+    --bg-color: #f3f4f6;            /* Gris muy claro */
+    --panel-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --error-color: #ef4444;
+    --success-color: #10b981;
+    --border-color: #d1d5db;
+    --radius: 8px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Estilos Base --- */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f7f6;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Ocupa todo el alto de la pantalla */
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* Ocultamos el H1 que está fuera de la sección si no lo quieres duplicado */
-body > h1 {
-  display: none; 
+/* --- Header / Navigation --- */
+header {
+    background-color: #1e293b;
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow);
 }
 
-/* 2. Navegación superior */
 header nav ul {
-  display: flex;
-  list-style: none;
-  background: white;
-  margin: 0;
-  padding: 15px 50px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 2rem;
+    justify-content: center; /* Centra los links en el header */
 }
 
-header nav ul li a {
-  margin-right: 20px;
-  text-decoration: none;
-  color: #007bff;
-  font-weight: bold;
+header nav a {
+    color: #f8fafc;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
 }
 
-/* 3. CENTRADO: La sección ocupa el espacio restante y centra su contenido */
-.login-section {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center; /* Centra horizontal */
-  align-items: center;     /* Centra vertical */
-  padding: 20px;
+header nav a:hover {
+    color: var(--primary-color);
 }
 
-/* 4. La Tarjeta (el div dentro de la sección) */
-.login-section > div {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 380px;
-  text-align: center;
+/* --- Layout del Registro --- */
+.register-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
 }
 
-h1 { margin-top: 0; color: #333; font-size: 24px; }
-h2 { color: #777; font-size: 14px; margin-bottom: 30px; font-weight: normal; }
+.register-section > div {
+    background: var(--panel-bg);
+    padding: 2.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 400px; /* Un poco más estrecho para que se vea más estilizado */
+}
 
-/* 5. Estilo de Formulario, Inputs y Select */
+h1 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.75rem;
+    color: var(--text-main); /* Cambiado a oscuro para mejor lectura */
+    text-align: center;
+}
+
+h2 {
+    font-size: 0.95rem;
+    font-weight: normal;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* --- Formulario e Inputs --- */
 form {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Espacio uniforme entre campos */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 label {
-  font-size: 12px;
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 5px;
-  margin-top: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
 }
 
 input, select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  box-sizing: border-box; /* Evita que se salgan del contenedor */
-  font-size: 14px;
-  background-color: #fff;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
 }
 
 input:focus, select:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* 6. Botón de Login */
+/* --- Botón --- */
 button[type="submit"] {
-  width: 100%;
-  padding: 14px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  margin-top: 25px;
-  letter-spacing: 1px;
+    margin-top: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.85rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 button[type="submit"]:hover {
-  background-color: #0056b3;
+    background-color: var(--primary-hover);
+}
+
+button[type="submit"]:active {
+    transform: translateY(1px);
 }

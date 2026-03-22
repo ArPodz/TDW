@@ -1,6 +1,8 @@
 import { UserFactory } from "../models/UserFactory.js";
 import { UsersRepository } from "../models/UsersRepository.js";
 import { Session } from "../models/Session.js";
+import { RegisterView } from "../views/RegisterView.js";
+
 
 export class UserController {
     constructor() {
@@ -41,7 +43,27 @@ export class UserController {
         }
     }
 
+    async registerUser(data) {
+        if (data.password !== data.confirmPassword) {
+            throw new Error("Las contraseñas no coinciden");
+        }
 
+        this.validEmail(data.email);
+        this.validPassword(data.password);
+        const normalizedRol = this.validRol(data.rol);
+
+        const exists = this.users.getUsers().find(u => u.email === data.email);
+        if (exists) throw new Error("El usuario ya está registrado");
+
+        const newUser = UserFactory(data.email, data.password, normalizedRol);
+
+        this.users.addUser(newUser);
+        await this.users.persistence.save(this.users.getUsers());
+
+        return newUser;
+    }
+
+    /*
     createUser(email, password, rol){
         this.validEmail(email);
         this.validPassword(password);
@@ -51,6 +73,7 @@ export class UserController {
         this.users.addUser(newUser);
         return newUser;
     }
+    */
 
     updateUserRol(email, newRol){
         try {
