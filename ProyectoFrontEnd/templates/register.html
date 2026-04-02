@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "utf-8" />
+        <meta name = "viewport" content = "width=device-width, initial-scale = 1" />
+        <meta name = "author" content = "Asier Prieto Dom&iacute;nguez" />
+        <title>Proyecto Reserva Vuelos y Trenes</title>
+        <base href= "../">
+        <link rel = "stylesheet" href = "styles.css" />
+        <link rel = "icon" href = "images/icon_avion.png" type = "image/x-icon" />
+    </head>
+
+    <body>
+        <header class = "top-bar">
+            <nav>
+                <ul>
+                    <li><a href = "index.html">Inicio</a></li>
+                    <li><a href = "vuelos.html">Vuelos</a></li>
+                    <li><a href = "trenes.html">Trenes</a></li>
+                </ul>
+            </nav>
+        </header>
+
+
+        <section class = "register-section">
+            <div>
+                <h1>Registrar Usuario</h1>
+                <h2>Introduce tus credenciales de acceso</h2>
+                <form id = "registerUser" class = "register-form">
+                    <label for = "email">EMAIL</label>
+                    <input type = "email" id = "email" name = "email" required/>
+                    
+                    <label for = "password">PASSWORD</label>
+                    <input type = "password" id = "password" name = "password" required/>
+
+                    <label for = "confirmPassword">CONFIRMAR PASSWORD</label>
+                    <input type = "password" id = "confirmPassword" name = "confirmPassword" required/>
+
+                    <label for = "rol">ROL</label>
+                    <select id = "rol" name = "rol" required>
+                        <option value = "PUBLICO">Publico</option>
+                        <!-- <option value = "GESTOR">Gestor</option> -->
+                    </select>
+
+                    <div id = "status" class = "status"></div>
+
+                    <button id = "btnRegister" type = "submit">REGISTRAR</button>
+                </form>
+            </div>
+        </section>
+
+        <script type = "module" src = "app1.js"></script>
+    </body>
+</html>
