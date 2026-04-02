@@ -7,4 +7,3 @@ export class User {
 
 }
 
-// https://gemini.google.com/share/45a9ca38763b

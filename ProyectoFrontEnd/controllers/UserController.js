@@ -63,17 +63,18 @@ export class UserController {
         return newUser;
     }
 
-    /*
-    createUser(email, password, rol){
-        this.validEmail(email);
-        this.validPassword(password);
-        const normalizedRol = this.validRol(rol);
-
-        const newUser = UserFactory(email, password, normalizedRol);
-        this.users.addUser(newUser);
-        return newUser;
+    async loginUser(data){
+        const user = this.users.findUserByEmail(data.email);
+        
+        if(!user){
+            throw new Error("Usuario no encontrado");
+        } else if (user.password !== data.password){
+            throw new Error("Contraseña incorrecta");
+        } else {
+            this.activeSession.login(user);
+            return user;
+        }
     }
-    */
 
     updateUserRol(email, newRol){
         try {
@@ -89,6 +90,19 @@ export class UserController {
             throw error;
         }
     }
+
+    // FUNCIONES ANTIGUAS USADAS EN PRUEBAS, BORRAR DESPUES DE LAS PRUEBAS
+    /*
+    createUser(email, password, rol){
+        this.validEmail(email);
+        this.validPassword(password);
+        const normalizedRol = this.validRol(rol);
+
+        const newUser = UserFactory(email, password, normalizedRol);
+        this.users.addUser(newUser);
+        return newUser;
+    }
+    */
 }
 
 
