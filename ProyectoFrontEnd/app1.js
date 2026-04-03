@@ -1,56 +1,87 @@
 import { UserController } from "./controllers/UserController.js";
 import { RegisterView } from "./views/RegisterView.js";
+import { LoginView } from "./views/LoginView.js";
 import { StorageRepo } from "./repositories/StorageRepo.js";
-import { JsonRepository } from "./repositories/JsonRepository.js";
-
-// --- FUNCIÓN DE SEGURIDAD ---
-function escapeHTML(s) {
-    return String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
-}
-
-
 
 async function init() {
     console.log("🚀 LEYENDO APP1.JS...");
 
     const userController = new UserController();
-    const registerView = new RegisterView();
-    
-    // Conectamos persistencia
     userController.users.persistence = new StorageRepo(localStorage, "app_v1");
 
-    // 1. CONECTAR FORMULARIO PRIMERO (Para que funcione sí o sí)
-    if (registerView.registerForm) {
-        console.log("🔗 CONECTANDO FORMULARIO...");
-        
+    // 1. CARGA INICIAL DESDE JSON
+    try {
+        const currentUsers = userController.users.getUsers();
+        if (currentUsers.length === 0) {
+            console.log("📂 Cargando usuarios iniciales desde data.json...");
+            const response = await fetch('data.json'); 
+            const data = await response.json();
+            for (const u of data.users) {
+                await userController.users.addUser(u); 
+            }
+            console.log("✅ Carga inicial completada.");
+        }
+    } catch (e) {
+        console.warn("⚠️ No se pudo cargar data.json.");
+    }
+
+    // --- LÓGICA DE REGISTRO ---
+    const registerView = new RegisterView();
+    // CAMBIO AQUÍ: Usamos .registerForm en vez de .formEl
+    if (registerView.registerForm) { 
+        console.log("🔗 CONECTANDO FORMULARIO DE REGISTRO...");
         registerView.bindFormSubmit(async () => {
-            console.log("🔘 ¡BOTÓN PULSADO!"); // ESTO DEBE SALIR AL CLICAR
-            
             const formData = registerView.getFormData();
             try {
                 const user = await userController.registerUser(formData);
                 registerView.setStatus(`¡Éxito! Usuario ${user.email} creado.`, false);
                 registerView.clearForm();
-                
-                console.log("✅ NUEVA LISTA DE USUARIOS:");
-                console.table(userController.users.getUsers());
+                mostrarEstadoActual(userController);
             } catch (error) {
-                console.error("❌ ERROR AL REGISTRAR:", error.message);
                 registerView.setStatus(error.message, true);
             }
         });
-        console.log("✅ CABLE CONECTADO.");
     }
 
-    // 2. LANZAR TESTS AL FINAL
-    try {
-        await runningTests(userController);
-    } catch (e) {
-        console.warn("⚠️ Error en los tests automáticos.");
+    // --- LÓGICA DE LOGIN ---
+    const loginView = new LoginView();
+    // CAMBIO AQUÍ: Usamos .loginForm en vez de .formEl
+    if (loginView.loginForm) {
+        console.log("🔗 CONECTANDO FORMULARIO DE LOGIN...");
+        loginView.bindFormSubmit(async () => {
+            const formData = loginView.getFormData();
+            try {
+                console.log("🔍 Intentando login para:", formData.email);
+                const user = await userController.loginUser(formData);
+                
+                console.log("✅ LOGIN CORRECTO:", user);
+                loginView.setStatus(`Bienvenido, ${user.email}.`, false);
+                
+                mostrarEstadoActual(userController);
+            } catch (error) {
+                console.error("❌ ERROR LOGIN:", error.message);
+                loginView.setStatus(error.message, true);
+            }
+        });
     }
+
+    mostrarEstadoActual(userController);
 }
 
-// ARRANQUE SEGURO
+function mostrarEstadoActual(controller) {
+    console.group("📊 ESTADO ACTUAL DE LA APP");
+    console.log("👥 Lista Total de Usuarios:");
+    console.table(controller.users.getUsers());
+
+    const active = controller.activeSession.getUser();
+    if (active) {
+        console.log("🔑 Sesión Activa:", active);
+    } else {
+        console.log("🔑 Sesión Activa: NINGUNA (Invitado)");
+    }
+    console.groupEnd();
+}
+
 window.onload = () => {
-    init().catch(err => console.error("Fallo crítico en init:", err));
+    init().catch(err => console.error("Fallo crítico:", err));
 };

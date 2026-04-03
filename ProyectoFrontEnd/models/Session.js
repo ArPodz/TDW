@@ -7,7 +7,6 @@ function createInstance() {
         login(user){
             const sessionData = {
                 email: user.email,
-                password: user.password,
                 rol: user.rol,
                 loggedAt: Date.now()
             };

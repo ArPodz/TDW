@@ -1,12 +1,12 @@
 import { UserFactory } from "../models/UserFactory.js";
 import { UsersRepository } from "../models/UsersRepository.js";
-import { Session } from "../models/Session.js";
+import { getSessionInstance } from "../models/Session.js";
 import { RegisterView } from "../views/RegisterView.js";
 
 
 export class UserController {
     constructor() {
-        this.activeSession = Session.getSessionInstance();
+        this.activeSession = getSessionInstance();
         this.users = new UsersRepository();
     }
 
