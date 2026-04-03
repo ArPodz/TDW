@@ -1,13 +1,43 @@
-export class Session {
-    static instance;
+let instance;
 
-    constructor() {
-    } 
+function createInstance() {
+    return {
+        user: null,
 
-    static getSessionInstance(){
-        if (!Session.instance) {
-            Session.instance = new Session();
+        login(user){
+            const sessionData = {
+                email: user.email,
+                password: user.password,
+                rol: user.rol,
+                loggedAt: Date.now()
+            };
+
+            this.user = sessionData;
+
+            sessionStorage.setItem("activeUser", JSON.stringify(sessionData));
+        },
+
+        logout(){
+            this.user = null;
+            sessionStorage.removeItem("activeUser");
+        },
+
+        getUser() {
+            if (!this.user) {
+                const saved = sessionStorage.getItem("activeUser");
+            if (saved) this.user = JSON.parse(saved);
+            }
+            return this.user;
         }
-        return Session.instance;
-    }
+    };
 }
+
+export function getSessionInstance(){
+    if (!instance) {
+        instance = createInstance();
+    }
+    return instance;
+}
+
+
+
