@@ -35,7 +35,7 @@ export class UsersRepository {
     }
 
     findUserByEmail(email) {
-        return this.users.find(u => u.email === email); // Corregido: u.email
+        return this.users.find(u => u.email === email);
     }
 
     updateRolPossible(email, newRol) {
@@ -57,7 +57,7 @@ export class UsersRepository {
     async updateRol(email, newUserRol) {
         const index = this.users.findIndex(u => u.email === email);
         if (index !== -1) {
-            this.users[index] = newUserRol;
+            this.users[index].rol = newUserRol;
             await this.persistence.save(this.users);
         }
     }

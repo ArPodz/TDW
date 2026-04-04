@@ -2,34 +2,48 @@ import { UserController } from "./controllers/UserController.js";
 import { RegisterView } from "./views/RegisterView.js";
 import { LoginView } from "./views/LoginView.js";
 import { StorageRepo } from "./repositories/StorageRepo.js";
+// Importamos la vista de sesión que creamos
+import { SessionView } from "./views/SessionView.js"; 
 
 async function init() {
     console.log("🚀 LEYENDO APP1.JS...");
 
     const userController = new UserController();
+    
+    // 1. VINCULAR PERSISTENCIA
     userController.users.persistence = new StorageRepo(localStorage, "app_v1");
 
-    // 1. CARGA INICIAL DESDE JSON
+    // 2. CARGA DE DATOS (SEED + LOCALSTORAGE)
     try {
-        const currentUsers = userController.users.getUsers();
-        if (currentUsers.length === 0) {
-            console.log("📂 Cargando usuarios iniciales desde data.json...");
-            const response = await fetch('data.json'); 
-            const data = await response.json();
-            for (const u of data.users) {
-                await userController.users.addUser(u); 
-            }
-            console.log("✅ Carga inicial completada.");
-        }
+        const response = await fetch('data.json'); 
+        const data = await response.json();
+        await userController.users.initialize(data.users);
+        console.log("✅ Datos cargados correctamente.");
     } catch (e) {
-        console.warn("⚠️ No se pudo cargar data.json.");
+        console.warn("⚠️ Error al inicializar datos:", e.message);
     }
+
+    // --- LÓGICA DE SESIÓN (LOGIN/LOGOUT DINÁMICO) ---
+    // Esta función conecta el Controlador con la SessionView
+    const actualizarInterfazSesion = () => {
+        const activeUser = userController.activeSession.getUser();
+        
+        if (activeUser) {
+            // Si hay usuario, renderizamos Logout y pasamos la lógica de cierre
+            SessionView.renderSession(activeUser.email, (e) => {
+                e.preventDefault();
+                userController.activeSession.logout(); // Asumo que tu controller tiene este método
+                window.location.reload(); 
+            });
+        } else {
+            // Si no hay usuario, mostramos el link de Login
+            SessionView.renderGuest();
+        }
+    };
 
     // --- LÓGICA DE REGISTRO ---
     const registerView = new RegisterView();
-    // CAMBIO AQUÍ: Usamos .registerForm en vez de .formEl
     if (registerView.registerForm) { 
-        console.log("🔗 CONECTANDO FORMULARIO DE REGISTRO...");
         registerView.bindFormSubmit(async () => {
             const formData = registerView.getFormData();
             try {
@@ -45,40 +59,34 @@ async function init() {
 
     // --- LÓGICA DE LOGIN ---
     const loginView = new LoginView();
-    // CAMBIO AQUÍ: Usamos .loginForm en vez de .formEl
     if (loginView.loginForm) {
-        console.log("🔗 CONECTANDO FORMULARIO DE LOGIN...");
         loginView.bindFormSubmit(async () => {
             const formData = loginView.getFormData();
             try {
-                console.log("🔍 Intentando login para:", formData.email);
                 const user = await userController.loginUser(formData);
-                
                 console.log("✅ LOGIN CORRECTO:", user);
-                loginView.setStatus(`Bienvenido, ${user.email}.`, false);
                 
+                // Actualizamos la interfaz de sesión inmediatamente tras el login
+                actualizarInterfazSesion();
+                
+                loginView.setStatus(`Bienvenido, ${user.email}.`, false);
                 mostrarEstadoActual(userController);
             } catch (error) {
-                console.error("❌ ERROR LOGIN:", error.message);
                 loginView.setStatus(error.message, true);
             }
         });
     }
 
+    // Al arrancar, ejecutamos la actualización por primera vez
+    actualizarInterfazSesion();
     mostrarEstadoActual(userController);
 }
 
 function mostrarEstadoActual(controller) {
     console.group("📊 ESTADO ACTUAL DE LA APP");
-    console.log("👥 Lista Total de Usuarios:");
     console.table(controller.users.getUsers());
-
     const active = controller.activeSession.getUser();
-    if (active) {
-        console.log("🔑 Sesión Activa:", active);
-    } else {
-        console.log("🔑 Sesión Activa: NINGUNA (Invitado)");
-    }
+    console.log(active ? "🔑 Sesión Activa:" : "🔑 Sesión Activa: NINGUNA", active || "");
     console.groupEnd();
 }
 

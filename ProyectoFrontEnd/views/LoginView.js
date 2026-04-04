@@ -26,7 +26,7 @@ export class LoginView {
         e.preventDefault();
         handler();
         });
-    }
+    } 
 }
 
 function escapeHTML(s) {
