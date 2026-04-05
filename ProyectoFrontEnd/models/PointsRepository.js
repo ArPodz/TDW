@@ -14,7 +14,7 @@ export class PointsRepository {
             if (this.points.length === 0 && defaultData.length > 0) {
                 console.log("📦 El storage estaba vacío. Guardando semilla inicial...");
                 this.points = defaultData;
-                await this.persistence.save(this.points); // Aquí es donde se escribe en Application
+                await this.persistence.save(this.points);
             }
         } catch (error) {
             console.error("Error al inicializar repositorio:", error);
