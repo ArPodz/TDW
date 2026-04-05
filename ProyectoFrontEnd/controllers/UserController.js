@@ -10,7 +10,7 @@ export class UserController {
         this.users = new UsersRepository();
     }
 
-    validPassword(password){
+            validPassword(password){
         if(password.length < 8){
             throw new Error("Password debe tener al menos 8 carácteres");
         } else if (!/\d/.test(password)){
@@ -43,6 +43,7 @@ export class UserController {
         }
     }
 
+
     async registerUser(data) {
         if (data.password !== data.confirmPassword) {
             throw new Error("Las contraseñas no coinciden");
@@ -53,12 +54,14 @@ export class UserController {
         const normalizedRol = this.validRol(data.rol);
 
         const exists = this.users.getUsers().find(u => u.email === data.email);
-        if (exists) throw new Error("El usuario ya está registrado");
+        if (exists) {
+            throw new Error("El usuario ya está registrado");
+        }
 
         const newUser = UserFactory(data.email, data.password, normalizedRol);
 
         this.users.addUser(newUser);
-        await this.users.persistence.save(this.users.getUsers());
+        await this.users.addUser(newUser);
 
         return newUser;
     }
@@ -88,27 +91,13 @@ export class UserController {
 
             await this.users.persistence.save(this.users.getUsers());
         } catch (error) {
-            console.error("Error al actualizar el rol:", error.message);
-            throw error;
+            throw new Error("Error al actualizar rol: " + error.message);
         }
     }
 
     getUsersList(){
         return this.users.getUsers();
     }
-
-    // FUNCIONES ANTIGUAS USADAS EN PRUEBAS, BORRAR DESPUES DE LAS PRUEBAS
-    /*
-    createUser(email, password, rol){
-        this.validEmail(email);
-        this.validPassword(password);
-        const normalizedRol = this.validRol(rol);
-
-        const newUser = UserFactory(email, password, normalizedRol);
-        this.users.addUser(newUser);
-        return newUser;
-    }
-    */
 }
 
 

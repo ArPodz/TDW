@@ -4,14 +4,4 @@ export class Point {
         this.type = type;
         this.code = code;
     }
-
-    validType(type){
-        const upperType = tipo.trim().toUpperCase();
-
-        if(upperType === "PUERTA" || upperType === "VIA"){
-            return true;
-        } else {
-            throw new Error("Tipo de Punto incorrecto");
-        }
-    }
 }

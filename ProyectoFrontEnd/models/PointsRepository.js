@@ -12,13 +12,13 @@ export class PointsRepository {
             this.points = list;
             
             if (this.points.length === 0 && defaultData.length > 0) {
-                console.log("📦 El storage estaba vacío. Guardando semilla inicial...");
                 this.points = defaultData;
                 await this.persistence.save(this.points);
+                return true;
             }
         } catch (error) {
-            console.error("Error al inicializar repositorio:", error);
-            this.points = defaultData; 
+            this.points = defaultData;
+            throw new Error("Error al inicializar repositorio de puntos: " + error.message);
         }
     }
 
