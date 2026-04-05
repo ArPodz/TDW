@@ -64,7 +64,6 @@ export class UserManagementView {
         });
     }
 
-
     setStatus(message, isError = false) {
         const statusDiv = document.getElementById('user-status-message');
         if (statusDiv) {
