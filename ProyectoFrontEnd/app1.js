@@ -15,7 +15,7 @@ async function init() {
 
     // 2. CARGA DE DATOS (SEED + LOCALSTORAGE)
     try {
-        const response = await fetch('data.json'); 
+        const response = await fetch('usersData.json'); 
         const data = await response.json();
         await userController.users.initialize(data.users);
         console.log("✅ Datos cargados correctamente.");

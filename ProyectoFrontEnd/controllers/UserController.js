@@ -91,6 +91,10 @@ export class UserController {
         }
     }
 
+    showUsers(){
+        return this.users.getUsers();
+    }
+
     // FUNCIONES ANTIGUAS USADAS EN PRUEBAS, BORRAR DESPUES DE LAS PRUEBAS
     /*
     createUser(email, password, rol){
