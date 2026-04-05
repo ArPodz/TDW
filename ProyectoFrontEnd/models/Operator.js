@@ -8,4 +8,20 @@ export class Operator {
         this.color = color;
         this.urlIcono = urlIcono;
     }
+
+    getName() {
+        return this.name;
+    }
+
+    getAcronyms() {
+        return this.acronyms;
+    }
+
+    getColor() {
+        return this.color;
+    }
+
+    getUrlIcono() {
+        return this.urlIcono;
+    }
 }

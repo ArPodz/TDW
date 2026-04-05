@@ -60,7 +60,6 @@ export class UserController {
 
         const newUser = UserFactory(data.email, data.password, normalizedRol);
 
-        this.users.addUser(newUser);
         await this.users.addUser(newUser);
 
         return newUser;
