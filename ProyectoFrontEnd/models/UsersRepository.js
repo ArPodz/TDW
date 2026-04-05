@@ -57,7 +57,7 @@ export class UsersRepository {
     async updateRol(email, newUserRol) {
         const index = this.users.findIndex(u => u.email === email);
         if (index !== -1) {
-            this.users[index].rol = newUserRol;
+            this.users[index] = newUserRol;
             await this.persistence.save(this.users);
         }
     }

@@ -15,7 +15,7 @@
 
 /* --- Estilos Base --- */
 body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-main);
     margin: 0;
@@ -24,63 +24,127 @@ body {
     min-height: 100vh;
 }
 
-/* --- Header / Navigation Corregido --- */
+/* --- Header / Navigation --- */
 header {
     background-color: var(--header-bg);
-    padding: 1.5rem 2rem;
+    padding: 1rem 2rem;
     box-shadow: var(--shadow);
-    text-align: center; /* Centra el H1 */
 }
 
 header h1 {
     color: white;
     margin: 0 0 1rem 0;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    text-align: center;
+    opacity: 0.9;
 }
 
 header nav {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     justify-content: center;
-    align-items: center; /* Alinea verticalmente el texto y el span */
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 header nav a {
     color: #f8fafc;
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    padding: 0.5rem 1rem;
     border-radius: var(--radius);
 }
 
 header nav a:hover {
     background-color: rgba(255, 255, 255, 0.1);
-    color: var(--primary-color);
+    color: white;
 }
 
-/* Estilo específico para el nombre de usuario */
-#user-name {
-    font-size: 0.9rem;
+/* El SPAN donde sale el nombre del usuario */
+#user-display {
+    font-size: 0.85rem;
+    color: #fbbf24; /* Un tono dorado para resaltar el nombre */
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    margin-right: 0.5rem;
 }
 
-/* --- Layout de Secciones --- */
-.register-section, .login-section {
+/* --- Gestión de Usuarios (Tabla) --- */
+.users-management-section {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+#users-table-container {
+    background: var(--panel-bg);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.users-table { /* Cambiado de .admin-table para coincidir con tu View */
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.users-table th {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid var(--bg-color);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.users-table td {
+    padding: 12px;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: middle;
+}
+
+/* --- Badges de Rol --- */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+.badge.gestor { background: #fef3c7; color: #92400e; }
+.badge.publico { background: #e2e8f0; color: #475569; }
+
+/* --- Botones de Acción en Tabla --- */
+.btn-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.75rem;
+    transition: opacity 0.2s;
+}
+
+.btn-action:hover { opacity: 0.85; }
+
+.btn-promote { background-color: var(--success-color); color: white; }
+.btn-degrade { background-color: var(--error-color); color: white; }
+
+/* --- Formularios (Login / Register) --- */
+.login-section, .register-section {
     flex: 1;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     padding: 2rem;
-    flex-direction: column;
 }
 
-.register-section > div, .login-section > div {
+.form-container { /* Un contenedor genérico para los formularios */
     background: var(--panel-bg);
     padding: 2.5rem;
     border-radius: var(--radius);
@@ -89,126 +153,53 @@ header nav a:hover {
     max-width: 400px;
 }
 
-/* --- Formulario e Inputs --- */
 .login-form, .register-form {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
 }
 
 label {
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: -0.8rem;
 }
 
 input, select {
-    width: 100%;
-    padding: 0.8rem;
+    padding: 0.7rem;
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     font-size: 1rem;
-    transition: all 0.2s;
 }
 
 input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* --- Botones --- */
-button[type="submit"] {
-    margin-top: 1rem;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 1rem;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.1s, background-color 0.2s;
-    text-transform: uppercase;
-}
-
-button[type="submit"]:hover {
-    background-color: var(--primary-hover);
-}
-
-button[type="submit"]:active {
-    transform: scale(0.98);
-}
-
-/* --- Feedback de error/éxito --- */
+/* --- Mensajes de Estado --- */
 .status {
-    padding: 0.5rem;
-    border-radius: 4px;
-    font-size: 0.85rem;
     margin-top: 1rem;
-}
-
-.status.error {
-    background-color: #fef2f2;
-    color: var(--error-color);
-}
-
-.status.success {
-    background-color: #f0fdf4;
-    color: var(--success-color);
-}
-
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    background: white;
+    padding: 0.8rem;
     border-radius: var(--radius);
-    overflow: hidden;
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: 500;
 }
 
-.admin-table th, .admin-table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
+.status.error { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+.status.success { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
 
-.admin-table th {
-    background-color: #f8fafc;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    text-transform: uppercase;
+/* Responsivo */
+@media (max-width: 600px) {
+    header nav { gap: 0.5rem; }
+    header nav a { font-size: 0.8rem; padding: 0.4rem 0.6rem; }
+    .users-management-section { padding: 1rem; }
 }
-
-/* Estilos de los botones de acción */
-.btn-action {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.8rem;
-}
-
-.btn-promote {
-    background-color: var(--success-color);
-    color: white;
-}
-
-.btn-degrade {
-    background-color: var(--error-color);
-    color: white;
-}
-
-/* Etiquetas (Badges) para el rol */
-.badge {
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: bold;
-}
-.badge.gestor { background: #dcfce7; color: #166534; }
-.badge.publico { background: #f1f5f9; color: #475569; }

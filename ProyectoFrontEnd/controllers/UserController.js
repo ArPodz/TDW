@@ -76,7 +76,7 @@ export class UserController {
         }
     }
 
-    updateUserRol(email, newRol){
+    async updateUserRol(email, newRol){
         try {
             const normalizedRol = this.validRol(newRol);
             this.users.updateRolPossible(email, normalizedRol);
@@ -85,13 +85,15 @@ export class UserController {
             const updatedUser = UserFactory(oldUser.email, oldUser.password, normalizedRol);
 
             this.users.updateRol(email, updatedUser);
+
+            await this.users.persistence.save(this.users.getUsers());
         } catch (error) {
             console.error("Error al actualizar el rol:", error.message);
             throw error;
         }
     }
 
-    showUsers(){
+    getUsersList(){
         return this.users.getUsers();
     }
 

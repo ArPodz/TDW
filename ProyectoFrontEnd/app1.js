@@ -2,11 +2,11 @@ import { UserController } from "./controllers/UserController.js";
 import { RegisterView } from "./views/RegisterView.js";
 import { LoginView } from "./views/LoginView.js";
 import { StorageRepo } from "./repositories/StorageRepo.js";
-// Importamos la vista de sesión que creamos
 import { SessionView } from "./views/SessionView.js"; 
+import { UserManagementView } from "./views/UserManagementView.js";
 
 async function init() {
-    console.log("🚀 LEYENDO APP1.JS...");
+    console.log("🚀 INICIALIZANDO APLICACIÓN...");
 
     const userController = new UserController();
     
@@ -17,26 +17,26 @@ async function init() {
     try {
         const response = await fetch('usersData.json'); 
         const data = await response.json();
+        // Cargamos los usuarios iniciales si el storage está vacío
         await userController.users.initialize(data.users);
-        console.log("✅ Datos cargados correctamente.");
+        console.log("✅ Repositorio de usuarios listo.");
     } catch (e) {
-        console.warn("⚠️ Error al inicializar datos:", e.message);
+        console.warn("⚠️ Error al cargar semilla inicial:", e.message);
     }
 
     // --- LÓGICA DE SESIÓN (LOGIN/LOGOUT DINÁMICO) ---
-    // Esta función conecta el Controlador con la SessionView
     const actualizarInterfazSesion = () => {
         const activeUser = userController.activeSession.getUser();
         
         if (activeUser) {
-            // Si hay usuario, renderizamos Logout y pasamos la lógica de cierre
+            // Pasamos el email y la función de logout
             SessionView.renderSession(activeUser.email, (e) => {
                 e.preventDefault();
-                userController.activeSession.logout(); // Asumo que tu controller tiene este método
-                window.location.reload(); 
+                userController.activeSession.logout();
+                console.log("👋 Sesión cerrada.");
+                window.location.href = "index.html"; 
             });
         } else {
-            // Si no hay usuario, mostramos el link de Login
             SessionView.renderGuest();
         }
     };
@@ -47,10 +47,9 @@ async function init() {
         registerView.bindFormSubmit(async () => {
             const formData = registerView.getFormData();
             try {
-                const user = await userController.registerUser(formData);
-                registerView.setStatus(`¡Éxito! Usuario ${user.email} creado.`, false);
-                registerView.clearForm();
-                mostrarEstadoActual(userController);
+                await userController.registerUser(formData);
+                alert(`¡Registro con éxito! Ahora puedes iniciar sesión.`);
+                window.location.href = "index.html"; 
             } catch (error) {
                 registerView.setStatus(error.message, true);
             }
@@ -64,32 +63,66 @@ async function init() {
             const formData = loginView.getFormData();
             try {
                 const user = await userController.loginUser(formData);
-                console.log("✅ LOGIN CORRECTO:", user);
-                
-                // Actualizamos la interfaz de sesión inmediatamente tras el login
-                actualizarInterfazSesion();
-                
-                loginView.setStatus(`Bienvenido, ${user.email}.`, false);
-                mostrarEstadoActual(userController);
+                console.log("✅ Sesión iniciada:", user);
+                window.location.href = "index.html"; 
             } catch (error) {
                 loginView.setStatus(error.message, true);
             }
         });
     }
 
-    // Al arrancar, ejecutamos la actualización por primera vez
+    // --- LÓGICA DE GESTIÓN DE USUARIOS (SOLO EN USERS.HTML) ---
+    const userManagementView = new UserManagementView();
+    
+    // Verificamos si existe el contenedor de la tabla en el HTML actual
+    if (userManagementView.container) {
+        const activeUser = userController.activeSession.getUser();
+
+        // SEGURIDAD: Bloqueo si no es GESTOR
+        if (!activeUser || activeUser.rol !== 'GESTOR') {
+            alert("Acceso denegado. Se requiere rol de GESTOR.");
+            window.location.href = "index.html";
+            return;
+        }
+
+        // Definimos qué pasa cuando se cambia un rol
+        const handleRoleChange = async (email, newRole) => {
+            try {
+                // Importante: updateUserRol ahora es ASYNC para guardar en Storage
+                await userController.updateUserRol(email, newRole);
+                
+                // Actualizamos la tabla con la lista fresca del controlador
+                const updatedUsers = userController.getUsersList();
+                userManagementView.updateTable(updatedUsers, handleRoleChange);
+                
+                userManagementView.setStatus(`Usuario ${email} actualizado a ${newRole} con éxito.`);
+            } catch (error) {
+                userManagementView.setStatus(error.message, true);
+            }
+        };
+
+        // Renderizado inicial de la tabla
+        userManagementView.render(userController.getUsersList(), handleRoleChange);
+    }
+
+    // Sincronizar UI al cargar (Login/Logout del menú)
     actualizarInterfazSesion();
     mostrarEstadoActual(userController);
 }
 
+/**
+ * Muestra información de depuración en la consola
+ */
 function mostrarEstadoActual(controller) {
-    console.group("📊 ESTADO ACTUAL DE LA APP");
-    console.table(controller.users.getUsers());
+    console.group("📊 ESTADO DE LA APP");
+    const users = controller.getUsersList();
+    console.table(users);
     const active = controller.activeSession.getUser();
-    console.log(active ? "🔑 Sesión Activa:" : "🔑 Sesión Activa: NINGUNA", active || "");
+    console.log(active ? `🔑 Usuario activo: ${active.email} [${active.rol}]` : "🔑 No hay sesión iniciada");
     console.groupEnd();
 }
 
-window.onload = () => {
-    init().catch(err => console.error("Fallo crítico:", err));
-};
+// Arrancar la aplicación cuando el DOM esté listo
+document.addEventListener("DOMContentLoaded", () => {
+    init().catch(err => console.error("Fallo crítico en el arranque:", err));
+});
