@@ -13,7 +13,7 @@ export class UsersRepository {
             
             if (this.users.length === 0 && defaultData.length > 0) {
                 this.users = defaultData;
-                await this.persistence.save(this.users); 
+                await this.persistence.save({ users: this.users }); 
                 return true;
             }
         } catch (error) {
@@ -23,8 +23,11 @@ export class UsersRepository {
     }
 
     async addUser(user) {
+        if(this.findUserByEmail(user.email)){
+            throw new Error("El usuario ya está registrado");
+        }
         this.users.push(user);
-        await this.persistence.save(this.users);
+        await this.persistence.save({ users: this.users });
     }
 
     getUsers() {
@@ -48,6 +51,8 @@ export class UsersRepository {
             } else {
                 return true;
             }
+        } else {
+            return true;
         }
     }
 
@@ -55,7 +60,7 @@ export class UsersRepository {
         const index = this.users.findIndex(u => u.email === email);
         if (index !== -1) {
             this.users[index] = newUserRol;
-            await this.persistence.save(this.users);
+            await this.persistence.save({ users: this.users });
         }
     }
 }

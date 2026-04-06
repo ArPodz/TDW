@@ -13,7 +13,7 @@ export class PointsRepository {
             
             if (this.points.length === 0 && defaultData.length > 0) {
                 this.points = defaultData;
-                await this.persistence.save(this.points);
+                await this.persistence.save({ points: this.points });
                 return true;
             }
         } catch (error) {
@@ -23,8 +23,11 @@ export class PointsRepository {
     }
 
     async addPoint(point) {
+        if(this.findPointByCode(point.code)){
+            throw new Error("El punto ya está registrado");
+        }
         this.points.push(point);
-        await this.persistence.save(this.points);
+        await this.persistence.save({ points: this.points });
     }
 
     getPoints() {
@@ -34,7 +37,6 @@ export class PointsRepository {
     findPointByCode(code) {
         return this.points.find(p => p.code === code);
     }
-
 
 }
 

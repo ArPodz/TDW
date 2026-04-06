@@ -10,7 +10,7 @@ export class UserController {
         this.users = new UsersRepository();
     }
 
-            validPassword(password){
+    validPassword(password){
         if(password.length < 8){
             throw new Error("Password debe tener al menos 8 carácteres");
         } else if (!/\d/.test(password)){
@@ -86,17 +86,16 @@ export class UserController {
             const oldUser = this.users.findUserByEmail(email);
             const updatedUser = UserFactory(oldUser.email, oldUser.password, normalizedRol);
 
-            this.users.updateRol(email, updatedUser);
-
-            await this.users.persistence.save(this.users.getUsers());
+            await this.users.updateRol(email, updatedUser);
         } catch (error) {
             throw new Error("Error al actualizar rol: " + error.message);
         }
     }
 
-    getUsersList(){
-        return this.users.getUsers();
+    getUsersList() {
+        return [...this.users.getUsers()];
     }
+
 }
 
 
