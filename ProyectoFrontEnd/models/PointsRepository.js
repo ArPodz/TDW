@@ -38,5 +38,13 @@ export class PointsRepository {
         return this.points.find(p => p.code === code);
     }
 
+    uniqueCode(code) {
+        return !this.points.some(p => p.code === code);
+    }
+
+    maxPointId() {
+        return this.points.reduce((maxId, point) => Math.max(maxId, point.pointId), 0);
+    }
+
 }
 
