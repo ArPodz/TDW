@@ -29,11 +29,12 @@ export class OperationController {
 
     validState(state) {
         const normalizedState = state.trim().toUpperCase();
+        const validStates = ["PROGRAMADO", "EMBARCANDO", "RETRASADO", "EN_RUTA", "CANCELADO", "LLEGADO"];
 
-        if (normalizedState === "PROGRAMADO" || normalizedState === "EMBARCANDO" || normalizedState === "RETRASADO" || normalizedState === "EN_RUTA" || normalizedState === "CANCELADO" || normalizedState === "LLEGADO") {
+        if (validStates.includes(normalizedState)) {
             return normalizedState;
         } else {
-            throw new Error("El estado de la reserva debe ser 'PROGRAMADO', 'EMBARCANDO', 'RETRASADO', 'EN_RUTA', 'CANCELADO' o 'LLEGADO'");
+            throw new Error(`El estado de la operación debe ser uno de: ${validStates.join(", ")}`);
         }
     }
 
