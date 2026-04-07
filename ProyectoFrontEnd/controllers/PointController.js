@@ -3,8 +3,8 @@ import { PointFactory } from "../models/PointFactory.js";
 import { PointsRepository } from "../models/PointsRepository.js";
 
 export class PointController {
-    constructor() {
-        this.points = new PointsRepository();
+    constructor(persistence) {
+        this.points = new PointsRepository(persistence);
     }
 
     validCode(code) {

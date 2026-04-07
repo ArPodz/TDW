@@ -1,7 +1,8 @@
-export class Booking {
-    constructor(operationId, type, direction, origin, destination, scheduledTime, estimatedTime, state, operatorId, pointId) {
+export class Operation {
+    constructor(operationId, type, code, direction, origin, destination, scheduledTime, estimatedTime, state, operatorId, pointId) {
         this.operationId = operationId;
         this.type = type;
+        this.code = code;
         this.direction = direction;
         this.origin = origin;
         this.destination = destination;
@@ -14,6 +15,30 @@ export class Booking {
 
     getOperationId() {
         return this.operationId;
+    }
+
+    getType() {
+        return this.type;
+    }
+
+    getDirection() {
+        return this.direction;
+    }   
+
+    getOrigin() {  
+        return this.origin;
+    }
+
+    getDestination() {
+        return this.destination;
+    }
+
+    getScheduledTime() {
+        return this.scheduledTime;
+    }
+
+    getEstimatedTime() { 
+        return this.estimatedTime;
     }
 
     setOperationId(operationId) {

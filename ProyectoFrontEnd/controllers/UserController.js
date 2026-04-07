@@ -5,9 +5,9 @@ import { RegisterView } from "../views/RegisterView.js";
 
 
 export class UserController {
-    constructor() {
+    constructor(persistence) {
         this.activeSession = getSessionInstance();
-        this.users = new UsersRepository();
+        this.users = new UsersRepository(persistence);
     }
 
     validPassword(password){
