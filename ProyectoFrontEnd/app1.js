@@ -8,30 +8,27 @@ import { UserManagementView } from "./views/UserManagementView.js";
 async function init() {
     console.log("🚀 INICIALIZANDO APLICACIÓN...");
 
-    const userController = new UserController();
-    
-    // 1. VINCULAR PERSISTENCIA
-    userController.users.persistence = new StorageRepo(localStorage, "app_v1");
+    // 1. VINCULAR PERSISTENCIA (Inyectada al controlador)
+    const persistence = new StorageRepo(localStorage, "app_v1");
+    const userController = new UserController(persistence);
 
     // 2. CARGA DE DATOS (SEED + LOCALSTORAGE)
     try {
         const response = await fetch('usersData.json'); 
         const data = await response.json();
-        // Cargamos los usuarios iniciales si el storage está vacío
         await userController.users.initialize(data.users);
         console.log("✅ Repositorio de usuarios listo.");
     } catch (e) {
         console.warn("⚠️ Error al cargar semilla inicial:", e.message);
     }
 
-    // --- LÓGICA DE SESIÓN (LOGIN/LOGOUT DINÁMICO) ---
+    // --- LÓGICA DE SESIÓN (LOGIN/LOGOUT) ---
     const actualizarInterfazSesion = () => {
         const activeUser = userController.activeSession.getUser();
         
         if (activeUser) {
-            // Pasamos el email y la función de logout
-            SessionView.renderSession(activeUser.email, (e) => {
-                e.preventDefault();
+            // Quitamos el parámetro (e) y el preventDefault porque SessionView ya lo hace
+            SessionView.renderSession(activeUser.email, activeUser.rol, () => {
                 userController.activeSession.logout();
                 console.log("👋 Sesión cerrada.");
                 window.location.href = "index.html"; 
@@ -71,58 +68,42 @@ async function init() {
         });
     }
 
-    // --- LÓGICA DE GESTIÓN DE USUARIOS (SOLO EN USERS.HTML) ---
+    // --- LÓGICA DE GESTIÓN DE USUARIOS ---
     const userManagementView = new UserManagementView();
-    
-    // Verificamos si existe el contenedor de la tabla en el HTML actual
     if (userManagementView.container) {
         const activeUser = userController.activeSession.getUser();
 
-        // SEGURIDAD: Bloqueo si no es GESTOR
         if (!activeUser || activeUser.rol !== 'GESTOR') {
             alert("Acceso denegado. Se requiere rol de GESTOR.");
             window.location.href = "index.html";
             return;
         }
 
-        // Definimos qué pasa cuando se cambia un rol
         const handleRoleChange = async (email, newRole) => {
             try {
-                // Importante: updateUserRol ahora es ASYNC para guardar en Storage
                 await userController.updateUserRol(email, newRole);
-                
-                // Actualizamos la tabla con la lista fresca del controlador
-                const updatedUsers = userController.getUsersList();
-                userManagementView.updateTable(updatedUsers, handleRoleChange);
-                
+                userManagementView.updateTable(userController.getUsersList(), handleRoleChange);
                 userManagementView.setStatus(`Usuario ${email} actualizado a ${newRole} con éxito.`);
             } catch (error) {
                 userManagementView.setStatus(error.message, true);
             }
         };
 
-        // Renderizado inicial de la tabla
         userManagementView.render(userController.getUsersList(), handleRoleChange);
     }
 
-    // Sincronizar UI al cargar (Login/Logout del menú)
     actualizarInterfazSesion();
     mostrarEstadoActual(userController);
 }
 
-/**
- * Muestra información de depuración en la consola
- */
 function mostrarEstadoActual(controller) {
     console.group("📊 ESTADO DE LA APP");
-    const users = controller.getUsersList();
-    console.table(users);
+    console.table(controller.getUsersList());
     const active = controller.activeSession.getUser();
-    console.log(active ? `🔑 Usuario activo: ${active.email} [${active.rol}]` : "🔑 No hay sesión iniciada");
+    console.log(active ? `🔑 Activo: ${active.email} [${active.rol}]` : "🔑 Sin sesión");
     console.groupEnd();
 }
 
-// Arrancar la aplicación cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", () => {
-    init().catch(err => console.error("Fallo crítico en el arranque:", err));
+    init().catch(err => console.error("Fallo crítico:", err));
 });

@@ -37,6 +37,20 @@ export class OperationController {
         }
     }
 
+    async createOperation(data) {
+        if(this.validType(data.type) && this.validDirection(data.direction) && this.validState(data.state)){
+            if(this.operations.uniqueCode(data.code)){
+                const newOperation = OperationFactory(data.type, data.code, data.direction, data.origin, data.destination, data.scheduledTime, data.estimatedTime, data.state, data.operatorId, data.pointId);
+                await this.operations.addOperation(newOperation);
+            } else {
+                throw new Error("El código de la operación ya está en uso");
+            }
+        } else {
+            throw new Error("Datos de la operación no válidos");
+        }
+    }
+
+
 
 
 }
