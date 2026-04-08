@@ -14,8 +14,9 @@
         <header>
             <nav>
                 <a href = "index.html">Inicio</a>
-                <a href = "templates/users.html">Usuarios</a>
                 <a href = "templates/information.html">Información Vuelos y Trenes</a>
+                <a href = "templates/operations.html">Administración de Operaciones</a>
+                <a href = "templates/users.html">Gestor de Usuarios</a>
                 <span id = "user-data" style ="display: none; color: white; margin-right: 10px;"></span>
                 <a href = "templates/login.html" id = "login-link">Login</a>
             </nav>
@@ -23,8 +24,16 @@
         </header>
 
         <section class = "operations-information-section">
-            <div id = "information-table-container">
+            <div class = "dashboard-container">
+                <section id = "departures-panel">
+                    <h2>SALIDAS</h2>
+                    <div id = "table-departures"></div>
+                </section>
                 
+                <section id = "arrivals-panel">
+                    <h2>LLEGADAS</h2>
+                    <div id = "table-arrivals"></div>
+                </section>
             </div>
         
         
