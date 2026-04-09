@@ -11,8 +11,18 @@ constructor(storage, key) {
         return raw ? JSON.parse(raw) : [];
     }
 
-    // Guarda la lista de objetos (usuarios, vuelos, etc.)
+    /*
     async save(list) {
         this.storage.setItem(this.key, JSON.stringify(list, null, 2));
+    }
+    */
+
+    async save(newData) {
+        const currentRaw = this.storage.getItem(this.key);
+        const currentData = currentRaw ? JSON.parse(currentRaw) : {};
+
+        const updatedData = { ...currentData, ...newData };
+
+        this.storage.setItem(this.key, JSON.stringify(updatedData, null, 2));
     }
 }

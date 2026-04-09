@@ -51,6 +51,25 @@ export class OperationController {
         }
     }
 
+    async deleteOperation(operationId) {
+        await this.operations.deleteOperation(operationId);
+    }
+
+    async updateOperation(operationId, updatedData) {
+        const existingOperation = this.operations.getOperations().find(op => op.operationId === operationId);
+        if (!existingOperation) {
+            throw new Error("Operación no encontrada");
+        }
+        const updatedOperation = {
+            ...existingOperation,
+            ...updatedData, 
+            type: this.validType(updatedData.type || existingOperation.type),
+            direction: this.validDirection(updatedData.direction || existingOperation.direction),
+            state: this.validState(updatedData.state || existingOperation.state)
+        };
+        await this.operations.updateOperation(updatedOperation);
+    }
+
 
 
 

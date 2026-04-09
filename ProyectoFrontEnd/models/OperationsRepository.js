@@ -27,6 +27,21 @@ export class OperationsRepository {
         await this.persistence.save({ operations: this.operations });
     }
 
+    async updateOperation(updatedOperation) {
+        const index = this.operations.findIndex(o => o.operationId === updatedOperation.operationId);
+        if (index !== -1) {
+            this.operations[index] = updatedOperation;
+            await this.persistence.save({ operations: this.operations });
+        } else {
+            throw new Error("Operación " + updatedOperation.operationId + " no encontrada");
+        }
+    }
+
+    async deleteOperation(operationId) {
+        this.operations = this.operations.filter(o => o.operationId !== operationId);
+        await this.persistence.save({ operations: this.operations });
+    }
+
     getOperations() {
         return this.operations;
     }

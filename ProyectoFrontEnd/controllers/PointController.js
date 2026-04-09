@@ -1,4 +1,4 @@
-import { Point } from "../models/Point";
+import { Point } from "../models/Point.js";
 import { PointFactory } from "../models/PointFactory.js";
 import { PointsRepository } from "../models/PointsRepository.js";
 
@@ -39,4 +39,23 @@ export class PointController {
             throw new Error("Datos del punto no válidos");
         }
     }
+
+    async deletePoint(pointId) {
+        await this.points.deletePoint(pointId);
+    }
+
+    async updatePoint(pointId, updatedData) {
+        const existingPoint = this.points.getPoints().find(p => p.pointId === pointId);
+        if (!existingPoint) {
+            throw new Error("Punto no encontrado");
+        }
+        const updatedPoint = {
+            ...existingPoint,
+            ...updatedData,
+            code: this.validCode(updatedData.code || existingPoint.code),
+            type: this.validType(updatedData.type || existingPoint.type)
+        };
+        await this.points.updatePoit(updatedPoint);
+    }
+
 }

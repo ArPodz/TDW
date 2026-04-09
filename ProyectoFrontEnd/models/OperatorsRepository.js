@@ -27,6 +27,21 @@ export class OperatorsRepository {
         await this.persistence.save({ operators: this.operators });
     }
 
+    async deleteOperator(operatorId) {
+        this.operators = this.operators.filter(o => o.operatorId !== operatorId);
+        await this.persistence.save({ operators: this.operators });
+    }
+
+    async updateOperator(updatedOperator) {
+        const index = this.operators.findIndex(o => o.operatorId === updatedOperator.operatorId);
+        if (index !== -1) {
+            this.operators[index] = updatedOperator;
+            await this.persistence.save({ operators: this.operators });
+        } else {
+            throw new Error("Operador " + updatedOperator.operatorId + " no encontrado");
+        }
+    }
+
     getOperators() {
         return this.operators;
     }

@@ -30,6 +30,21 @@ export class PointsRepository {
         await this.persistence.save({ points: this.points });
     }
 
+    async deletePoint(pointId) {
+        this.points = this.points.filter(p => p.pointId !== pointId);
+        await this.persistence.save({ points: this.points });
+    }
+
+    async updatePoit(updatedPoint) {
+        const index = this.points.findIndex(p => p.pointId === updatedPoint.pointId);
+        if (index !== -1) {
+            this.points[index] = updatedPoint;
+            await this.persistence.save({ points: this.points });
+        } else {
+            throw new Error("Punto " + updatedPoint.pointId + " no encontrado");
+        }  
+    }
+
     getPoints() {
         return this.points;
     }

@@ -11,4 +11,20 @@ export class OperatorController {
         await this.operators.addOperator(newOperator);
     }
 
+    async deleteOperator(operatorId) { 
+        await this.operators.deleteOperator(operatorId);
+    }
+
+    async updateOperator(operatorId, updatedData) {
+        const existingOperator = this.operators.getOperators().find(o => o.operatorId === operatorId);
+        if (!existingOperator) {
+            throw new Error("Operador no encontrado");
+        }
+        const updatedOperator = {
+            ...existingOperator,
+            ...updatedData
+        };
+        await this.operators.updateOperator(updatedOperator);
+    }
+
 }
