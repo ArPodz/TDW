@@ -27,4 +27,8 @@ export class OperatorController {
         await this.operators.updateOperator(updatedOperator);
     }
 
+    getOperatorsList(){
+        return [...this.operators.getOperators()];
+    }
+
 }

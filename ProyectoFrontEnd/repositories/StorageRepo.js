@@ -5,7 +5,6 @@ constructor(storage, key) {
         this.key = key;
     }
 
-    // Lee los datos del almacenamiento del navegador
     async load() {
         const raw = this.storage.getItem(this.key);
         return raw ? JSON.parse(raw) : [];

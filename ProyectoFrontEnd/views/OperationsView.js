@@ -1,13 +1,11 @@
 export class OperationsView {
     constructor(operationController, domElementId) {
-        this.controller = operationController;
-        // El contenedor principal en tu HTML donde se renderizará esta vista
+        this.operationController = operationController;
         this.container = document.getElementById(domElementId); 
     }
 
-    // Método principal para renderizar la tabla
     render() {
-        const operations = this.controller.operations.getOperations();
+        const operations = this.operationController.getOperationsList();
         
         let html = `
             <div class="gestor-panel">
@@ -48,21 +46,19 @@ export class OperationsView {
         html += `</tbody></table></div>`;
         this.container.innerHTML = html;
 
-        // Una vez inyectado el HTML, asignamos los eventos
         this.bindEvents();
     }
 
     bindEvents() {
-        // Evento para Eliminar
         const deleteButtons = this.container.querySelectorAll('.btn-delete');
         deleteButtons.forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const code = e.target.getAttribute('data-code');
                 if (confirm(`¿Seguro que deseas eliminar la operación ${code}?`)) {
                     try {
-                        await this.controller.deleteOperation(code);
+                        await this.operationController.deleteOperation(code);
                         alert("Operación eliminada");
-                        this.render(); // Recargar la vista
+                        this.render();
                     } catch (error) {
                         alert(error.message);
                     }
@@ -88,7 +84,7 @@ export class OperationsView {
 
     // Renderiza un formulario simple para editar lo que pide el ejercicio
     renderEditForm(code) {
-        const operation = this.controller.operations.findOperationByCode(code);
+        const operation = this.operationController.findOperationByCode(code);
         if (!operation) return;
 
         const formHtml = `
@@ -130,9 +126,9 @@ export class OperationsView {
             };
 
             try {
-                await this.controller.updateOperationSpecifics(code, updates);
+                await this.operationController.updateOperationSpecifics(code, updates);
                 alert("Operación actualizada con éxito");
-                this.render(); // Volver a la tabla
+                this.render();
             } catch (error) {
                 alert("Error al actualizar: " + error.message);
             }

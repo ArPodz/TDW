@@ -70,7 +70,8 @@ export class OperationController {
         await this.operations.updateOperation(updatedOperation);
     }
 
-
-
+    getOperationsList() {
+        return [...this.operations.getOperations()];
+    }
 
 }

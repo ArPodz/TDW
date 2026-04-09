@@ -17,26 +17,16 @@ async function init() {
     // 1. VINCULAR PERSISTENCIA
     const persistence = new StorageRepo(localStorage, "app_v1");
     const userController = new UserController(persistence);
-    
-    // --- NUEVOS CONTROLADORES ---
     const operationController = new OperationController(persistence);
     const operatorController = new OperatorController(persistence);
     const pointController = new PointController(persistence);
 
-    // 2. CARGA DE DATOS (SEED + LOCALSTORAGE)
-    // Mantenemos tu bloque de usuarios intacto
+    // 2. CARGA DE DATOS (Usuarios, Operaciones, etc.)
     try {
         const response = await fetch('data/usersData.json'); 
         const data = await response.json();
         await userController.users.initialize(data.users);
-        console.log("✅ Repositorio de usuarios listo.");
-    } catch (e) {
-        console.warn("⚠️ Error al cargar usuarios:", e.message);
-    }
-
-    // --- NUEVA CARGA DE DATOS (OPERACIONES, OPERADORES, PUNTOS) ---
-    // Lo hacemos en bloques separados para que si uno falla, no afecte a los usuarios
-    try {
+        
         const resOps = await fetch('data/operationsData.json');
         const dataOps = await resOps.json();
         await operationController.operations.initialize(dataOps.operations);
@@ -49,18 +39,17 @@ async function init() {
         const dataPoints = await resPoints.json();
         await pointController.points.initialize(dataPoints.points);
         
-        console.log("✅ Repositorios de gestión listos.");
+        console.log("✅ Repositorios listos.");
     } catch (e) {
-        console.warn("⚠️ Error al cargar datos de gestión:", e.message);
+        console.warn("⚠️ Error en carga de datos:", e.message);
     }
 
-    // --- LÓGICA DE SESIÓN (LOGIN/LOGOUT) ---
+    // --- LÓGICA DE SESIÓN ---
     const actualizarInterfazSesion = () => {
         const activeUser = userController.activeSession.getUser();
         if (activeUser) {
             SessionView.renderSession(activeUser.email, activeUser.rol, () => {
                 userController.activeSession.logout();
-                console.log("👋 Sesión cerrada.");
                 window.location.href = "index.html"; 
             });
         } else {
@@ -68,41 +57,33 @@ async function init() {
         }
     };
 
-    // --- LÓGICA DE REGISTRO ---
+    // --- LÓGICA DE FORMULARIOS (LOGIN/REGISTER) ---
     const registerView = new RegisterView();
     if (registerView.registerForm) { 
         registerView.bindFormSubmit(async () => {
-            const formData = registerView.getFormData();
             try {
-                await userController.registerUser(formData);
-                alert(`¡Registro con éxito! Ahora puedes iniciar sesión.`);
+                await userController.registerUser(registerView.getFormData());
+                alert(`¡Registro con éxito!`);
                 window.location.href = "index.html"; 
-            } catch (error) {
-                registerView.setStatus(error.message, true);
-            }
+            } catch (error) { registerView.setStatus(error.message, true); }
         });
     }
 
-    // --- LÓGICA DE LOGIN ---
     const loginView = new LoginView();
     if (loginView.loginForm) {
         loginView.bindFormSubmit(async () => {
-            const formData = loginView.getFormData();
             try {
-                const user = await userController.loginUser(formData);
-                console.log("✅ Sesión iniciada:", user);
+                await userController.loginUser(loginView.getFormData());
                 window.location.href = "index.html"; 
-            } catch (error) {
-                loginView.setStatus(error.message, true);
-            }
+            } catch (error) { loginView.setStatus(error.message, true); }
         });
     }
 
-    // --- LÓGICA DE GESTIÓN (USUARIOS Y OPERACIONES) ---
+    // --- LÓGICA DE GESTIÓN (EL CORAZÓN DEL ERROR) ---
     const userManagementView = new UserManagementView();
-    const operationsContainer = document.getElementById('admin-operations-container');
+    // UNIFICAMOS EL ID: Usa el mismo que pusiste en el HTML
+    const operationsContainer = document.getElementById('operations-management-container');
 
-    // Si existe el contenedor de usuarios o el de operaciones, verificamos rol
     if (userManagementView.container || operationsContainer) {
         const activeUser = userController.activeSession.getUser();
 
@@ -112,23 +93,21 @@ async function init() {
             return;
         }
 
-        // Si hay contenedor de usuarios, renderizamos usuarios
+        // Gestión de Usuarios
         if (userManagementView.container) {
             const handleRoleChange = async (email, newRole) => {
                 try {
                     await userController.updateUserRol(email, newRole);
                     userManagementView.updateTable(userController.getUsersList(), handleRoleChange);
-                    userManagementView.setStatus(`Usuario ${email} actualizado a ${newRole} con éxito.`);
-                } catch (error) {
-                    userManagementView.setStatus(error.message, true);
-                }
+                } catch (error) { userManagementView.setStatus(error.message, true); }
             };
             userManagementView.render(userController.getUsersList(), handleRoleChange);
         }
 
-        // --- NUEVA LÓGICA: RENDERIZAR OPERACIONES ---
+        // Gestión de Operaciones (CORREGIDO)
         if (operationsContainer) {
-            const operationsView = new OperationsView(operationController, 'admin-operations-container');
+            // Pasamos exactamente el mismo ID que acabamos de capturar
+            const operationsView = new OperationsView(operationController, 'operations-management-container');
             operationsView.render();
         }
     }
@@ -136,6 +115,8 @@ async function init() {
     actualizarInterfazSesion();
     mostrarEstadoActual(userController, operationController, operatorController, pointController);
 }
+
+// ... (Resto de funciones mostrarEstadoActual y DOMContentLoaded se mantienen igual)
 
 
 function mostrarEstadoActual(userController, operationController, operatorController, pointController) {

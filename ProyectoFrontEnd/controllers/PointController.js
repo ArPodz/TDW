@@ -58,4 +58,8 @@ export class PointController {
         await this.points.updatePoit(updatedPoint);
     }
 
+    getPointsList(){
+        return [...this.points.getPoints()];
+    }
+
 }
