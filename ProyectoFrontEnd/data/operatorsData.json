@@ -3,35 +3,35 @@
     {
       "operatorId": 1,
       "name": "Renfe Operadora",
-      "acronyms": "RENFE",
+      "acronym": "RENFE",
       "color": "#EE3124",
       "urlIcono": "https://assets.example.com/icons/renfe.png"
     },
     {
       "operatorId": 2,
       "name": "Intermodalidad de Levante",
-      "acronyms": "IRYO",
+      "acronym": "IRYO",
       "color": "#BE1111",
       "urlIcono": "https://assets.example.com/icons/iryo.png"
     },
     {
       "operatorId": 3,
       "name": "Ouigo España",
-      "acronyms": "OUIGO",
+      "acronym": "OUIGO",
       "color": "#E1007A",
       "urlIcono": "https://assets.example.com/icons/ouigo.png"
     },
     {
       "operatorId": 4,
       "name": "Sociedad Nacional de Ferrocarriles Franceses",
-      "acronyms": "SNCF",
+      "acronym": "SNCF",
       "color": "#00205B",
       "urlIcono": "https://assets.example.com/icons/sncf.png"
     },
     {
       "operatorId": 5,
       "name": "Ferrocarrils de la Generalitat",
-      "acronyms": "FGC",
+      "acronym": "FGC",
       "color": "#F39200",
       "urlIcono": "https://assets.example.com/icons/fgc.png"
     }

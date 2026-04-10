@@ -8,7 +8,7 @@ export class OperatorController {
 
     async createOperator(data){
         let operatorId = this.operators.maxOperatorId() + 1;
-        const newOperator = OperatorFactory(operatorId, data.name, data.acronyms, data.color, data.urlIcono);
+        const newOperator = OperatorFactory(operatorId, data.name, data.acronym, data.color, data.urlIcono);
         await this.operators.addOperator(newOperator);
     }
 

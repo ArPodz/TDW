@@ -1,10 +1,10 @@
 export class Operator {
     static cont = 1;
 
-    constructor(operatorId, name, acronyms, color, urlIcono) {
+    constructor(operatorId, name, acronym, color, urlIcono) {
         this.operatorId = operatorId;
         this.name = name;
-        this.acronyms = acronyms;
+        this.acronym = acronym;
         this.color = color;
         this.urlIcono = urlIcono;
     }
@@ -13,8 +13,8 @@ export class Operator {
         return this.name;
     }
 
-    getAcronyms() {
-        return this.acronyms;
+    getAcronym() {
+        return this.acronym;
     }
 
     getColor() {

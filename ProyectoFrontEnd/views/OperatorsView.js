@@ -17,7 +17,7 @@ export class OperatorsView {
                             <th>Nombre</th>
                             <th>Siglas</th>
                             <th>Color</th>
-                            <th>URL Logo</th>
+                            <th>URL Icono</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -27,8 +27,8 @@ export class OperatorsView {
                                 <td>${op.operatorId}</td>
                                 <td>${op.name}</td>
                                 <td>${op.acronym}</td>
-                                <td><span class = "color-box" style="background-color: ${op.color};"></span> ${op.color}</td>
-                                <td><a href="${op.logoUrl}" target="_blank">Ver Logo</a></td>
+                                <td><span class = "color-box" style = "background-color: ${op.color};"></span> ${op.color}</td>
+                                <td><a href="${op.urlIcono}" target = "_blank">Ver Icono</a></td>
                                 <td>
                                     <button class = "btn-edit-operator" data-id = "${op.operatorId}">Editar</button>
                                     <button class = "btn-delete-operator" data-id = "${op.operatorId}">Borrar</button>
@@ -64,7 +64,7 @@ export class OperatorsView {
         const editButtons = this.container.querySelectorAll('.btn-edit-operator');
         editButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const id = e.target.getAttribute('data-id');
+                const id = Number(e.target.getAttribute('data-id'));
                 this.renderEditForm(id);
             });
         });
@@ -146,7 +146,7 @@ export class OperatorsView {
                     </div>
 
                     <div class = "form-group">
-                        <label>URL del Logo:</label>
+                        <label>URL del Icono:</label>
                         <input type = "url" id = "new-operator-urlIcono" placeholder= "Ej: https://example.com/logo.png">
                     </div>
 
@@ -167,17 +167,21 @@ export class OperatorsView {
         if (!operator) return;
 
         const formHtml = `
-            <div class= "modal">
-                <h3>Editando Operador: ${operator.name}</h3>
-                <label>Tipo:
-                    <select id="edit-type">
-                        <option value="PUERTA" ${operator.type === 'PUERTA' ? 'selected' : ''}>Puerta</option>
-                        <option value="VIA" ${operator.type === 'VIA' ? 'selected' : ''}>Vía</option>
-                    </select>
+            <div class = "modal">
+                <h3>Editando Operador: ${operator.operatorId} - ${operator.name}</h3>
+                <label>Nombre:
+                    <input type = "text" id = "edit-code" value="${operator.name}">
                 </label>
-                <label>Código:
-                    <input type="text" id="edit-code" value="${operator.name}">
+                <label>Acrónimo:
+                    <input type = "text" id = "edit-acronym" value = "${operator.acronym}">
                 </label>
+                <label>Color:
+                    <input type = "color" id = "edit-color" value = "${operator.color}">
+                </label>
+                <label>URL del Icono:
+                    <input type = "url" id = "edit-urlIcono" value = "${operator.urlIcono}">
+                </label>
+
                 <button id="btn-save-edit">Guardar Cambios</button>
                 <button id="btn-cancel-edit">Cancelar</button>
             </div>
@@ -186,9 +190,5 @@ export class OperatorsView {
         this.container.innerHTML = formHtml;
         this.bindEditEvents(operator.operatorId);
     }
-
-
-
-
 
 }

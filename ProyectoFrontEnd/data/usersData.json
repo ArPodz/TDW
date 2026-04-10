@@ -31,8 +31,13 @@
       "rol": "PUBLICO"
     },
     {
-      "email": "rufofake@gmail.com",
-      "password": "aaaaaaaaaaaa11",
+      "email": "lamine19@outlook.es",
+      "password": "lamine19",
+      "rol": "GESTOR"
+    },
+    {
+      "email": "raphina11@alumnos.upm.es",
+      "password": "raphina11",
       "rol": "GESTOR"
     }
   ]
