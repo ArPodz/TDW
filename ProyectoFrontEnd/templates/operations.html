@@ -8,6 +8,13 @@
         <base href= "../">
         <link rel = "stylesheet" href = "styles.css" />
         <link rel = "icon" href = "images/icon_avion.png" type = "image/x-icon" />
+        <script type= "importmap">
+            {
+            "imports": {
+                "ulid": "https://unpkg.com/ulid@2.3.0/dist/index.esm.js"
+                }
+            }
+        </script>
     </head>
 
     <body>
@@ -23,19 +30,29 @@
             <h1>Administración de Operaciones</h1>
         </header>
 
-        <div id = "operations-management-container"> 
-                    
+        <nav class = "admin-sidebar">
+            <button id = "nav-operations">Operaciones</button>
+            <button id = "nav-operators">Operadores</button>
+            <button id = "nav-points">Puntos</button>
+        </nav>
 
+        <div id = "admin-management-container"> 
+            <div id = "operations-management-container" class = "admin-section">
+                <!-- Aquí se renderizará la gestión de operaciones -->  
+            </div>
+
+            <div id = "operators-management-container" class = "admin-section" style = "display: none;">
+                <!-- Aquí se renderizará la gestión de operadores -->
+            </div>
+
+            <div id = "points-management-container" class = "admin-section" style = "display: none;">
+                <!-- Aquí se renderizará la gestión de puntos -->
+            </div>
         </div>
+
+
         
         
         <script type = "module" src = "app1.js"></script>
-        <script type= "importmap">
-            {
-            "imports": {
-                "ulid": "https://unpkg.com/ulid@2.3.0/dist/index.esm.js"
-                }
-            }
-        </script>
     </body>
 </html>

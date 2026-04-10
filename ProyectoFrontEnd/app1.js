@@ -10,6 +10,8 @@ import { OperationController } from "./controllers/OperationController.js";
 import { OperatorController } from "./controllers/OperatorController.js";
 import { PointController } from "./controllers/PointController.js";
 import { OperationsView } from "./views/OperationsView.js";
+import { PointsView } from "./views/PointsView.js"; // <-- AÑADIDO
+import { OperatorsView } from "./views/OperatorsView.js"; // <-- AÑADIDO
 
 async function init() {
     console.log("🚀 INICIALIZANDO APLICACIÓN...");
@@ -79,12 +81,13 @@ async function init() {
         });
     }
 
-    // --- LÓGICA DE GESTIÓN (EL CORAZÓN DEL ERROR) ---
+    // --- LÓGICA DE GESTIÓN (ACTUALIZADA) ---
     const userManagementView = new UserManagementView();
-    // UNIFICAMOS EL ID: Usa el mismo que pusiste en el HTML
     const operationsContainer = document.getElementById('operations-management-container');
+    const pointsContainer = document.getElementById('points-management-container'); // <-- AÑADIDO
+    const operatorsContainer = document.getElementById('operators-management-container'); // <-- AÑADIDO
 
-    if (userManagementView.container || operationsContainer) {
+    if (userManagementView.container || operationsContainer || pointsContainer) {
         const activeUser = userController.activeSession.getUser();
 
         if (!activeUser || activeUser.rol !== 'GESTOR') {
@@ -104,46 +107,61 @@ async function init() {
             userManagementView.render(userController.getUsersList(), handleRoleChange);
         }
 
-        // Gestión de Operaciones (CORREGIDO)
+        // Gestión de Operaciones
         if (operationsContainer) {
-            // Pasamos exactamente el mismo ID que acabamos de capturar
             const operationsView = new OperationsView(operationController, 'operations-management-container');
             operationsView.render();
         }
+
+        // --- GESTIÓN DE PUNTOS (AÑADIDO) ---
+        if (pointsContainer) {
+            const pointsView = new PointsView(pointController, 'points-management-container');
+            pointsView.render();
+        }
+
+        // --- LÓGICA DE NAVEGACIÓN DE PESTAÑAS (AÑADIDO) ---
+        const sections = {
+            'nav-operations': 'operations-management-container',
+            'nav-operators': 'operators-management-container',
+            'nav-points': 'points-management-container'
+        };
+
+        Object.entries(sections).forEach(([btnId, containerId]) => {
+            const btn = document.getElementById(btnId);
+            const container = document.getElementById(containerId);
+            if (btn && container) {
+                btn.addEventListener('click', () => {
+                    // Ocultar todas las secciones
+                    Object.values(sections).forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.style.display = 'none';
+                    });
+                    // Mostrar la seleccionada
+                    container.style.display = 'block';
+                });
+            }
+        });
     }
 
     actualizarInterfazSesion();
     mostrarEstadoActual(userController, operationController, operatorController, pointController);
 }
 
-// ... (Resto de funciones mostrarEstadoActual y DOMContentLoaded se mantienen igual)
-
-
 function mostrarEstadoActual(userController, operationController, operatorController, pointController) {
     console.group("📊 ESTADO DE LA APP");
-    
     console.log("👥 USUARIOS:");
     console.table(userController.getUsersList());
-
     console.log("\n ---------------------------------------------------------------------- \n");
-    
     console.log("✈️ OPERACIONES:");
-    // Accedemos al repositorio de operaciones para obtener el array
     console.table(operationController.operations.getOperations());
-    
     console.log("\n ---------------------------------------------------------------------- \n");
-
     console.log("👷 OPERADORES:");
     console.table(operatorController.operators.getOperators());
-    
     console.log("\n ---------------------------------------------------------------------- \n");
-
     console.log("📍 PUNTOS:");
     console.table(pointController.points.getPoints());
-    
     const active = userController.activeSession.getUser();
     console.log(active ? `🔑 Activo: ${active.email} [${active.rol}]` : "🔑 Sin sesión");
-    
     console.groupEnd();
 }
 

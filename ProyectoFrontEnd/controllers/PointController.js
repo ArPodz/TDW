@@ -8,10 +8,10 @@ export class PointController {
     }
 
     validCode(code) {
-        const codeRegex = /^[a-zA-Z0-9][\sáéíóúÁÉÍÓÚa-zA-Z0-9-]{1,11}$/;
+        const codeRegex = /^[a-zA-Z0-9][\sáéíóúÁÉÍÓÚa-zA-Z0-9-]{1,17}$/;
 
         if (!codeRegex.test(code)) {
-            throw new Error("El código debe tener entre 2 y 12 caracteres y no contener símbolos especiales (excepto guiones).");
+            throw new Error("El código debe tener entre 2 y 18 caracteres y no contener símbolos especiales (excepto guiones).");
         }
         return code.trim();
     }
@@ -62,4 +62,7 @@ export class PointController {
         return [...this.points.getPoints()];
     }
 
+    findPointByCode(code) {
+        return this.points.findPointByCode(code);
+    }
 }
