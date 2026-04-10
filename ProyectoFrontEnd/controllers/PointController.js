@@ -46,9 +46,14 @@ export class PointController {
 
     async updatePoint(pointId, updatedData) {
         const existingPoint = this.points.getPoints().find(p => p.pointId === pointId);
+
         if (!existingPoint) {
             throw new Error("Punto no encontrado");
         }
+        if(updatedData.code && !this.points.uniqueCode(updatedData.code)){
+            throw new Error("El código del punto ya está en uso");
+        }
+        
         const updatedPoint = {
             ...existingPoint,
             ...updatedData,

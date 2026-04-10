@@ -6,6 +6,93 @@ export class OperationsView {
 
     render() {
         const operations = this.operationController.getOperationsList();
+        let html = `
+            <div class="management-operations">
+                <h2>Gestión de Operaciones</h2>
+                <button id = "btn-new-operation">Nueva Operación</button>
+                <table class = "table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Código</th>
+                            <th>Tipo</th>
+                            <th>Sentido</th>
+                            <th>Origen</th>
+                            <th>Destino</th>
+                            <th>Hora Programada</th>
+                            <th>Hora Estimada</th>
+                            <th>Estado</th>
+                            <th>Operador</th>
+                            <th>Punto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    ${operations.map(o => `
+                            <tr>
+                                <td>${o.operationId}</td>
+                                <td>${o.code}</td>
+                                <td>${o.type}</td>
+                                <td>${o.direction}</td>
+                                <td>${o.origin}</td>
+                                <td>${o.destination}</td>
+                                <td>${o.scheduledTime}</td>
+                                <td>${o.estimatedTime}</td>
+                                <td>${o.state}</td>
+                                <td>${o.operatorId}</td>
+                                <td>${o.pointId}</td>
+                                <td>
+                                    <button class = "btn-edit-point" data-id = "${o.code}">Editar</button>
+                                    <button class = "btn-delete-point" data-id = "${o.code}">Borrar</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        this.container.innerHTML = html;
+        this.bindEvents();
+    }
+
+    render() {
+        const points = this.pointController.getPointsList();
+        let html = `
+            <div class = "management-points">
+                <h2>Gestión de Puntos</h2>
+                <button id = "btn-new-point">Nuevo Punto</button>
+                <table class = "table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Código</th>
+                            <th>Tipo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${points.map(p => `
+                            <tr>
+                                <td>${p.pointId}</td>
+                                <td>${p.code}</td>
+                                <td>${p.type}</td>
+                                <td>
+                                    <button class = "btn-edit-point" data-id = "${p.code}">Editar</button>
+                                    <button class = "btn-delete-point" data-id = "${p.code}">Borrar</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+        this.container.innerHTML = html;
+        this.bindEvents();
+    }
+
+    render() {
+        const operations = this.operationController.getOperationsList();
         
         let html = `
             <div class="gestor-panel">
@@ -82,7 +169,7 @@ export class OperationsView {
         });
     }
 
-    // Renderiza un formulario simple para editar lo que pide el ejercicio
+
     renderEditForm(code) {
         const operation = this.operationController.findOperationByCode(code);
         if (!operation) return;
@@ -95,7 +182,6 @@ export class OperationsView {
                         <option value="PROGRAMADO" ${operation.state === 'PROGRAMADO' ? 'selected' : ''}>Programado</option>
                         <option value="EN_RUTA" ${operation.state === 'EN_RUTA' ? 'selected' : ''}>En Ruta</option>
                         <option value="CANCELADO" ${operation.state === 'CANCELADO' ? 'selected' : ''}>Cancelado</option>
-                        <!-- Añade el resto de estados válidos -->
                     </select>
                 </label>
                 <label>Hora Estimada:
