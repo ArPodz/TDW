@@ -471,3 +471,13 @@ input:focus {
 
 .btn-promote:hover { opacity: 0.9; }
 .btn-degrade:hover { background-color: #e5e7eb; }
+
+.color-box {
+    display: inline-block; /* Permite que tenga ancho y alto */
+    width: 20px;           /* Tamaño del cuadradito */
+    height: 20px;
+    border-radius: 4px;    /* Bordes ligeramente redondeados */
+    border: 1px solid rgba(0,0,0,0.1); /* Un borde fino por si el color es blanco */
+    vertical-align: middle; /* Lo alinea con el texto del código hexadecimal */
+    margin-right: 8px;     /* Separa el cuadro del texto */
+}

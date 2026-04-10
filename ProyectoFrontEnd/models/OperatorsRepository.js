@@ -46,8 +46,8 @@ export class OperatorsRepository {
         return this.operators;
     }
 
-    findOperatorByName(name) {
-        return this.operators.find(o => o.name === name);
+    findOperatorById(operatorId) {
+        return this.operators.find(o => o.operatorId === operatorId);
     }
 
     maxOperatorId() {

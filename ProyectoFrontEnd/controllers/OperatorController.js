@@ -32,4 +32,10 @@ export class OperatorController {
         return [...this.operators.getOperators()];
     }
 
+    findOperatorById(operatorId) {
+        return this.operators.findOperatorById(operatorId);
+    }
+
+
+
 }
