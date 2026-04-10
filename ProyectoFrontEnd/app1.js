@@ -119,6 +119,11 @@ async function init() {
             pointsView.render();
         }
 
+        if(operatorsContainer) {
+            const operatorsView = new OperatorsView(operatorController, 'operators-management-container');
+            operatorsView.render();
+        }
+
         // --- LÓGICA DE NAVEGACIÓN DE PESTAÑAS (AÑADIDO) ---
         const sections = {
             'nav-operations': 'operations-management-container',
