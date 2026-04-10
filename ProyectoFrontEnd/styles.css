@@ -352,3 +352,122 @@ input:focus {
 .admin-sidebar button:not(.active):hover {
     background-color: #cbd5e1;
 }
+
+/* --- Estilos para Formularios de Puntos (Crear y Editar) --- */
+
+/* Contenedor tipo Modal/Panel */
+.modal, .gestor-panel {
+    background: var(--panel-bg);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    max-width: 500px;
+    margin: 2rem auto;
+    border: 1px solid var(--border-color);
+}
+
+.modal h3, .gestor-panel h3 {
+    margin-top: 0;
+    color: var(--text-main);
+    font-size: 1.25rem;
+    border-bottom: 2px solid var(--bg-color);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Agrupación de inputs */
+.form-group {
+    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* Inputs y Selects dentro del formulario */
+.modal input[type="text"], 
+.modal select,
+.gestor-panel input[type="text"],
+.gestor-panel select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    box-sizing: border-box; /* Evita que el padding desborde el ancho */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal input:focus, .modal select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Contenedor de botones de acción */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Botón Editar y Borrar en la tabla (Específicos para Puntos) */
+.btn-edit-point, .btn-delete-point {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.btn-edit-point {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.btn-edit-point:hover {
+    background-color: #bae6fd;
+}
+
+.btn-delete-point {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.btn-delete-point:hover {
+    background-color: #fecaca;
+}
+
+/* Botón de Guardar/Crear (Principal) */
+.btn-promote {
+    background-color: var(--success-color);
+    color: white;
+    flex: 1;
+    padding: 0.8rem;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Botón de Cancelar (Secundario) */
+.btn-degrade {
+    background-color: #f3f4f6;
+    color: var(--text-main);
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-promote:hover { opacity: 0.9; }
+.btn-degrade:hover { background-color: #e5e7eb; }
