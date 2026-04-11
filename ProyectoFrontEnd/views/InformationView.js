@@ -1,34 +1,15 @@
-export const InformationView = {
-
-    renderInformation: (containerId, operations) => {
-        const container = document.getElementById('information-table-container');
-        
-        container.innerHTML = `
-            <table>
-                <thead>
-                    <tr>
-                        <th onclick="sortData('scheduledTime')">Hora</th>
-                        <th onclick="sortData('code')">Código</th>
-                        <th onclick="sortData('origin')">Origen/Destino</th>
-                        <th>Operador</th>
-                        <th>Puerta/Vía</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${operations.map(op => `
-                        <tr onclick="showDetail('${op.operationId}')">
-                            <td>${new Date(op.estimatedTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
-                            <td>**${op.code}**</td>
-                            <td>${op.direction === 'SALIDA' ? op.destination : op.origin}</td>
-                            <td>${op.operatorName}</td>
-                            <td>${op.pointCode}</td>
-                            <td class="status-${op.state.toLowerCase()}">${op.state}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
+export class InformationView {
+    constructor(operationController, operatorsController, pointsController, domElementId) {
+        this.operationController = operationController;
+        this.operatorsController = operatorsController;
+        this.pointsController = pointsController;
+        this.container = document.getElementById(domElementId);
     }
-};
 
+    render() {
+        const operations = this.operationController.getOperationsList();
+        const operators = this.operatorsController.getOperatorsList();
+        const points = this.pointsController.getPointsList();
+
+    }
+}

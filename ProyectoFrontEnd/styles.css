@@ -19,24 +19,28 @@ body {
     color: var(--text-main);
     margin: 0;
     line-height: 1.5;
+    display: flex;
+    flex-direction: column;
 }
 
-/* --- Navegación Profesional --- */
+/* --- Header Corregido --- */
 header {
     background: #1e293b;
-    padding: 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    padding: 1rem 2rem;
+    /* Eliminamos sticky momentáneamente para debuguear, 
+       o aseguramos que no tenga un height infinito */
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 header nav {
-    max-width: 1200px;
-    margin: 0 auto;
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap; /* Responsive: se ajusta en móviles */
+    gap: 1.5rem;
+    flex-wrap: wrap;
 }
 
 header nav a {
@@ -46,157 +50,74 @@ header nav a {
     border-radius: var(--radius);
     font-size: 0.9rem;
     font-weight: 500;
-    transition: background 0.3s;
+    background: rgba(255, 255, 255, 0.05);
 }
 
-header nav a:hover {
-    background: rgba(255, 255, 255, 0.1);
+/* El texto del rol y email */
+#user-info, .user-display-text {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 0.5rem;
 }
 
-/* --- Contenedores Principales (Responsive) --- */
+/* --- Contenedor de la Tabla (Para que no se suba) --- */
+main, .content-wrapper {
+    margin-top: 2rem; /* Espacio de seguridad para que no choque con el header */
+    padding: 0 2rem;
+}
+
 .management-operations, 
-.users-management-section, 
-.gestor-panel {
+.users-management-section {
     background: var(--bg-card);
-    margin: 2rem auto;
+    margin: 0 auto 2rem auto;
     padding: 2rem;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    max-width: 95%; /* Se adapta al ancho de pantalla */
-    width: 1200px;
-    box-sizing: border-box;
+    max-width: 98%;
+    overflow-x: auto; /* Scroll interno si la tabla es muy grande */
 }
 
-/* --- Tablas Responsivas --- */
-/* Contenedor para scroll horizontal solo cuando es necesario */
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-top: 1rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-}
-
+/* --- Tablas --- */
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    min-width: 800px; /* Evita que los datos se amontonen en móvil */
+    min-width: 1000px; /* Evita que se amontone */
 }
 
 th {
     background: #f1f5f9;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
     padding: 1rem;
     text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
 }
 
 td {
     padding: 1rem;
     border-bottom: 1px solid var(--border);
     font-size: 0.9rem;
-}
-
-tr:hover {
-    background-color: #f8fafc;
-}
-
-/* --- Ajuste Específico Tabla Usuarios (Tu problema anterior) --- */
-.users-table {
-    table-layout: auto;
-}
-
-.users-table td:last-child {
-    text-align: right; /* Botones alineados a la derecha */
-}
-
-/* --- Formularios (Grid Responsive) --- */
-.form-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-label {
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-input, select {
-    padding: 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 1rem;
-    transition: border-color 0.2s;
-}
-
-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    ring: 2px solid var(--primary);
+    white-space: nowrap;
 }
 
 /* --- Botones --- */
-button {
-    cursor: pointer;
-    font-weight: 600;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius);
-    border: none;
-    transition: transform 0.1s, opacity 0.2s;
-}
-
-button:active { transform: scale(0.98); }
-
-#btn-new-operation {
-    background: var(--primary);
-    color: white;
-    margin-bottom: 1.5rem;
-}
-
 .btn-edit-operation, .btn-promote {
     background: #dbeafe;
     color: #1e40af;
-    margin-right: 0.5rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .btn-delete-operation, .btn-degrade {
     background: #fee2e2;
     color: #991b1b;
-}
-
-/* --- MEDIA QUERIES (Móvil) --- */
-@media (max-width: 768px) {
-    .management-operations, 
-    .users-management-section {
-        padding: 1rem;
-        margin: 1rem auto;
-    }
-
-    header nav {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    header nav a {
-        text-align: center;
-    }
-
-    /* En móviles muy pequeños, hacemos que las celdas de acciones 
-       no empujen la tabla */
-    .table-responsive {
-        border: none;
-    }
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
