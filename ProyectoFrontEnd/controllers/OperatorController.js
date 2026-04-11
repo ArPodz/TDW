@@ -35,7 +35,5 @@ export class OperatorController {
     findOperatorById(operatorId) {
         return this.operators.findOperatorById(operatorId);
     }
-
-
-
+    
 }

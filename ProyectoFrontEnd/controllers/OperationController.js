@@ -74,4 +74,9 @@ export class OperationController {
         return [...this.operations.getOperations()];
     }
 
+    findOperationByCode(code) {
+        return this.operations.findOperationByCode(code);
+    }
+    
+
 }
