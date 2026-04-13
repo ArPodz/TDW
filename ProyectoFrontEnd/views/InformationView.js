@@ -39,14 +39,14 @@ export class InformationView {
 
                 <div class = "controls-panel">
                     <input type = "text" id = "operation-code" placeholder = "Buscar por código..." value="${this.filters.search}">
-                    <select id = "info-status-filter">
-                        <option value = "ALL" ${this.filters.status === 'ALL' ? 'selected' : ''}>Todos los estados</option>
-                        <option value = "PROGRAMADO" ${this.filters.status === 'PROGRAMADO' ? 'selected' : ''}>Programado</option>
-                        <option value = "EN CURSO" ${this.filters.status === 'EN CURSO' ? 'selected' : ''}>En curso</option>
-                        <option value = "RETRASADO" ${this.filters.status === 'RETRASADO' ? 'selected' : ''}>Retrasado</option>
-                        <option value = "LLEGADO" ${this.filters.status === 'LLEGADO' ? 'selected' : ''}>Completado</option>
-                        <option value = "CANCELADO" ${this.filters.status === 'CANCELADO' ? 'selected' : ''}>Cancelado</option>
-                        <option value = "EMBARCANDO" ${this.filters.status === 'EMBARCANDO' ? 'selected' : ''}>Embarcando</option>
+                    <select id = "info-state-filter">
+                        <option value = "ALL" ${this.filters.state === 'ALL' ? 'selected' : ''}>Todos los estados</option>
+                        <option value = "PROGRAMADO" ${this.filters.state === 'PROGRAMADO' ? 'selected' : ''}>Programado</option>
+                        <option value = "EN CURSO" ${this.filters.state === 'EN CURSO' ? 'selected' : ''}>En curso</option>
+                        <option value = "RETRASADO" ${this.filters.state === 'RETRASADO' ? 'selected' : ''}>Retrasado</option>
+                        <option value = "LLEGADO" ${this.filters.state === 'LLEGADO' ? 'selected' : ''}>Completado</option>
+                        <option value = "CANCELADO" ${this.filters.state === 'CANCELADO' ? 'selected' : ''}>Cancelado</option>
+                        <option value = "EMBARCANDO" ${this.filters.state === 'EMBARCANDO' ? 'selected' : ''}>Embarcando</option>
                     </select>
                 </div>
 
@@ -60,15 +60,26 @@ export class InformationView {
         this.startAutoRefresh();
     }
 
-     generateTableHtml(data) {
+    generateTableHtml(data) {
+        const locHeader = this.currentTab === 'SALIDA' ? 'Destino' : 'Origen';
+        const locKey = this.currentTab === 'SALIDA' ? 'destination' : 'origin';
+
         return `
-            <table class = "table">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th id = "sort-time">Hora ${this.getSortIcon('estimatedTime')}</th>
-                        <th id = "sort-code">Código ${this.getSortIcon('code')}</th>
-                        <th id = "sort-location">${this.currentTab === 'SALIDA' ? 'Destino' : 'Origen'}</th>
-                        <th>Operador</th>
+                        <th id="sort-time" style="cursor:pointer">
+                            Hora ${this.getSortIcon('estimatedTime')}
+                        </th>
+                        <th id="sort-code" style="cursor:pointer">
+                            Código ${this.getSortIcon('code')}
+                        </th>
+                        <th id="sort-location" style="cursor:pointer">
+                            ${locHeader} ${this.getSortIcon(locKey)}
+                        </th>
+                        <th id="sort-operator" style="cursor:pointer">
+                            Operador ${this.getSortIcon('operatorId')}
+                        </th>
                         <th>Puerta/Vía</th>
                         <th>Estado</th>
                     </tr>
@@ -77,19 +88,23 @@ export class InformationView {
                     ${data.length > 0 ? data.map(op => {
                         const operator = this.informationController.getOperatorInfo(op.operatorId);
                         return `
-                            <tr class = "info-row" data-id = "${op.operationId}">
+                            <tr class="info-row" data-id="${op.operationId}" style="cursor:pointer">
                                 <td><strong>${op.estimatedTime}</strong></td>
                                 <td>${op.code}</td>
-                                <td>${this.currentTab === 'SALIDA' ? op.destination : op.origin}</td>
+                                <td>${op[locKey]}</td>
                                 <td>
-                                    <span class = "color-box" style = "background-color: ${operator?.color || '#ccc'}"></span>
-                                    ${operator?.acronyms || 'N/A'}
+                                    <span class="color-box" style="background-color: ${operator?.color || '#ccc'}"></span>
+                                    ${operator?.acronym || 'N/A'}
                                 </td>
+                                <td>${op.pointId || '---'}</td>
                                 <td>
-                                <td><span class = "state-badge state-${op.state.toLowerCase()}">${op.state}</span></td>
+                                    <span class="state-badge state-${op.state.toLowerCase()}">
+                                        ${op.state}
+                                    </span>
+                                </td>
                             </tr>
                         `;
-                    }).join('') : '<tr><td colspan="5">No hay operaciones que mostrar</td></tr>'}
+                    }).join('') : '<tr><td colspan="6" style="text-align:center">No hay operaciones que mostrar</td></tr>'}
                 </tbody>
             </table>
         `;
@@ -134,13 +149,62 @@ export class InformationView {
 
         const sortTime = document.getElementById('sort-time');
         const sortCode = document.getElementById('sort-code');
+        const sortLocation = document.getElementById('sort-location');
+        const sortOperator = document.getElementById('sort-operator');
 
-        if(sortTime) sortTime.addEventListener('click', () => this.handleSort('estimatedTime'));
-        if(sortCode) sortCode.addEventListener('click', () => this.handleSort('code'));
+        if (sortTime) {
+            sortTime.addEventListener('click', () => this.handleSort('estimatedTime'));
+        }
+        
+        if (sortCode) {
+            sortCode.addEventListener('click', () => this.handleSort('code'));
+        }
 
-        this.container.querySelectorAll('.info-row').forEach(row => {
-            row.addEventListener('click', () => console.log("Mostrar detalle de operación:", row.dataset.id));
+        if (sortLocation) {
+            sortLocation.addEventListener('click', () => {
+                const key = this.currentTab === 'SALIDA' ? 'destination' : 'origin';
+                this.handleSort(key);
+            });
+        }
+
+        if (sortOperator) {
+            sortOperator.addEventListener('click', () => this.handleSort('operatorId'));
+        }
+
+        const rows = this.container.querySelectorAll('.info-row');
+        rows.forEach(row => {
+            row.addEventListener('click', () => {
+                const operationId = row.getAttribute('data-id');
+                this.showDetail(operationId);
+            });
         });
+    }
+
+    showDetail(id) {
+        const op = this.informationController.operationController.getOperationsList().find(o => o.operationId === id);
+        if (!op) return;
+
+        const operator = this.informationController.getOperatorInfo(op.operatorId);
+
+        alert(`
+            DETALLE COMPLETO DE LA OPERACIÓN
+            ----------------------------------
+            Código: ${op.code}
+            Tipo: ${op.type}
+            Dirección: ${op.direction}
+            Estado: ${op.state}
+            
+            Origen: ${op.origin}
+            Destino: ${op.destination}
+            
+            Hora Programada: ${op.scheduledTime}
+            Hora Estimada: ${op.estimatedTime}
+            
+            Operador: ${operator?.name || 'No asignado'} (${operator?.acronym || 'N/A'})
+            Puerta/Vía Asignada: ${op.pointId || 'Pendiente'}
+            ----------------------------------
+            ID Interno: ${op.operationId}
+        `);
     }
 
     updateTableOnly() {

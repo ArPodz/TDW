@@ -1,4 +1,4 @@
-// --- IMPORTS DE SESIÓN Y USUARIOS ---
+// --- 1. IMPORTS DE SESIÓN Y USUARIOS ---
 import { UserController } from "./controllers/UserController.js";
 import { RegisterView } from "./views/RegisterView.js";
 import { LoginView } from "./views/LoginView.js";
@@ -6,7 +6,7 @@ import { StorageRepo } from "./repositories/StorageRepo.js";
 import { SessionView } from "./views/SessionView.js"; 
 import { UserManagementView } from "./views/UserManagementView.js";
 
-// --- IMPORTS DE GESTIÓN (ADMIN) ---
+// --- 2. IMPORTS DE GESTIÓN (ADMIN) ---
 import { OperationController } from "./controllers/OperationController.js";
 import { OperatorController } from "./controllers/OperatorController.js";
 import { PointController } from "./controllers/PointController.js";
@@ -14,21 +14,22 @@ import { OperationsView } from "./views/OperationsView.js";
 import { PointsView } from "./views/PointsView.js"; 
 import { OperatorsView } from "./views/OperatorsView.js";
 
-// --- NUEVOS IMPORTS TABLERO PÚBLICO (MVC) ---
+// --- 3. IMPORTS TABLERO PÚBLICO Y HOME (MVC) ---
 import { InformationController } from "./controllers/InformationController.js";
 import { InformationView } from "./views/InformationView.js";
+import { HomePageView } from "./views/HomePageView.js";
 
 async function init() {
     console.log("🚀 INICIALIZANDO APLICACIÓN...");
 
-    // 1. VINCULAR PERSISTENCIA Y CONTROLADORES BASE
+    // --- A. VINCULAR PERSISTENCIA Y CONTROLADORES BASE ---
     const persistence = new StorageRepo(localStorage, "app_v1");
     const userController = new UserController(persistence);
     const operationController = new OperationController(persistence);
     const operatorController = new OperatorController(persistence);
     const pointController = new PointController(persistence);
 
-    // 2. CARGA DE DATOS DESDE JSON
+    // --- B. CARGA DE DATOS DESDE JSON ---
     try {
         const [resUsers, resOps, resOperators, resPoints] = await Promise.all([
             fetch('data/usersData.json'),
@@ -54,7 +55,7 @@ async function init() {
         console.warn("⚠️ Error en carga de datos iniciales:", e.message);
     }
 
-    // --- 3. LÓGICA DE SESIÓN ---
+    // --- C. LÓGICA DE SESIÓN ---
     const actualizarInterfazSesion = () => {
         const activeUser = userController.activeSession.getUser();
         if (activeUser) {
@@ -67,7 +68,7 @@ async function init() {
         }
     };
 
-    // --- 4. VISTAS DE ACCESO (LOGIN/REGISTER) ---
+    // --- D. VISTAS DE ACCESO (LOGIN/REGISTER) ---
     const registerView = new RegisterView();
     if (registerView.registerForm) { 
         registerView.bindFormSubmit(async () => {
@@ -89,17 +90,30 @@ async function init() {
         });
     }
 
-    // --- 5. INICIALIZACIÓN DEL TABLERO PÚBLICO (NUEVO MVC) ---
+    // --- E. INICIALIZACIÓN DE LA HOME (BIENVENIDA) ---
+    const welcomeContainer = document.querySelector('.welcome-page');
+    if (welcomeContainer) {
+        const homeView = new HomePageView();
+        homeView.bindNavigate(
+            () => {
+                const navBtn = document.getElementById('nav-board');
+                if (navBtn) navBtn.click();
+            },
+            () => {
+                window.location.href = "templates/login.html";
+            }
+        );
+    }
+
+    // --- F. INICIALIZACIÓN DEL TABLERO PÚBLICO ---
     const boardContainer = document.getElementById('information-board-container');
     if (boardContainer) {
-        // Creamos el controlador específico para la vista de información
         const informationController = new InformationController(operationController, operatorController);
-        // Pasamos el controlador a la vista
         const informationView = new InformationView(informationController, 'information-board-container');
         informationView.render();
     }
 
-    // --- 6. LÓGICA DE GESTIÓN (SOLO GESTORES) ---
+    // --- G. LÓGICA DE GESTIÓN (SOLO GESTORES) ---
     const userManagementView = new UserManagementView();
     const operationsContainer = document.getElementById('operations-management-container');
     const pointsContainer = document.getElementById('points-management-container');
@@ -107,18 +121,16 @@ async function init() {
 
     const activeUser = userController.activeSession.getUser();
 
-    // Verificamos si la página actual contiene elementos de administración
     if (userManagementView.container || operationsContainer || pointsContainer || operatorsContainer) {
-        
         if (!activeUser || activeUser.rol !== 'GESTOR') {
             console.warn("🚫 Acceso denegado: Se requiere rol de GESTOR.");
-            if (operationsContainer || pointsContainer || operatorsContainer) {
+            if (operationsContainer || pointsContainer || operatorsContainer || userManagementView) {
                 alert("Acceso denegado. Debes ser GESTOR.");
                 window.location.href = "index.html";
                 return;
             }
         } else {
-            // Inicialización de vistas administrativas
+            // Usuarios
             if (userManagementView.container) {
                 const handleRoleChange = async (email, newRole) => {
                     try {
@@ -128,17 +140,17 @@ async function init() {
                 };
                 userManagementView.render(userController.getUsersList(), handleRoleChange);
             }
-
+            // Operaciones
             if (operationsContainer) {
                 const operationsView = new OperationsView(operationController, 'operations-management-container');
                 operationsView.render();
             }
-
+            // Puntos (Puertas/Vías)
             if (pointsContainer) {
                 const pointsView = new PointsView(pointController, 'points-management-container');
                 pointsView.render();
             }
-
+            // Operadores (Compañías)
             if (operatorsContainer) {
                 const operatorsView = new OperatorsView(operatorController, 'operators-management-container');
                 operatorsView.render();
@@ -146,7 +158,7 @@ async function init() {
         }
     }
 
-    // --- 7. LÓGICA DE NAVEGACIÓN (TABS DE SECCIÓN) ---
+    // --- H. LÓGICA DE NAVEGACIÓN (TABS / SECCIONES) ---
     const sections = {
         'nav-board': 'information-board-container',
         'nav-operations': 'operations-management-container',
@@ -159,18 +171,23 @@ async function init() {
         const container = document.getElementById(containerId);
         if (btn && container) {
             btn.addEventListener('click', () => {
-                // Ocultar todos los contenedores
+                // Ocultar el Hero de bienvenida si el usuario navega
+                const welcome = document.querySelector('.welcome-page');
+                if (welcome) welcome.style.display = 'none';
+
+                // Ocultar todos los contenedores de gestión/tablero
                 Object.values(sections).forEach(id => {
                     const el = document.getElementById(id);
                     if (el) el.style.display = 'none';
                 });
+                
                 // Mostrar el contenedor seleccionado
                 container.style.display = 'block';
             });
         }
     });
 
-    // Ejecución final
+    // Ejecución final de refresco de UI
     actualizarInterfazSesion();
     mostrarEstadoActual(userController, operationController, operatorController, pointController);
 }
@@ -193,7 +210,7 @@ function mostrarEstadoActual(userController, operationController, operatorContro
     console.groupEnd();
 }
 
-// Arrancar la App al cargar el DOM
+// Arrancar la App
 document.addEventListener("DOMContentLoaded", () => {
     init().catch(err => {
         console.error("❌ Fallo crítico en el arranque:", err);
