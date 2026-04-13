@@ -122,7 +122,7 @@ export class PointsView {
         if (!point) return;
 
         const formHtml = `
-            <div class= "modal">
+            <div class= "form-edit-card">
                 <h3>Editando Punto: ${point.code}</h3>
                 <label>Tipo:
                     <select id="edit-type">

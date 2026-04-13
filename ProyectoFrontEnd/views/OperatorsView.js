@@ -167,7 +167,7 @@ export class OperatorsView {
         if (!operator) return;
 
         const formHtml = `
-            <div class = "modal">
+            <div class = "form-edit-card">
                 <h3>Editando Operador: ${operator.operatorId} - ${operator.name}</h3>
                 <label>Nombre:
                     <input type = "text" id = "edit-code" value="${operator.name}">

@@ -150,7 +150,7 @@ export class OperationsView {
         if (!operation) return;
 
         const formHtml = `
-            <div class = "modal">
+            <div class = "form-edit-card">
                 <h3>Editando Operación: ${operation.code}</h3>
                 <label>Estado:
                     <select id = "edit-state">

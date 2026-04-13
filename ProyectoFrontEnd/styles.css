@@ -5,7 +5,7 @@
     --accent-hover: #4f46e5;     
     --success-color: #10b981;    
     --error-color: #ef4444;      
-    --bg-light: #f8fafc;        
+    --bg-light: #f8fafc;         
     --text-main: #334155;      
     --text-muted: #64748b;       
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -66,7 +66,6 @@ nav a:hover { color: white; }
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-
 .home-container {
     display: flex;
     flex-direction: column;
@@ -106,7 +105,6 @@ nav a:hover { color: white; }
     gap: 20px;
     justify-content: center;
 }
-
 
 #login-container, #register-container {
     background: #ffffff;
@@ -149,7 +147,6 @@ nav a:hover { color: white; }
 }
 
 .auth-footer a:hover { text-decoration: underline; }
-
 
 .controls-panel, .management-tabs {
     background-color: white;
@@ -201,7 +198,6 @@ td {
 
 tr:hover { background-color: #f8fafc; }
 
-
 .form-group {
     margin-bottom: 1.25rem;
     display: flex;
@@ -218,7 +214,7 @@ tr:hover { background-color: #f8fafc; }
 }
 
 input[type="text"], input[type="email"], input[type="password"], 
-input[type="number"], input[type="datetime-local"], select {
+input[type="number"], input[type="datetime-local"], input[type="url"], select {
     width: 100%;
     padding: 12px;
     border-radius: 10px;
@@ -235,7 +231,6 @@ input:focus, select:focus {
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
-
 button, .btn-action {
     padding: 10px 20px;
     border-radius: 10px;
@@ -249,7 +244,6 @@ button, .btn-action {
     justify-content: center;
     gap: 8px;
 }
-
 
 .btn-primary, #btn-login, #btn-register, #btnRegister {
     background-color: var(--accent-color);
@@ -278,10 +272,8 @@ button, .btn-action {
     transform: translateY(-2px);
 }
 
-
 .btn-promote { background-color: var(--success-color); color: white; }
 .btn-degrade { background-color: #fee2e2; color: var(--error-color); }
-
 
 .badge, .state-badge {
     padding: 4px 12px;
@@ -293,8 +285,11 @@ button, .btn-action {
 }
 
 .state-programado { background: #dbeafe; color: #1e40af; }
-.state-retrasado   { background: #fee2e2; color: #991b1b; }
+.state-retrasado   { background: #fee2e2; color: #b9531d; }
 .state-embarcando  { background: #dcfce7; color: #166534; }
+.state-en_ruta { background: #ede9fe;    color: #5b21b6; } 
+.state-llegado { background: #ccfbf1; color: #0f766e; } 
+.state-cancelado { background: #ffedd5; color: #840a0a; }
 
 .status, .status-message {
     margin-top: 1rem;
@@ -304,6 +299,135 @@ button, .btn-action {
     font-weight: 600;
 }
 
+.form-container, 
+#operations-management-container form, 
+#points-management-container form, 
+#operators-management-container form {
+    background: #ffffff !important;
+    padding: 2.5rem !important;
+    margin: 2rem auto !important;
+    max-width: 500px !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow-card) !important;
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.2rem !important;
+}
+
+#operators-management-container form label,
+#points-management-container form label,
+#operations-management-container form label {
+    display: block !important;
+    width: 100% !important;
+    text-align: left !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase !important;
+    margin-bottom: 4px !important;
+}
+
+#operators-management-container form input, 
+#operators-management-container form select,
+#points-management-container form input,
+#points-management-container form select,
+#operations-management-container form input,
+#operations-management-container form select {
+    display: block !important;
+    width: 100% !important;
+    min-height: 45px !important;
+    box-sizing: border-box !important;
+}
+
+input[type="color"] {
+    height: 50px !important;
+    padding: 5px !important;
+    cursor: pointer !important;
+}
+
+.form-actions, 
+#operators-management-container form .btn-group,
+#points-management-container form .btn-group {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    justify-content: flex-end !important;
+    margin-top: 1rem !important;
+}
+
+#operations-management-container h2, 
+#points-management-container h2, 
+#operators-management-container h2 {
+    text-align: center !important;
+    margin-bottom: 1.5rem !important;
+    color: var(--primary-color) !important;
+}
+
+.btn-cancel {
+    background-color: #f1f5f9 !important;
+    color: var(--text-main) !important;
+}
+
+.form-edit-card {
+    background: #ffffff !important;
+    padding: 2rem !important;
+    margin: 2rem auto !important;
+    width: 100% !important;
+    max-width: 460px !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow-card) !important;
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.2rem !important;
+}
+
+.form-edit-card h2 {
+    text-align: center !important;
+    color: var(--primary-color) !important;
+    font-size: 1.4rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.form-edit-card .field-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+}
+
+.form-edit-card label {
+    display: block !important;
+    text-align: left !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase !important;
+}
+
+.form-edit-card .inline-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.form-edit-card input[type="color"] {
+    width: 55px !important;
+    height: 45px !important;
+    flex-shrink: 0 !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+}
+
+.form-edit-card .form-actions {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    margin-top: 1rem !important;
+}
+
+/* ----------------------------------------------------------- */
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(15px); }
