@@ -30,28 +30,33 @@
         </header>
 
 
-        <section class = "login-section">
-            <div>
-                <h1>Login</h1>
-                <h2>Introduce tus credenciales de acceso</h2>
-                <form id = "loginUser" class = "login-form">
-                    <label for = "email">EMAIL</label>
-                    <input type = "email" id = "email" name = "email" required/>
-                    
-                    <label for = "password">PASSWORD</label>
-                    <input type = "password" id = "password" name = "password" required/>
+        <section class = "home-container">
+            <main id = "login-container">
+                <div>
+                    <h2>Login</h2>
+                    <p class = "auth-subtitle">Introduce tus credenciales de acceso</p>
+                    <form id = "loginUser" class = "login-form">
+                        <label for = "email">EMAIL</label>
+                        <input type = "email" id = "email" name = "email" required/>
+                        
+                        <label for = "password">PASSWORD</label>
+                        <input type = "password" id = "password" name = "password" required/>
 
 
-                    <div id = "status" class = "status"></div>
+                        <div id = "status" class = "status"></div>
 
-                    <button id = "btnLogin" type = "submit">INICIAR SESIÓN</button>
+                        <button id = "btnLogin" type = "submit">INICIAR SESIÓN</button>
 
-                </form>
-            </div>
+                    </form>
+                </div>
+
+                <div class = "auth-footer">
+                    ¿No tienes cuenta? <a href="templates/register.html">Regístrate aquí</a>
+                </div>
+            </main>
         </section>
 
-        <a href = "templates/register.html" class = "register-link">Regístrate aquí</a>
-
+        
 
         <script type = "module" src = "app.js"></script>
     </body>

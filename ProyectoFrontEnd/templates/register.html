@@ -30,10 +30,10 @@
         </header>
 
 
-        <section class = "register-section">
-            <div>
-                <h1>Registrar Usuario</h1>
-                <h2>Introduce tus credenciales de acceso</h2>
+        <section class = "home-container">
+            <div id = "register-container">
+                <h2>Registrar Usuario</h2>
+                <p class = "auth-subtitle">Crea tu cuenta para gestionar reservas</p>
                 <form id = "registerUser" class = "register-form">
                     <label for = "email">EMAIL</label>
                     <input type = "email" id = "email" name = "email" required/>
@@ -54,6 +54,10 @@
 
                     <button id = "btnRegister" type = "submit">REGISTRAR</button>
                 </form>
+            </div>
+
+            <div class="auth-footer">
+                ¿Ya tienes cuenta? <a href="templates/login.html">Inicia sesión aquí</a>
             </div>
         </section>
 
