@@ -121,3 +121,111 @@ td {
     font-size: 0.8rem;
     font-weight: 600;
 }
+
+/* --- ESTILOS PARA EL INICIO TEMPORAL --- */
+
+.hero-welcome {
+    position: relative;
+    width: 100%;
+    height: 80vh; /* Ocupa el 80% del alto de la ventana */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 12px;
+    overflow: hidden; /* Para que el overlay no se salga de las esquinas redondeadas */
+    margin-bottom: 20px;
+    
+    /* IMAGEN DE FONDO PROFESSIONAL */
+    /* He usado una imagen de Unsplash de transporte, puedes cambiar la URL por la que quieras */
+    background-image: url('https://images.unsplash.com/photo-1542296116-4328577d404d?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Sombra suave para dar profundidad */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Capa oscura transparente para que el texto blanco resalte */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Negro al 50% de opacidad */
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* Por encima del overlay */
+    color: white;
+    padding: 0 20px;
+    max-width: 800px;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* Un ligero degradado de texto para el toque final */
+    background: linear-gradient(to right, #ffffff, #e0e0e0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-content p {
+    font-size: 1.3rem;
+    font-weight: 300;
+    margin-bottom: 40px;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Botones modernos y limpios */
+.btn-hero-primary, .btn-hero-secondary {
+    padding: 15px 35px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px; /* Bordes muy redondeados (píldora) */
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-hero-primary {
+    background-color: #0984e3; /* Azul profesional */
+    color: white;
+}
+
+.btn-hero-secondary {
+    background-color: rgba(255, 255, 255, 0.2); /* Blanco tranSsparente */
+    color: white;
+    backdrop-filter: blur(5px); /* Efecto cristal esmerilado */
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Efectos de hover (Poner el ratón encima) */
+.btn-hero-primary:hover {
+    background-color: #07449a;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(9, 132, 227, 0.4);
+}
+
+.btn-hero-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+}

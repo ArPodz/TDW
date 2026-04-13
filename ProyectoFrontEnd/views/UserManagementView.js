@@ -58,7 +58,9 @@ export class UserManagementView {
             ;
 
             const button = tr.querySelector('.btn-action');
-            button.onclick = () => onRoleChange(user.email, newRole);
+            button.addEventListener('click', () => {
+                onRoleChange(user.email, newRole);
+            });
 
             table.appendChild(tr);
         });

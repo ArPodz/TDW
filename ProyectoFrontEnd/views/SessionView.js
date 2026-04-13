@@ -7,10 +7,14 @@ export const SessionView = {
         if (session) {
             session.textContent = 'Logout';
             session.href = '#';
-            session.onclick = (e) => {
-                e.preventDefault(); 
+
+            const newSession = session.cloneNode(true);
+            session.parentNode.replaceChild(newSession, session);
+
+            newSession.addEventListener('click', (e) => {
+                e.preventDefault();
                 if (onLogout) onLogout();
-            };
+            });
         }
 
         if (userEmail) {
@@ -26,7 +30,9 @@ export const SessionView = {
         if (session) {
             session.textContent = 'Login';
             session.href = 'templates/login.html';
-            session.onclick = null;
+            
+            const newSession = session.cloneNode(true);
+            session.parentNode.replaceChild(newSession, session);
         }
 
         if (userEmail) {

@@ -60,7 +60,7 @@ export class InformationView {
         this.startAutoRefresh();
     }
 
-    generateTableHtml(data) {
+     generateTableHtml(data) {
         return `
             <table class = "table">
                 <thead>
@@ -85,6 +85,7 @@ export class InformationView {
                                     <span class = "color-box" style = "background-color: ${operator?.color || '#ccc'}"></span>
                                     ${operator?.acronyms || 'N/A'}
                                 </td>
+                                <td>
                                 <td><span class = "state-badge state-${op.state.toLowerCase()}">${op.state}</span></td>
                             </tr>
                         `;
@@ -96,35 +97,49 @@ export class InformationView {
 
     bindEvents() {
 
-        document.getElementById('tab-departures').onclick = () => {
-            this.currentTab = 'SALIDA';
-            this.render();
-        };
+        const tabDepartures = document.getElementById('tab-departures');
+        const tabArrivals = document.getElementById('tab-arrivals');
 
-        document.getElementById('tab-arrivals').onclick = () => {
-            this.currentTab = 'LLEGADA';
-            this.render();
-        };
-
-        const searchInput = document.getElementById('operation-code');
-        searchInput.oninput = (e) => {
-            this.filters.search = e.target.value;
-            this.updateTableOnly();
-        };
-
-        searchInput.focus();
-        searchInput.setSelectionRange(this.filters.search.length, this.filters.search.length);
-
-        document.getElementById('info-status-filter').onchange = (e) => {
-            this.filters.state = e.target.value;
-            this.updateTableOnly();
+        if(tabDepartures) {
+            tabDepartures.addEventListener('click', () => {
+                this.currentTab = 'SALIDA';
+                this.render();
+            });
         }
 
-        document.getElementById('sort-time').onclick = () => this.handleSort('estimatedTime');
-        document.getElementById('sort-code').onclick = () => this.handleSort('code');
+        if(tabArrivals) {
+            tabArrivals.addEventListener('click', () => {
+                this.currentTab = 'LLEGADA';
+                this.render();
+            });
+        }
+
+        const searchInput = document.getElementById('operation-code');
+        if(searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.filters.search = e.target.value;
+                this.updateTableOnly();
+            });
+            searchInput.focus();
+            searchInput.setSelectionRange(this.filters.search.length, this.filters.search.length);
+        }
+
+        const stateFilter = document.getElementById('info-state-filter');
+        if(stateFilter) {
+            stateFilter.addEventListener('change', (e) => {
+                this.filters.state = e.target.value;
+                this.updateTableOnly();
+            });
+        }
+
+        const sortTime = document.getElementById('sort-time');
+        const sortCode = document.getElementById('sort-code');
+
+        if(sortTime) sortTime.addEventListener('click', () => this.handleSort('estimatedTime'));
+        if(sortCode) sortCode.addEventListener('click', () => this.handleSort('code'));
 
         this.container.querySelectorAll('.info-row').forEach(row => {
-            row.onclick = () => console.log("Mostrar detalle de operación:", row.dataset.id);
+            row.addEventListener('click', () => console.log("Mostrar detalle de operación:", row.dataset.id));
         });
     }
 
