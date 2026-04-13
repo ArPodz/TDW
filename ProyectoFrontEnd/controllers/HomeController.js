@@ -9,10 +9,10 @@ export class HomeController {
     }
 
     handleNavigateToInfo = () => {
-        window.location.href = 'information.html';
+        window.location.href = './templates/information.html';
     }
 
     handleNavigateToLogin = () => {
-        window.location.href = 'login.html';
+        window.location.href = './templates/login.html';
     }
 }
