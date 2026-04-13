@@ -6,9 +6,9 @@ export class InformationController {
 
     getProcessedData(configuration) {
 
-        const {type, search, state, sort } = configuration;
+        const {direction, search, state, sort } = configuration;
 
-        let data = this.operationController.getOperationsList().filter(op => op.type === type);
+        let data = this.operationController.getOperationsList().filter(op => op.direction === direction);
 
         if (search) {
             const query = search.toLowerCase();

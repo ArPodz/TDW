@@ -1,6 +1,4 @@
 export class Operator {
-    static cont = 1;
-
     constructor(operatorId, name, acronym, color, urlIcono) {
         this.operatorId = operatorId;
         this.name = name;

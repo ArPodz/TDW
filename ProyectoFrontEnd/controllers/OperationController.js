@@ -1,6 +1,5 @@
-import { Operation } from "../models/Operation.js";
-import { OperationFactory } from "../models/OperationFactory.js";
-import { OperationsRepository } from "../models/OperationsRepository.js";
+import { OperationFactory } from "../factories/OperationFactory.js";
+import { OperationsRepository } from "../repositories/OperationsRepository.js";
 
 export class OperationController {
     constructor(persistence) {

@@ -1,5 +1,5 @@
-import { OperatorsRepository } from "../models/OperatorsRepository.js";
-import { OperatorFactory } from "../models/OperatorFactory.js";
+import { OperatorsRepository } from "../repositories/OperatorsRepository.js";
+import { OperatorFactory } from "../factories/OperatorFactory.js";
 
 export class OperatorController {
     constructor(persistence) {

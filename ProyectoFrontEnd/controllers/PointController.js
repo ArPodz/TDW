@@ -1,6 +1,5 @@
-import { Point } from "../models/Point.js";
-import { PointFactory } from "../models/PointFactory.js";
-import { PointsRepository } from "../models/PointsRepository.js";
+import { PointFactory } from "../factories/PointFactory.js";
+import { PointsRepository } from "../repositories/PointsRepository.js";
 
 export class PointController {
     constructor(persistence) {
@@ -53,7 +52,7 @@ export class PointController {
         if(updatedData.code && !this.points.uniqueCode(updatedData.code)){
             throw new Error("El código del punto ya está en uso");
         }
-        
+
         const updatedPoint = {
             ...existingPoint,
             ...updatedData,

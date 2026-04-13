@@ -22,9 +22,9 @@ export class InformationView {
         this.stopAutoRefresh();
 
         const data = this.informationController.getProcessedData({
-            type: this.currentTab,
+            direction: this.currentTab,
             search: this.filters.search,
-            state: this.filters.status,
+            state: this.filters.state,
             sort: this.sortConfig
         });
 
@@ -75,17 +75,17 @@ export class InformationView {
                 </thead>
                 <tbody>
                     ${data.length > 0 ? data.map(op => {
-                        const operator = this.informationController.getOperatorById(op.operatorId);
+                        const operator = this.informationController.getOperatorInfo(op.operatorId);
                         return `
                             <tr class = "info-row" data-id = "${op.operationId}">
                                 <td><strong>${op.estimatedTime}</strong></td>
                                 <td>${op.code}</td>
                                 <td>${this.currentTab === 'SALIDA' ? op.destination : op.origin}</td>
                                 <td>
-                                    <span class = "color-box" style="background-color: ${operator?.color || '#ccc'}"></span>
+                                    <span class = "color-box" style = "background-color: ${operator?.color || '#ccc'}"></span>
                                     ${operator?.acronyms || 'N/A'}
                                 </td>
-                                <td><span class = "status-badge status-${op.status.toLowerCase()}">${op.status}</span></td>
+                                <td><span class = "state-badge state-${op.state.toLowerCase()}">${op.state}</span></td>
                             </tr>
                         `;
                     }).join('') : '<tr><td colspan="5">No hay operaciones que mostrar</td></tr>'}
@@ -130,7 +130,7 @@ export class InformationView {
 
     updateTableOnly() {
         const data = this.informationController.getProcessedData({
-            type: this.currentTab,
+            direction: this.currentTab,
             search: this.filters.search,
             state: this.filters.state,
             sort: this.sortConfig

@@ -1,8 +1,6 @@
-import { UserFactory } from "../models/UserFactory.js";
-import { UsersRepository } from "../models/UsersRepository.js";
+import { UserFactory } from "../factories/UserFactory.js";
+import { UsersRepository } from "../repositories/UsersRepository.js";
 import { getSessionInstance } from "../models/Session.js";
-import { RegisterView } from "../views/RegisterView.js";
-
 
 export class UserController {
     constructor(persistence) {
