@@ -212,11 +212,11 @@ export class OperationsView {
                     </div>
                     <div class = "form-group">
                         <label>Hora Programada:</label>
-                        <input type = "time" id = "new-operation-scheduledTime">
+                        <input type = "datetime-local" id = "new-operation-scheduledTime">
                     </div>
                     <div class = "form-group">
                         <label>Hora Estimada:</label>
-                        <input type = "time" id = "new-operation-estimatedTime">
+                        <input type = "datetime-local" id = "new-operation-estimatedTime">
                     </div>
                     <div class = "form-group">
                         <label>Estado:</label>
