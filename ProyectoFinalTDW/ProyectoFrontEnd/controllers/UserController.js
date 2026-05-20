@@ -1,0 +1,99 @@
+import { UserFactory } from "../factories/UserFactory.js";
+import { UsersRepository } from "../repositories/UsersRepository.js";
+import { getSessionInstance } from "../models/Session.js";
+
+export class UserController {
+    constructor(persistence) {
+        this.activeSession = getSessionInstance();
+        this.users = new UsersRepository(persistence);
+    }
+
+    validPassword(password){
+        if(password.length < 8){
+            throw new Error("Password debe tener al menos 8 carácteres");
+        } else if (!/\d/.test(password)){
+            throw new Error("Password debe contener al menos un número");
+        } else {
+            return true;
+        }
+    }
+
+    validEmail(email){
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(regex.test(email)){
+            return true;
+        } else {
+            throw new Error("Email no valido");
+        }
+    }
+
+    validRol(rol){
+        const auxRol = rol
+        .trim()
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+        if(auxRol === "PUBLICO" || auxRol === "GESTOR"){
+            return auxRol;
+        } else {
+            throw new Error("Rol tiene que ser PUBLICO O GESTOR");
+        }
+    }
+
+
+    async registerUser(data) {
+        if (data.password !== data.confirmPassword) {
+            throw new Error("Las contraseñas no coinciden");
+        }
+
+        this.validEmail(data.email);
+        this.validPassword(data.password);
+        const normalizedRol = this.validRol(data.rol);
+
+        const exists = this.users.getUsers().find(u => u.email === data.email);
+        if (exists) {
+            throw new Error("El usuario ya está registrado");
+        }
+
+        const newUser = UserFactory(data.email, data.password, normalizedRol);
+
+        await this.users.addUser(newUser);
+
+        return newUser;
+    }
+
+    async loginUser(data){
+        const user = this.users.findUserByEmail(data.email);
+        
+        if(!user){
+            throw new Error("Usuario no encontrado");
+        } else if (user.password !== data.password){
+            throw new Error("Contraseña incorrecta");
+        } else {
+            this.activeSession.login(user);
+            return user;
+        }
+    }
+
+    async updateUserRol(email, newRol){
+        try {
+            const normalizedRol = this.validRol(newRol);
+            this.users.updateRolPossible(email, normalizedRol);
+
+            const oldUser = this.users.findUserByEmail(email);
+            const updatedUser = UserFactory(oldUser.email, oldUser.password, normalizedRol);
+
+            await this.users.updateRol(email, updatedUser);
+        } catch (error) {
+            throw new Error("Error al actualizar rol: " + error.message);
+        }
+    }
+
+    getUsersList() {
+        return [...this.users.getUsers()];
+    }
+
+}
+
+

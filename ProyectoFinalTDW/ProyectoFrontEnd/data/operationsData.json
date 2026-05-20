@@ -1,0 +1,82 @@
+{
+  "operations": [
+    {
+      "operationId": "01H2V6G9Z5B0W4M8N3P7Q1R9ST",
+      "type": "TREN",
+      "code": "AVE0312",
+      "direction": "SALIDA",
+      "origin": "Madrid-Puerta de Atocha",
+      "destination": "Barcelona-Sants",
+      "scheduledTime": "2024-05-20T09:30:00Z",
+      "estimatedTime": "2024-05-20T09:45:00Z",
+      "state": "RETRASADO",
+      "operatorId": 1,
+      "pointId": 2
+    },
+    {
+      "operationId": "01H2V6G9Z5C1X5N9P4Q8R2S0UV",
+      "type": "VUELO",
+      "code": "IB1234",
+      "direction": "LLEGADA",
+      "origin": "London-Heathrow",
+      "destination": "Madrid-Barajas",
+      "scheduledTime": "2024-05-20T11:00:00Z",
+      "estimatedTime": "2024-05-20T11:00:00Z",
+      "state": "PROGRAMADO",
+      "operatorId": 4,
+      "pointId": 1
+    },
+    {
+      "operationId": "01H2V6G9Z5D2Y6Q0Q5R9S3T1WX",
+      "type": "TREN",
+      "code": "OUIGO678",
+      "direction": "SALIDA",
+      "origin": "Valencia-Joaquín Sorolla",
+      "destination": "Madrid-Chamartín",
+      "scheduledTime": "2024-05-20T14:15:00Z",
+      "estimatedTime": "2024-05-20T14:15:00Z",
+      "state": "EMBARCANDO",
+      "operatorId": 3,
+      "pointId": 2
+    },
+    {
+      "operationId": "01H2V6G9Z5E3Z7R1R6S0T4U2YZ",
+      "type": "VUELO",
+      "code": "VLG2240",
+      "direction": "SALIDA",
+      "origin": "Barcelona-El Prat",
+      "destination": "Paris-Orly",
+      "scheduledTime": "2024-05-20T18:00:00Z",
+      "estimatedTime": "2024-05-20T18:00:00Z",
+      "state": "CANCELADO",
+      "operatorId": 5,
+      "pointId": 3
+    },
+    {
+      "operationId": "01H2V6G9Z5F4A8S2S7T1U5V3AB",
+      "type": "TREN",
+      "code": "IRYO051",
+      "direction": "LLEGADA",
+      "origin": "Sevilla-Santa Justa",
+      "destination": "Madrid-Puerta de Atocha",
+      "scheduledTime": "2024-05-20T20:45:00Z",
+      "estimatedTime": "2024-05-20T21:10:00Z",
+      "state": "EN_RUTA",
+      "operatorId": 2,
+      "pointId": 2
+    },
+    {
+      "operationId": "01H2V6G9Z5G5B9T3T8U2V6W4CD",
+      "type": "VUELO",
+      "code": "UX4012",
+      "direction": "LLEGADA",
+      "origin": "Palma de Mallorca",
+      "destination": "Madrid-Barajas",
+      "scheduledTime": "2024-05-20T22:30:00Z",
+      "estimatedTime": "2024-05-20T22:25:00Z",
+      "state": "LLEGADO",
+      "operatorId": 4,
+      "pointId": 1
+    }
+  ]
+}
