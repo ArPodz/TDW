@@ -1,57 +1,77 @@
+import { ApiService } from "../services/ApiService.js";
+
+
 export class OperationsRepository {
-    constructor(persistence) {
-        this.persistence = persistence;
+    constructor(api) {
+        this.api = api;
         this.operations = [];
     }
 
     async initialize(defaultData = []) {
         try {
-            const data = await this.persistence.load();
+            const data = await this.api.get('operations');
+
+            const raw = data?.operations ?? data ?? [];
+            this.operations = raw.map(item => item.operation ?? item);
             
-            const list = (data && data.operations) ? data.operations : (Array.isArray(data) ? data : []);
-            this.operations = list;
-            
-            if (this.operations.length === 0 && defaultData.length > 0) {
-                this.operations = defaultData;
-                await this.persistence.save({ operations: this.operations });
-                return true;
-            }
         } catch (error) {
-            this.operations = defaultData;
+            this.operations = [];
             throw new Error("Error al inicializar repositorio de operaciones: " + error.message);
         }
     }
 
-    async addOperation(operation) {
-        this.operations.push(operation);
-        await this.persistence.save({ operations: this.operations });
+    async addOperation(operationData) {
+        if(!this.uniqueCode(operationData.codigo)){
+            throw new Error("El código de la operación ya existe");
+        } 
+        const data = await this.api.post('operations', {
+            tipo: operationData.tipo,
+            codigo: operationData.codigo,
+            sentido: operationData.sentido,
+            origen: operationData.origen,
+            destino: operationData.destino,
+            horaProgramada: operationData.horaProgramada,
+            horaEstimada: operationData.horaEstimada,
+            estado: operationData.estado,
+            operadorId: operationData.operadorId,
+            puntoId: operationData.puntoId
+        });
+
+        const created = data?.operation ?? data;
+        this.operations.push(created);
+
+        return created;
     }
 
-    async updateOperation(updatedOperation) {
-        const index = this.operations.findIndex(o => o.operationId === updatedOperation.operationId);
+    async updateOperation(operacionId, updatedData) {
+        const data = await this.api.put(`operations/${operacionId}`, updatedData);
+        const updatedOperation = data?.operation ?? data;
+
+
+        const index = this.operations.findIndex(o => o.operacionId === operacionId);
         if (index !== -1) {
             this.operations[index] = updatedOperation;
-            await this.persistence.save({ operations: this.operations });
-        } else {
-            throw new Error("Operación " + updatedOperation.operationId + " no encontrada");
         }
+
+        return updatedOperation;
     }
 
     async deleteOperation(operationId) {
-        this.operations = this.operations.filter(o => o.operationId !== operationId);
-        await this.persistence.save({ operations: this.operations });
+        await this.api.delete(`operations/${operationId}`);
+        this.operations = this.operations.filter(o => o.operacionId !== operationId);
     }
 
+    
     getOperations() {
         return this.operations;
     }
 
     findOperationByCode(code) {
-        return this.operations.find(o => o.code === code);
+        return this.operations.find(o => o.codigo === code);
     }
 
     uniqueCode(code) {
-        return !this.operations.some(o => o.code === code);
+        return !this.operations.some(o => o.codigo === code);
     }
 
 }

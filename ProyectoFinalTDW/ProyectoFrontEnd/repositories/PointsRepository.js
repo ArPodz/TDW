@@ -1,65 +1,82 @@
+import { ApiService } from "../services/ApiService.js";
+
+
 export class PointsRepository {
-    constructor(persistence) {
-        this.persistence = persistence; 
-        this.points = [];
+
+    constructor(api) {
+        this.api = api;
+        this.spots = [];
     }
 
     async initialize(defaultData = []) {
         try {
-            const data = await this.persistence.load();
-            
-            const list = (data && data.points) ? data.points : (Array.isArray(data) ? data : []);
-            this.points = list;
-            
-            if (this.points.length === 0 && defaultData.length > 0) {
-                this.points = defaultData;
-                await this.persistence.save({ points: this.points });
-                return true;
-            }
+            const data = await this.api.get('spots');
+
+            const raw = data?.spots ?? data ?? [];
+            this.spots = raw.map(item => item.punto ?? item);
         } catch (error) {
-            this.points = defaultData;
+            this.spots = [];
             throw new Error("Error al inicializar repositorio de puntos: " + error.message);
         }
     }
 
-    async addPoint(point) {
-        if(this.findPointByCode(point.code)){
+    async addPoint(spotData) {
+        if(!this.uniqueCode(spotData.codigo)){
             throw new Error("El punto ya está registrado");
         }
-        this.points.push(point);
-        await this.persistence.save({ points: this.points });
+        const data = await this.api.post('spots', {
+            tipo: spotData.tipo,
+            codigo: spotData.codigo,
+        });
+
+        const created = data?.punto ?? data;
+        this.spots.push(created);
+
+        return created;
     }
 
-    async deletePoint(pointId) {
-        this.points = this.points.filter(p => p.pointId !== pointId);
-        await this.persistence.save({ points: this.points });
+    async deletePoint(id) {
+        await this.api.delete(`spots/${id}`);
+        this.spots = this.spots.filter(p => p.puntoId !== id);
     }
 
-    async updatePoit(updatedPoint) {
-        const index = this.points.findIndex(p => p.pointId === updatedPoint.pointId);
+    async updatePoint(id, updatedData) {
+        if(updatedData.codigo) {
+            const existing = this.findPointByCode(updatedData.codigo);
+            if (existing && existing.puntoId !== id) {
+                throw new Error("El código ya está registrado para otro punto");
+            }
+        }        
+        const data = await this.api.put(`spots/${id}`, updatedData);
+        const updatedPoint = data?.punto ?? data;
+
+        const index = this.spots.findIndex(p => p.puntoId === id);
         if (index !== -1) {
-            this.points[index] = updatedPoint;
-            await this.persistence.save({ points: this.points });
+            this.spots[index] = updatedPoint;
         } else {
-            throw new Error("Punto " + updatedPoint.pointId + " no encontrado");
-        }  
+            throw new Error("Punto " + id + " no encontrado");
+        }
+
+        return updatedPoint;
     }
 
     getPoints() {
-        return this.points;
+        return this.spots;
     }
 
     findPointByCode(code) {
-        return this.points.find(p => p.code === code);
+        return this.spots.find(p => p.codigo === code);
     }
 
     uniqueCode(code) {
-        return !this.points.some(p => p.code === code);
+        return !this.spots.some(p => p.codigo === code);
     }
 
+    /** 
     maxPointId() {
         return this.points.reduce((maxId, point) => Math.max(maxId, point.pointId), 0);
     }
+    */
 
 }
 

@@ -1,4 +1,4 @@
-import { ApiService } from "../services/ApiService";
+import { ApiService } from "../services/ApiService.js";
 
 export class OperatorsRepository {
 
@@ -58,10 +58,10 @@ export class OperatorsRepository {
         return this.operators.find(o => o.id === id);
     }
 
-    /* 
+    /**
     maxOperatorId() {
         return this.operators.reduce((maxId, operator) => Math.max(maxId, operator.operatorId), 0);
     }
-        */
+    */
 
 }
