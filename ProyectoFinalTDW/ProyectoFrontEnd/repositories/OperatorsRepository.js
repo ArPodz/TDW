@@ -1,57 +1,67 @@
+import { ApiService } from "../services/ApiService";
+
 export class OperatorsRepository {
-    constructor(persistence) {
-        this.persistence = persistence;
+
+    constructor(api) {
+        this.api = api;
         this.operators = [];
     }
 
     async initialize(defaultData = []) {
         try {
-            const data = await this.persistence.load();
+            const data = await this.api.get('operators');
+
+            const raw = data?.operators ?? data ?? [];
+            this.operators = raw.map(item => item.operador ?? item);
             
-            const list = (data && data.operators) ? data.operators : (Array.isArray(data) ? data : []);
-            this.operators = list;
-            
-            if (this.operators.length === 0 && defaultData.length > 0) {
-                this.operators = defaultData;
-                await this.persistence.save({ operators: this.operators });
-                return true;
-            }
         } catch (error) {
-            this.operators = defaultData;
+            this.operators = [];
             throw new Error("Error al inicializar repositorio de operadores: " + error.message);
         }
     }
 
-    async addOperator(operator) {
-        this.operators.push(operator);
-        await this.persistence.save({ operators: this.operators });
+    async addOperator(operatorData) {
+        const data = await this.api.post('operators', {
+            nombre: operatorData.nombre,
+            siglas: operatorData.siglas,
+            color: operatorData.color,
+            urlIcono: operatorData.urlIcono
+        });
+
+        const created = data?.operador ?? data;
+        this.operators.push(created);
+        return created;
     }
 
-    async deleteOperator(operatorId) {
-        this.operators = this.operators.filter(o => o.operatorId !== operatorId);
-        await this.persistence.save({ operators: this.operators });
+    async deleteOperator(id) {
+        await this.api.delete(`operators/${id}`);
+        this.operators = this.operators.filter(o => o.id !== id);
     }
 
-    async updateOperator(updatedOperator) {
-        const index = this.operators.findIndex(o => o.operatorId === updatedOperator.operatorId);
+    async updateOperator(id, updatedData) {
+        const data = await this.api.put(`operators/${id}`, updatedData);
+        const updatedOperator = data?.operador ?? data;
+
+        const index = this.operators.findIndex(o => o.id === id);
         if (index !== -1) {
             this.operators[index] = updatedOperator;
-            await this.persistence.save({ operators: this.operators });
-        } else {
-            throw new Error("Operador " + updatedOperator.operatorId + " no encontrado");
         }
+
+        return updatedOperator;
     }
 
     getOperators() {
         return this.operators;
     }
 
-    findOperatorById(operatorId) {
-        return this.operators.find(o => o.operatorId === operatorId);
+    findOperatorById(id) {
+        return this.operators.find(o => o.id === id);
     }
 
+    /* 
     maxOperatorId() {
         return this.operators.reduce((maxId, operator) => Math.max(maxId, operator.operatorId), 0);
     }
+        */
 
 }

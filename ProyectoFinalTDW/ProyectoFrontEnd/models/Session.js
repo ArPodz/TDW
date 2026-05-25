@@ -4,16 +4,27 @@ function createInstance() {
     return {
         user: null,
 
+        fromToken(token){
+            const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+            const payload = JSON.parse(atob(base64));
+            const scopes = payload.scopes ?? [];
+
+            this.login({
+                id: payload.uid,
+                email: payload.email,
+                rol: scopes.includes('gestor') ? 'GESTOR' : 'PUBLICO'
+            });
+        },
+
         login(user){
-            const sessionData = {
+            this.user = {
+                id: user.id,
                 email: user.email,
                 rol: user.rol,
                 loggedAt: Date.now()
             };
 
-            this.user = sessionData;
-
-            sessionStorage.setItem("activeUser", JSON.stringify(sessionData));
+            sessionStorage.setItem("activeUser", JSON.stringify(this.user));
         },
 
         logout(){
@@ -27,8 +38,21 @@ function createInstance() {
             if (saved) this.user = JSON.parse(saved);
             }
             return this.user;
+        },
+
+
+        isGestor(){
+            return this.getUser()?.rol === 'GESTOR';
+        },
+
+        isPublico(){
+            return this.getUser()?.rol === 'PUBLICO';
+        },
+
+        isLoggedIn(){
+            return this.getUser() !== null;
         }
-    };
+    }
 }
 
 export function getSessionInstance(){
