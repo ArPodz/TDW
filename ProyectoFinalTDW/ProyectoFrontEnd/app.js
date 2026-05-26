@@ -1,13 +1,14 @@
-import { UserController } from "./controllers/UserController.js";
-import { RegisterView } from "./views/RegisterView.js";
-import { LoginView } from "./views/LoginView.js";
-import { StorageRepo } from "./repositories/StorageRepo.js";
-import { SessionView } from "./views/SessionView.js"; 
-import { UserManagementView } from "./views/UserManagementView.js";
+import { ApiService } from "./services/ApiService.js";
 
+import { UserController } from "./controllers/UserController.js";
 import { OperationController } from "./controllers/OperationController.js";
 import { OperatorController } from "./controllers/OperatorController.js";
 import { PointController } from "./controllers/PointController.js";
+
+import { RegisterView } from "./views/RegisterView.js";
+import { LoginView } from "./views/LoginView.js";
+import { SessionView } from "./views/SessionView.js"; 
+import { UserManagementView } from "./views/UserManagementView.js";
 import { OperationsView } from "./views/OperationsView.js";
 import { PointsView } from "./views/PointsView.js"; 
 import { OperatorsView } from "./views/OperatorsView.js";
@@ -19,42 +20,31 @@ import { HomePageView } from "./views/HomePageView.js";
 async function init() {
     console.log("🚀 INICIALIZANDO APLICACIÓN...");
 
-    const persistence = new StorageRepo(localStorage, "app_v1");
-    const userController = new UserController(persistence);
-    const operationController = new OperationController(persistence);
-    const operatorController = new OperatorController(persistence);
-    const pointController = new PointController(persistence);
+    const api = new ApiService();
+
+    const userController = new UserController(api);
+    const operationController = new OperationController(api);
+    const operatorController = new OperatorController(api);
+    const pointController = new PointController(api);
 
     try {
-        const [resUsers, resOps, resOperators, resPoints] = await Promise.all([
-            fetch('data/usersData.json'),
-            fetch('data/operationsData.json'),
-            fetch('data/operatorsData.json'),
-            fetch('data/pointsData.json')
+        await Promise.all([
+            userController.initialize(),
+            operationController.initialize(),
+            operatorController.initialize(),
+            pointController.initialize()
         ]);
-
-        const dataUsers = await resUsers.json();
-        await userController.users.initialize(dataUsers.users);
-        
-        const dataOps = await resOps.json();
-        await operationController.operations.initialize(dataOps.operations);
-        
-        const dataOperators = await resOperators.json();
-        await operatorController.operators.initialize(dataOperators.operators);
-
-        const dataPoints = await resPoints.json();
-        await pointController.points.initialize(dataPoints.points);
-        
-        console.log("✅ Repositorios y datos inicializados.");
+        console.log("Repositorios inicializados con datos del servidor.");
     } catch (e) {
-        console.warn("⚠️ Error en carga de datos iniciales:", e.message);
+        console.warn("Error en carga de datos iniciales:", e.message);
     }
+
 
     const actualizarInterfazSesion = () => {
         const activeUser = userController.activeSession.getUser();
         if (activeUser) {
             SessionView.renderSession(activeUser.email, activeUser.rol, () => {
-                userController.activeSession.logout();
+                userController.logoutUser();
                 window.location.href = "index.html"; 
             });
         } else {
@@ -62,16 +52,27 @@ async function init() {
         }
     };
 
+
+
     const registerView = new RegisterView();
-    if (registerView.registerForm) { 
+    if (registerView.registerForm) {
+        registerView.bindEmailCheck(async (email) => {
+            const exists = await userController.checkEmailExists(email);
+            registerView.setEmailStatus(exists);
+        });
+
         registerView.bindFormSubmit(async () => {
             try {
                 await userController.registerUser(registerView.getFormData());
                 alert(`¡Registro con éxito!`);
                 window.location.href = "index.html"; 
-            } catch (error) { registerView.setStatus(error.message, true); }
+            } catch (error) { 
+                registerView.setStatus(error.message, true); 
+            }
         });
     }
+
+
 
     const loginView = new LoginView();
     if (loginView.loginForm) {
@@ -79,9 +80,13 @@ async function init() {
             try {
                 await userController.loginUser(loginView.getFormData());
                 window.location.href = "index.html"; 
-            } catch (error) { loginView.setStatus(error.message, true); }
+            } catch (error) { 
+                loginView.setStatus(error.message, true); 
+            }
         });
     }
+
+
 
     const welcomeContainer = document.querySelector('.welcome-page');
     if (welcomeContainer) {
@@ -97,6 +102,8 @@ async function init() {
         );
     }
 
+
+
     const boardContainer = document.getElementById('information-board-container');
     if (boardContainer) {
         const informationController = new InformationController(operationController, operatorController);
@@ -104,47 +111,62 @@ async function init() {
         informationView.render();
     }
 
+
+
     const userManagementView = new UserManagementView();
     const operationsContainer = document.getElementById('operations-management-container');
     const pointsContainer = document.getElementById('points-management-container');
     const operatorsContainer = document.getElementById('operators-management-container');
 
-    const activeUser = userController.activeSession.getUser();
 
-    if (userManagementView.container || operationsContainer || pointsContainer || operatorsContainer) {
-        if (!activeUser || activeUser.rol !== 'GESTOR') {
+    const hayContenedoresAdmin = userManagementView.container || operationsContainer || pointsContainer || operatorsContainer;
+
+    if (hayContenedoresAdmin) {
+        const activeUser = userController.activeSession.getUser();
+
+        if(!activeUser || activeUser.rol !== 'GESTOR') {
             console.warn("🚫 Acceso denegado: Se requiere rol de GESTOR.");
-            if (operationsContainer || pointsContainer || operatorsContainer || userManagementView) {
-                alert("Acceso denegado. Debes ser GESTOR.");
-                window.location.href = "index.html";
-                return;
-            }
-        } else {
-            
-            if (userManagementView.container) {
-                const handleRoleChange = async (email, newRole) => {
-                    try {
-                        await userController.updateUserRol(email, newRole);
-                        userManagementView.updateTable(userController.getUsersList(), handleRoleChange);
-                    } catch (error) { userManagementView.setStatus(error.message, true); }
-                };
-                userManagementView.render(userController.getUsersList(), handleRoleChange);
-            }
-            
-            if (operationsContainer) {
-                const operationsView = new OperationsView(operationController, 'operations-management-container');
-                operationsView.render();
-            }
+            alert("Acceso denegado. Debes ser GESTOR.");
+            window.location.href = "index.html";
+            return;
+        }
+
+        if (userManagementView.container) {
+            const handleRoleChange = async (userId, newRole) => {
+                try {
+                    await userController.updateUserRol(userId, newRole);
+                    userManagementView.updateTable(userController.getUsersList(), handleRoleChange);
+                } catch (error) { 
+                    userManagementView.setStatus(error.message, true); 
+                }
+            };
+
+            const handleDeleteUser = async (userId) => {
+                try {
+                    await userController.deleteUser(userId);
+                    userManagementView.updateTable(userController.getUsersList(), handleRoleChange);
+                } catch (error) {
+                    userManagementView.setStatus(error.message, true);
+                }
+            };
+
+            userManagementView.render(userController.getUsersList(), handleRoleChange, handleDeleteUser);
+        }
            
-            if (pointsContainer) {
-                const pointsView = new PointsView(pointController, 'points-management-container');
-                pointsView.render();
-            }
-           
-            if (operatorsContainer) {
-                const operatorsView = new OperatorsView(operatorController, 'operators-management-container');
-                operatorsView.render();
-            }
+                
+        if(operationsContainer) {
+            const operationsView = new OperationsView(operationController, 'operations-management-container');
+            operationsView.render();
+        }
+            
+        if(pointsContainer) {
+            const pointsView = new PointsView(pointController, 'points-management-container');
+            pointsView.render();
+        }
+            
+        if (operatorsContainer) {
+            const operatorsView = new OperatorsView(operatorController, 'operators-management-container');
+            operatorsView.render();
         }
     }
 

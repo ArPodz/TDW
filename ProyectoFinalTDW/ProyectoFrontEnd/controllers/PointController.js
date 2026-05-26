@@ -1,9 +1,11 @@
-import { PointFactory } from "../factories/PointFactory.js";
+//import { PointFactory } from "../factories/PointFactory.js";
 import { PointsRepository } from "../repositories/PointsRepository.js";
 
+
 export class PointController {
-    constructor(persistence) {
-        this.points = new PointsRepository(persistence);
+
+    constructor(api) {
+        this.spots = new PointsRepository(api);
     }
 
     validCode(code) {
@@ -25,41 +27,43 @@ export class PointController {
         }
     }
 
+
+    async initialize() {
+        await this.spots.initialize();
+    }
+
     async createPoint(data) {
-        if(this.validCode(data.code) && this.validType(data.type)){
-            if(this.points.uniqueCode(data.code)){
-                let pointId = this.points.maxPointId() + 1;
-                const newPoint = PointFactory(pointId, data.type, data.code);
-                await this.points.addPoint(newPoint);
-            } else {
-                throw new Error("El código del punto ya está en uso");
-            }
-        } else {
-            throw new Error("Datos del punto no válidos");
-        }
+        const validatedCode = this.validCode(data.code);
+        const validatedType = this.validType(data.type);
+
+        return await this.spots.addPoint({
+            tipo: validatedType,
+            codigo: validatedCode
+        });
     }
 
     async deletePoint(pointId) {
-        await this.points.deletePoint(pointId);
+        await this.spots.deletePoint(pointId);
     }
 
     async updatePoint(pointId, updatedData) {
-        const existingPoint = this.points.getPoints().find(p => p.pointId === pointId);
+        const existingPoint = this.spots.getPoints().find(p => p.puntoId === pointId);
 
         if (!existingPoint) {
             throw new Error("Punto no encontrado");
         }
-        if(updatedData.code && !this.points.uniqueCode(updatedData.code)){
-            throw new Error("El código del punto ya está en uso");
+
+        const payload = {};
+
+        if(updatedData.codigo){
+            payload.codigo = this.validCode(updatedData.codigo);
         }
 
-        const updatedPoint = {
-            ...existingPoint,
-            ...updatedData,
-            code: this.validCode(updatedData.code || existingPoint.code),
-            type: this.validType(updatedData.type || existingPoint.type)
-        };
-        await this.points.updatePoit(updatedPoint);
+        if(updatedData.tipo){
+            payload.tipo = this.validType(updatedData.tipo);
+        }
+
+        return await this.spots.updatePoint(pointId, payload);
     }
 
     getPointsList(){

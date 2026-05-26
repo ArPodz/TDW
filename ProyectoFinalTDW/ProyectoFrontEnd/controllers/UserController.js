@@ -1,11 +1,12 @@
-import { UserFactory } from "../factories/UserFactory.js";
+// import { UserFactory } from "../factories/UserFactory.js";
 import { UsersRepository } from "../repositories/UsersRepository.js";
 import { getSessionInstance } from "../models/Session.js";
 
 export class UserController {
-    constructor(persistence) {
+
+    constructor(api) {
         this.activeSession = getSessionInstance();
-        this.users = new UsersRepository(persistence);
+        this.users = new UsersRepository(api);
     }
 
     validPassword(password){
@@ -34,10 +35,10 @@ export class UserController {
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
 
-        if(auxRol === "PUBLICO" || auxRol === "GESTOR"){
+        if(auxRol === "PUBLICO" || auxRol === "GESTOR" || auxRol === "INACTIVO"){
             return auxRol;
         } else {
-            throw new Error("Rol tiene que ser PUBLICO O GESTOR");
+            throw new Error("Rol tiene que ser PUBLICO, GESTOR O INACTIVO");
         }
     }
 
@@ -49,51 +50,82 @@ export class UserController {
 
         this.validEmail(data.email);
         this.validPassword(data.password);
-        const normalizedRol = this.validRol(data.rol);
 
-        const exists = this.users.getUsers().find(u => u.email === data.email);
+        const exists = await this.users.emailExists(data.email);
         if (exists) {
             throw new Error("El usuario ya está registrado");
         }
 
-        const newUser = UserFactory(data.email, data.password, normalizedRol);
-
-        await this.users.addUser(newUser);
-
-        return newUser;
+        return await this.users.addUser({
+            email: data.email,
+            password: data.password,
+        });
     }
+    
+    async checkEmailExists(email) {
+        return await this.users.emailExists(email);
+    }
+    
 
     async loginUser(data){
-        const user = this.users.findUserByEmail(data.email);
-        
-        if(!user){
-            throw new Error("Usuario no encontrado");
-        } else if (user.password !== data.password){
-            throw new Error("Contraseña incorrecta");
-        } else {
-            this.activeSession.login(user);
-            return user;
-        }
+        this.validEmail(data.email);
+        this.validPassword(data.password);
+
+        await this.users.api.login(data.email, data.password);
+
+        return this.activeSession.getUser();
     }
 
-    async updateUserRol(email, newRol){
-        try {
-            const normalizedRol = this.validRol(newRol);
-            this.users.updateRolPossible(email, normalizedRol);
+    async logoutUser(){
+        this.users.api.logout();
+    }
 
-            const oldUser = this.users.findUserByEmail(email);
-            const updatedUser = UserFactory(oldUser.email, oldUser.password, normalizedRol);
 
-            await this.users.updateRol(email, updatedUser);
-        } catch (error) {
-            throw new Error("Error al actualizar rol: " + error.message);
+    async updateUserRol(userId, newRol){
+        const normalizedRol = this.validRol(newRol);
+
+        this.validLastGestor(userId, normalizedRol);
+ 
+        await this.users.updateUser(userId, {role: normalizedRol});
+    }
+
+    async updateUser(userId, fields){
+        if(fields.email){
+            this.validEmail(fields.email);
         }
+        if(fields.password){
+            this.validPassword(fields.password);
+        }
+        if(fields.role){
+            fields.role = this.validRol(fields.role);
+        }
+
+        return await this.users.updateUser(userId, fields);
+    }
+
+    
+    async deleteUser(userId){
+        await this.users.deleteUser(userId);
+    }
+
+    async initialize() {
+        await this.users.initialize();
     }
 
     getUsersList() {
         return [...this.users.getUsers()];
     }
 
+    validLastGestor(userId, newRol) {
+        if (newRol !== 'GESTOR') {
+            const gestores = this.users.getUsers().filter(u => u.role === 'GESTOR');
+            const isCurrentlyGestor = gestores.some(u => u.id === userId); 
+            if (isCurrentlyGestor && gestores.length <= 1) {
+                throw new Error('No se puede cambiar el rol: debe existir al menos un GESTOR.');
+            }
+        }
+    }
 }
+
 
 

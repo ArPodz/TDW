@@ -1,15 +1,23 @@
 import { OperatorsRepository } from "../repositories/OperatorsRepository.js";
-import { OperatorFactory } from "../factories/OperatorFactory.js";
+// import { OperatorFactory } from "../factories/OperatorFactory.js";
 
 export class OperatorController {
-    constructor(persistence) {
-        this.operators =  new OperatorsRepository(persistence);
+
+    constructor(api) {
+        this.operators =  new OperatorsRepository(api);
+    }
+
+    async initialize() {
+        await this.operators.initialize();
     }
 
     async createOperator(data){
-        let operatorId = this.operators.maxOperatorId() + 1;
-        const newOperator = OperatorFactory(operatorId, data.name, data.acronym, data.color, data.urlIcono);
-        await this.operators.addOperator(newOperator);
+        return await this.addOperator({
+            nombre: data.nombre,
+            siglas: data.siglas,
+            color: data.color,
+            urlIcono: data.urlIcono
+        });
     }
 
     async deleteOperator(operatorId) { 
@@ -17,15 +25,12 @@ export class OperatorController {
     }
 
     async updateOperator(operatorId, updatedData) {
-        const existingOperator = this.operators.getOperators().find(o => o.operatorId === operatorId);
+        const existingOperator = this.operators.findOperatorById(operatorId);
         if (!existingOperator) {
             throw new Error("Operador no encontrado");
         }
-        const updatedOperator = {
-            ...existingOperator,
-            ...updatedData
-        };
-        await this.operators.updateOperator(updatedOperator);
+        
+        return await this.operators.updateOperator(operatorId, updatedData);
     }
 
     getOperatorsList(){

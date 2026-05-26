@@ -1,9 +1,10 @@
-import { OperationFactory } from "../factories/OperationFactory.js";
+// import { OperationFactory } from "../factories/OperationFactory.js";
 import { OperationsRepository } from "../repositories/OperationsRepository.js";
 
 export class OperationController {
-    constructor(persistence) {
-        this.operations = new OperationsRepository(persistence);
+
+    constructor(api) {
+        this.operations = new OperationsRepository(api);
     }
 
     validType(type) {
@@ -37,17 +38,26 @@ export class OperationController {
         }
     }
 
+
+    async initialize() {
+        await this.operations.initialize();
+    }
+
     async createOperation(data) {
-        if(this.validType(data.type) && this.validDirection(data.direction) && this.validState(data.state)){
-            if(this.operations.uniqueCode(data.code)){
-                const newOperation = OperationFactory(data.type, data.code, data.direction, data.origin, data.destination, data.scheduledTime, data.estimatedTime, data.state, data.operatorId, data.pointId);
-                await this.operations.addOperation(newOperation);
-            } else {
-                throw new Error("El código de la operación ya está en uso");
-            }
-        } else {
-            throw new Error("Datos de la operación no válidos");
-        }
+        const payload = {
+            tipo: this.validType(data.type),
+            codigo: data.codigo,
+            sentido: this.validDirection(data.direction),
+            origen: data.origen,
+            destino: data.destino,
+            horaProgramada: data.horaProgramada,
+            horaEstimada: data.horaEstimada,
+            estado: this.validState(data.state),
+            operadorId: data.operadorId,
+            puntoId: data.puntoId
+        };
+
+        return await this.operations.addOperation(payload);
     }
 
     async deleteOperation(operationId) {
@@ -55,18 +65,25 @@ export class OperationController {
     }
 
     async updateOperation(operationId, updatedData) {
-        const existingOperation = this.operations.getOperations().find(op => op.operationId === operationId);
+        const existingOperation = this.operations.getOperations().find(op => op.operacionId === operationId);
+
         if (!existingOperation) {
             throw new Error("Operación no encontrada");
         }
-        const updatedOperation = {
-            ...existingOperation,
-            ...updatedData, 
-            type: this.validType(updatedData.type || existingOperation.type),
-            direction: this.validDirection(updatedData.direction || existingOperation.direction),
-            state: this.validState(updatedData.state || existingOperation.state)
-        };
-        await this.operations.updateOperation(updatedOperation);
+
+        const payload = { ...updatedData };
+
+        if(payload.tipo){
+            payload.tipo = this.validType(updatedData.tipo);
+        }
+        if(payload.sentido){
+            payload.sentido = this.validDirection(updatedData.sentido);
+        }
+        if(payload.estado){
+            payload.estado = this.validState(updatedData.estado);
+        }
+
+        return await this.operations.updateOperation(operacionId, payload);
     }
 
     getOperationsList() {
@@ -77,5 +94,4 @@ export class OperationController {
         return this.operations.findOperationByCode(code);
     }
     
-
 }
