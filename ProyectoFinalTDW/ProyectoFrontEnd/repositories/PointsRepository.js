@@ -12,7 +12,7 @@ export class PointsRepository {
         try {
             const data = await this.api.get('spots');
 
-            const raw = data?.spots ?? data ?? [];
+            const raw = data?.puntos ?? data ?? [];
             this.spots = raw.map(item => item.punto ?? item);
         } catch (error) {
             this.spots = [];

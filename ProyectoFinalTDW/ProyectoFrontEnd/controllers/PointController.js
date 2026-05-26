@@ -67,10 +67,10 @@ export class PointController {
     }
 
     getPointsList(){
-        return [...this.points.getPoints()];
+        return [...this.spots.getPoints()];
     }
 
     findPointByCode(code) {
-        return this.points.findPointByCode(code);
+        return this.spots.findPointByCode(code);
     }
 }

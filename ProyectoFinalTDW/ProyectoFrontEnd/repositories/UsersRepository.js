@@ -1,4 +1,5 @@
 import { ApiService } from "../services/ApiService.js";
+import { getSessionInstance } from "../models/Session.js";
 
 export class UsersRepository {
 
@@ -8,7 +9,7 @@ export class UsersRepository {
     }
 
     async initialize() {
-        const user = this.api.getStoredUser();
+        const user = getSessionInstance().getUser();
 
         if(!user || user.rol !== "GESTOR"){
             this.users = [];
@@ -18,7 +19,8 @@ export class UsersRepository {
         try {
             const data = await this.api.get('users');
 
-            this.users = data?.users ?? [];
+            const raw = data?.users ?? [];
+            this.users = raw.map(item => item.user ?? item);
         } catch (error) {
             this.users = []; 
             throw new Error("Error al inicializar repositorio de usuarios: " + error.message);

@@ -212,7 +212,7 @@ function mostrarEstadoActual(userController, operationController, operatorContro
     console.table(operatorController.operators.getOperators());
     console.log("\n ---------------------------------------------------------------------- \n");
     console.log("📍 PUNTOS:");
-    console.table(pointController.points.getPoints());
+    console.table(pointController.spots.getPoints());
     const active = userController.activeSession.getUser();
     console.log(active ? `🔑 Activo: ${active.email} [${active.rol}]` : "🔑 Sin sesión");
     console.groupEnd();

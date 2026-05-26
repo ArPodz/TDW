@@ -11,8 +11,8 @@ export class OperationsRepository {
         try {
             const data = await this.api.get('operations');
 
-            const raw = data?.operations ?? data ?? [];
-            this.operations = raw.map(item => item.operation ?? item);
+            const raw = data?.operaciones ?? data ?? [];
+            this.operations = raw.map(item => item.operacion ?? item);
             
         } catch (error) {
             this.operations = [];
@@ -37,7 +37,7 @@ export class OperationsRepository {
             puntoId: operationData.puntoId
         });
 
-        const created = data?.operation ?? data;
+        const created = data?.operacion ?? data;
         this.operations.push(created);
 
         return created;
@@ -45,7 +45,7 @@ export class OperationsRepository {
 
     async updateOperation(operacionId, updatedData) {
         const data = await this.api.put(`operations/${operacionId}`, updatedData);
-        const updatedOperation = data?.operation ?? data;
+        const updatedOperation = data?.operacion ?? data;
 
 
         const index = this.operations.findIndex(o => o.operacionId === operacionId);

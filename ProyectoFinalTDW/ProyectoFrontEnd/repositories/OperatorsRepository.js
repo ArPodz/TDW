@@ -11,7 +11,7 @@ export class OperatorsRepository {
         try {
             const data = await this.api.get('operators');
 
-            const raw = data?.operators ?? data ?? [];
+            const raw = data?.operadores ?? data ?? [];
             this.operators = raw.map(item => item.operador ?? item);
             
         } catch (error) {
