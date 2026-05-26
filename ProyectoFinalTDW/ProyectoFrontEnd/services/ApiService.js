@@ -3,8 +3,8 @@ import {getSessionInstance} from "../models/Session.js";
 
 export class ApiService {
 
-    static BaseUrl = "http://localhost:8080/api/v1";
-    static LoginUrl = "http://localhost:8080/access_token";
+    static BASE_URL = "http://localhost:8080/api/v1";
+    static LOGIN_URL = "http://localhost:8080/access_token";
 
     static #TOKEN_KEY = 'jwt_token';
 

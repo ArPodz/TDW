@@ -1,41 +1,75 @@
+import { ApiService } from "../services/ApiService.js";
+
 export class UsersRepository {
-    constructor(persistence) {
-        this.persistence = persistence; 
+
+    constructor(api) {
+        this.api = api; 
         this.users = []; 
     }
 
-    async initialize(defaultData = []) {
+    async initialize() {
+        const user = this.api.getStoredUser();
+
+        if(!user || user.rol !== "GESTOR"){
+            this.users = [];
+            return;
+        }
+
         try {
-            const data = await this.persistence.load();
-            
-            const list = (data && data.users) ? data.users : (Array.isArray(data) ? data : []);
-            this.users = list;
-            
-            if (this.users.length === 0 && defaultData.length > 0) {
-                this.users = defaultData;
-                await this.persistence.save({ users: this.users }); 
-                return true;
-            }
+            const data = await this.api.get('users');
+
+            this.users = data?.users ?? [];
         } catch (error) {
-            this.users = defaultData; 
+            this.users = []; 
             throw new Error("Error al inicializar repositorio de usuarios: " + error.message);
         }
     }
 
     async addUser(user) {
-        if(this.findUserByEmail(user.email)){
-            throw new Error("El usuario ya está registrado");
+        const data = await this.api.post('users', {
+            email: user.email,
+            password: user.password
+        }, false);
+
+        const createdUser = data?.user ?? data;
+        this.users.push(createdUser);
+
+        return createdUser;
+    }
+
+    async emailExists(email) {
+        try {
+            await this.api.get(`users/email/${encodeURIComponent(email)}`, false);
+            return true;
+        } catch (error) {
+            if(error.message === 'Recurso no encontrado'){
+                return false;
+            } else {
+                throw error;
+            }
         }
-        this.users.push(user);
-        await this.persistence.save({ users: this.users });
     }
 
-    getUsers() {
-        return this.users;
+    async updateUser(id, fields){
+        const data = await this.api.put(`users/${id}`, fields);
+        const updatedUser = data?.user ?? data;
+
+        const index = this.users.findIndex(u => u.id === id);
+        if (index !== -1) {
+            this.users[index] = updatedUser;
+        }
+
+        return updatedUser;
     }
 
-    findUserByEmail(email) {
-        return this.users.find(u => u.email === email);
+    async updateRol(email, newRol) {
+        const user = this.findUserByEmail(email);
+
+        if (!user) {
+            throw new Error("Usuario no encontrado");
+        }
+
+        await this.updateUser(user.id, {role: newRol});
     }
 
     updateRolPossible(email, newRol) {
@@ -44,24 +78,27 @@ export class UsersRepository {
             throw new Error("Usuario no encontrado");
         }
 
-        if(user.rol === "GESTOR" && newRol === "PUBLICO"){
-            const numGestores = this.users.filter(u => u.rol === "GESTOR").length;
-            if(numGestores <= 1){
-                throw new Error("No se puede cambiar el rol. Al menos debe haber un gestor.");
-            } else {
-                return true;
+        if (user.role === 'GESTOR' && newRol !== 'GESTOR') {
+            const numGestores = this.users.filter(u => u.role === 'GESTOR').length;
+            if (numGestores <= 1) {
+                throw new Error("No se puede cambiar el rol, debe existir al menos un GESTOR.");
             }
-        } else {
-            return true;
         }
+
+        return true;
     }
 
-    async updateRol(email, newUserRol) {
-        const index = this.users.findIndex(u => u.email === email);
-        if (index !== -1) {
-            this.users[index] = newUserRol;
-            await this.persistence.save({ users: this.users });
-        }
+    async deleteUser(id) {
+        await this.api.delete(`users/${id}`);
+        this.users = this.users.filter(u => u.id !== id);
+    }
+
+    getUsers() {
+        return this.users;
+    }
+
+    findUserByEmail(email) {
+        return this.users.find(u => u.email === email);
     }
 }
 
