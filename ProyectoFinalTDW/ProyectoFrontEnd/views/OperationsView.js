@@ -30,20 +30,20 @@ export class OperationsView {
                     <tbody>
                     ${operations.map(o => `
                             <tr>
-                                <td>${o.operationId}</td>
-                                <td>${o.code}</td>
-                                <td>${o.type}</td>
-                                <td>${o.direction}</td>
-                                <td>${o.origin}</td>
-                                <td>${o.destination}</td>
-                                <td>${o.scheduledTime}</td>
-                                <td>${o.estimatedTime}</td>
-                                <td>${o.state}</td>
-                                <td>${o.operatorId}</td>
-                                <td>${o.pointId}</td>
+                                <td>${o.operacionId}</td>
+                                <td>${o.codigo}</td>
+                                <td>${o.tipo}</td>
+                                <td>${o.sentido}</td>
+                                <td>${o.origen}</td>
+                                <td>${o.destino}</td>
+                                <td>${o.horaProgramada}</td>
+                                <td>${o.horaEstimada}</td>
+                                <td>${o.estado}</td>
+                                <td>${o.operador?.operador?.nombre ?? o.operadorId ?? '-'}</td>
+                                <td>${o.punto?.codigo ?? o.puntoId ?? '-'}</td>
                                 <td>
-                                    <button class = "btn-edit-operation" data-id = "${o.code}">Editar</button>
-                                    <button class = "btn-delete-operation" data-id = "${o.code}">Borrar</button>
+                                    <button class = "btn-edit-operation" data-id = "${o.codigo}">Editar</button>
+                                    <button class = "btn-delete-operation" data-id = "${o.codigo}">Borrar</button>
                                 </td>
                             </tr>
                         `).join('')}
@@ -58,14 +58,14 @@ export class OperationsView {
 
 
     bindEvents() {
-        const deleteButtons = this.container.querySelectorAll('.btn-delete-operation');
-        deleteButtons.forEach(btn => {
+        this.container.querySelectorAll('.btn-delete-operation').forEach(btn => {
             btn.addEventListener('click', async (e) => {
-                const code = e.target.getAttribute('data-id');
-                if (confirm(`¿Seguro que deseas eliminar la operación ${code}?`)) {
+                const codigo = e.target.getAttribute('data-id');
+                if (confirm(`¿Seguro que deseas eliminar la operación ${codigo}?`)) {
                     try {
-                        const operationId = this.operationController.findOperationByCode(code).operationId;
-                        await this.operationController.deleteOperation(operationId);
+                        const operation = this.operationController.findOperationByCode(codigo);
+                        
+                        await this.operationController.deleteOperation(operation.operacionId);
                         alert("Operación eliminada");
                         this.render();
                     } catch (error) {
@@ -75,19 +75,19 @@ export class OperationsView {
             });
         });
 
-        const editButtons = this.container.querySelectorAll('.btn-edit-operation');
-        editButtons.forEach(btn => {
+
+        this.container.querySelectorAll('.btn-edit-operation').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const code = e.target.getAttribute('data-id');
-                this.renderEditForm(code);
+                this.renderEditForm(e.target.getAttribute('data-id'));
             });
         });
 
+
         document.getElementById('btn-new-operation').addEventListener('click', () => {
-            console.log("Mostrar formulario de creación");
             this.renderCreateForm();
         });
     }
+
 
     bindCreateEvents() {
 
@@ -95,18 +95,20 @@ export class OperationsView {
             this.render();
         });
 
+
         document.getElementById('btn-save-new-operation').addEventListener('click', async () => {
+
             const newOperationData = {
-                type: document.getElementById('new-operation-type').value.trim(),
-                code: document.getElementById('new-operation-code').value.trim(),
-                direction: document.getElementById('new-operation-direction').value.trim(),
-                origin: document.getElementById('new-operation-origin').value.trim(),
-                destination: document.getElementById('new-operation-destination').value.trim(),
-                scheduledTime: document.getElementById('new-operation-scheduledTime').value,
-                estimatedTime: document.getElementById('new-operation-estimatedTime').value,
-                state: document.getElementById('new-operation-state').value.trim(),
-                operatorId: parseInt(document.getElementById('new-operation-operatorId').value),
-                pointId: parseInt(document.getElementById('new-operation-pointId').value)
+                tipo: document.getElementById('new-operation-type').value.trim(),
+                codigo: document.getElementById('new-operation-code').value.trim(),
+                sentido: document.getElementById('new-operation-direction').value.trim(),
+                origen: document.getElementById('new-operation-origin').value.trim(),
+                destino: document.getElementById('new-operation-destination').value.trim(),
+                horaProgramada: document.getElementById('new-operation-scheduledTime').value,
+                horaEstimada: document.getElementById('new-operation-estimatedTime').value,
+                estado: document.getElementById('new-operation-state').value.trim(),
+                operadorId: parseInt(document.getElementById('new-operation-operatorId').value),
+                puntoId: parseInt(document.getElementById('new-operation-pointId').value)
             };
 
             try {
@@ -115,13 +117,12 @@ export class OperationsView {
                 this.render();
             } catch (error) {
                 alert(error.message);
-                return;
             }
         });
     }
 
 
-    bindEditEvents(operationId) {
+    bindEditEvents(operacionId) {
 
         document.getElementById('btn-cancel-edit').addEventListener('click', () => {
             this.render();
@@ -129,14 +130,14 @@ export class OperationsView {
 
         document.getElementById('btn-save-edit').addEventListener('click', async () => {
             const updatedData = {
-                state: document.getElementById('edit-state').value.trim(),
-                estimatedTime: document.getElementById('edit-estimatedTime').value,
-                operatorId: parseInt(document.getElementById('edit-operatorId').value),
-                pointId: parseInt(document.getElementById('edit-pointId').value)
+                estado: document.getElementById('edit-state').value.trim(),
+                horaEstimada: document.getElementById('edit-estimatedTime').value,
+                operadorId: parseInt(document.getElementById('edit-operatorId').value),
+                puntoId: parseInt(document.getElementById('edit-pointId').value)
             };  
 
             try {
-                await this.operationController.updateOperation(operationId, updatedData);
+                await this.operationController.updateOperation(operacionId, updatedData);
                 alert("Operación actualizada con éxito");
                 this.render();
             } catch (error) {
@@ -145,42 +146,41 @@ export class OperationsView {
         });
     }
 
-    renderEditForm(code){
-        const operation = this.operationController.findOperationByCode(code);
+    renderEditForm(codigo){
+        const operation = this.operationController.findOperationByCode(codigo);
         if (!operation) return;
 
-        const formHtml = `
+        this.container.innerHTML = `
             <div class = "form-edit-card">
-                <h3>Editando Operación: ${operation.code}</h3>
+                <h3>Editando Operación: ${operation.codigo}</h3>
                 <label>Estado:
                     <select id = "edit-state">
-                        <option value="PROGRAMADO" ${operation.state === 'PROGRAMADO' ? 'selected' : ''}>Programado</option>
-                        <option value="EMBARCANDO" ${operation.state === 'EMBARCANDO' ? 'selected' : ''}>Embarcando</option>
-                        <option value="RETRASADO" ${operation.state === 'RETRASADO' ? 'selected' : ''}>Retrasado</option>
-                        <option value="EN_RUTA" ${operation.state === 'EN_RUTA' ? 'selected' : ''}>En Ruta</option>
-                        <option value="CANCELADO" ${operation.state === 'CANCELADO' ? 'selected' : ''}>Cancelado</option>
-                        <option value="LLEGADO" ${operation.state === 'LLEGADO' ? 'selected' : ''}>Llegado</option>
+                        <option value="PROGRAMADO" ${operation.estado === 'PROGRAMADO' ? 'selected' : ''}>Programado</option>
+                        <option value="EMBARCANDO" ${operation.estado === 'EMBARCANDO' ? 'selected' : ''}>Embarcando</option>
+                        <option value="RETRASADO" ${operation.estado === 'RETRASADO' ? 'selected' : ''}>Retrasado</option>
+                        <option value="EN_RUTA" ${operation.estado === 'EN_RUTA' ? 'selected' : ''}>En Ruta</option>
+                        <option value="CANCELADO" ${operation.estado === 'CANCELADO' ? 'selected' : ''}>Cancelado</option>
+                        <option value="LLEGADO" ${operation.estado === 'LLEGADO' ? 'selected' : ''}>Llegado</option>
                     </select>
                 </label>
                 <label>Hora Estimada:
-                    <input type = "time" id = "edit-estimatedTime" value = "${operation.estimatedTime || ''}">
+                    <input type = "time" id = "edit-estimatedTime" value = "${operation.horaEstimada || ''}">
                 </label>
                 <label>ID Operador:
-                    <input type = "number" id = "edit-operatorId" value = "${operation.operatorId}">
+                    <input type = "number" id = "edit-operatorId" value = "${operation.operadorId}">
                 </label>
                 <label>ID Punto:
-                    <input type = "number" id = "edit-pointId" value = "${operation.pointId}">
+                    <input type = "number" id = "edit-pointId" value = "${operation.puntoId}">
                 </label>
                 <button id = "btn-save-edit">Guardar Cambios</button>
                 <button id = "btn-cancel-edit">Cancelar</button>
             </div>
         `;
-        this.container.innerHTML = formHtml;
-        this.bindEditEvents(operation.operationId);
+        this.bindEditEvents(operation.operacionId);
     }
 
     renderCreateForm(){
-        const formHtml = `
+        this.container.innerHTML = `
             <div class= "gestor-panel">
                 <h3>Crear Nueva Operación</h3>
                 <div class = "form-container">
@@ -244,8 +244,6 @@ export class OperationsView {
                 </div>
             </div>
         `;
-
-        this.container.innerHTML = formHtml;
         this.bindCreateEvents();
     }
 }

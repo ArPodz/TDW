@@ -3,7 +3,7 @@ export class UserManagementView {
         this.container = document.getElementById('users-table-container');
     }
 
-    render(users, onRoleChange) {
+    render(users, onRoleChange, onDeleteUser) {
         if (!this.container) return;
 
         this.container.innerHTML = 
@@ -28,10 +28,10 @@ export class UserManagementView {
         `
         ;
 
-        this.updateTable(users, onRoleChange);
+        this.updateTable(users, onRoleChange, onDeleteUser);
     }
 
-    updateTable(users, onRoleChange) {
+    updateTable(users, onRoleChange, onDeleteUser) {
         const table = document.getElementById('users-table-body');
         if (!table) return;
 
@@ -40,31 +40,54 @@ export class UserManagementView {
         users.forEach(user => {
             const tr = document.createElement('tr');
             
-            const isGestor = user.rol === 'GESTOR';
+            const isGestor = user.role === 'GESTOR';
+            const isInactivo = user.role === 'INACTIVO';
+
             const actionText = isGestor ? 'Degradar a Público' : 'Promover a Gestor';
             const newRole = isGestor ? 'PUBLICO' : 'GESTOR';
             const buttonClass = isGestor ? 'btn-degrade' : 'btn-promote';
 
+            const toggleText = isInactivo ? 'Activar Usuario' : 'Desactivar Usuario';
+            const toggleRole = isInactivo ? 'PUBLICO' : 'INACTIVO';
+            const toggleClass = isInactivo ? 'btn-promote' : 'btn-degrade';
+
             tr.innerHTML = 
             `
                 <td>${user.email}</td>
-                <td><span class= "badge ${user.rol}">${user.rol}</span></td>
+                <td><span class= "badge ${user.role}">${user.role}</span></td>
                 <td>
-                    <button class="btn-action ${buttonClass}" data-email="${user.email}">
+                    <button class="btn-action ${buttonClass} btn-role">
                         ${actionText}
+                    </button>
+                    <button class="btn-action ${toggleClass} btn-toggle">
+                        ${toggleText}
+                    </button>
+                    <button class="btn-action btn-delete">
+                        Eliminar Usuario
                     </button>
                 </td>
             `
             ;
 
-            const button = tr.querySelector('.btn-action');
-            button.addEventListener('click', () => {
-                onRoleChange(user.email, newRole);
+            tr.querySelector('.btn-role').addEventListener('click', () => {
+                onRoleChange(user.id, newRole);
+            });
+
+            tr.querySelector('.btn-toggle').addEventListener('click', () => {
+                onRoleChange(user.id, toggleRole);
+            });
+
+            tr.querySelector('.btn-delete').addEventListener('click', () => {
+                if (confirm(`¿Seguro que deseas eliminar al usuario ${user.email}?`)) {
+                    onDeleteUser(user.id);
+                }
             });
 
             table.appendChild(tr);
+
         });
     }
+
 
     setStatus(message, isError = false) {
         const statusDiv = document.getElementById('user-status-message');

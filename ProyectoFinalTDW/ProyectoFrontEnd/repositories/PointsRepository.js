@@ -16,7 +16,7 @@ export class PointsRepository {
             this.spots = raw.map(item => item.punto ?? item);
         } catch (error) {
             this.spots = [];
-            throw new Error("Error al inicializar repositorio de puntos: " + error.message);
+            console.warn("Error al inicializar repositorio de puntos: " + error.message);
         }
     }
 

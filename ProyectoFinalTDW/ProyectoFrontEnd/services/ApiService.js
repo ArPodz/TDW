@@ -3,8 +3,8 @@ import {getSessionInstance} from "../models/Session.js";
 
 export class ApiService {
 
-    static BASE_URL = "http://localhost:8080/api/v1";
-    static LOGIN_URL = "http://localhost:8080/access_token";
+    static BASE_URL  = 'http://127.0.0.1:8000/api/v1';
+    static LOGIN_URL = 'http://127.0.0.1:8000/access_token';
 
     static #TOKEN_KEY = 'jwt_token';
 
@@ -78,10 +78,19 @@ export class ApiService {
     }
 
     async put(endpoint, body){
+
+        const getResponse = await fetch(`${ApiService.BASE_URL}/${endpoint}`, {
+            method: 'GET',
+            headers: this.#authHeaders()
+        });
+
+        const etag = getResponse.headers.get('ETag');
+
         const response = await fetch(`${ApiService.BASE_URL}/${endpoint}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'If-Match': etag,
                 ...this.#authHeaders()
             },
             body: JSON.stringify(body)
@@ -91,8 +100,17 @@ export class ApiService {
     }
 
     async delete(endpoint){
+
+        const getResponse = await fetch(`${ApiService.BASE_URL}/${endpoint}`, {
+            method: 'GET',
+            headers: this.#authHeaders()
+        });
+
+        const etag = getResponse.headers.get('ETag');
+
         const response = await fetch(`${ApiService.BASE_URL}/${endpoint}`, {
             method: 'DELETE',
+            'If-Match': etag,
             headers: this.#authHeaders()
         });
 

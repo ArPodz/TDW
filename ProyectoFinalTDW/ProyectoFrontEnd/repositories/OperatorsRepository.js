@@ -16,7 +16,7 @@ export class OperatorsRepository {
             
         } catch (error) {
             this.operators = [];
-            throw new Error("Error al inicializar repositorio de operadores: " + error.message);
+            console.warn("Error al inicializar repositorio de operadores: " + error.message);
         }
     }
 

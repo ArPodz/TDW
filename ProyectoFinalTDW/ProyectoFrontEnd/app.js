@@ -27,16 +27,18 @@ async function init() {
     const operatorController = new OperatorController(api);
     const pointController = new PointController(api);
 
-    try {
-        await Promise.all([
-            userController.initialize(),
-            operationController.initialize(),
-            operatorController.initialize(),
-            pointController.initialize()
-        ]);
-        console.log("Repositorios inicializados con datos del servidor.");
-    } catch (e) {
-        console.warn("Error en carga de datos iniciales:", e.message);
+    if (api.isLoggedIn()) {
+        try {
+            await Promise.all([
+                userController.initialize(),
+                operationController.initialize(),
+                operatorController.initialize(),
+                pointController.initialize()
+            ]);
+            console.log("✅ Repositorios inicializados.");
+        } catch (e) {
+            console.warn("⚠️ Error en carga inicial:", e.message);
+        }
     }
 
 
@@ -79,6 +81,7 @@ async function init() {
         loginView.bindFormSubmit(async () => {
             try {
                 await userController.loginUser(loginView.getFormData());
+
                 window.location.href = "index.html"; 
             } catch (error) { 
                 loginView.setStatus(error.message, true); 

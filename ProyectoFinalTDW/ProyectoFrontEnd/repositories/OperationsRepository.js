@@ -16,7 +16,7 @@ export class OperationsRepository {
             
         } catch (error) {
             this.operations = [];
-            throw new Error("Error al inicializar repositorio de operaciones: " + error.message);
+            console.warn("Error al inicializar repositorio de operaciones: " + error.message);
         }
     }
 

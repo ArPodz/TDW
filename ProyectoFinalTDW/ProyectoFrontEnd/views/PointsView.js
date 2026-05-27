@@ -22,12 +22,12 @@ export class PointsView {
                     <tbody>
                         ${points.map(p => `
                             <tr>
-                                <td>${p.pointId}</td>
-                                <td>${p.code}</td>
-                                <td>${p.type}</td>
+                                <td>${p.puntoId}</td>
+                                <td>${p.codigo}</td>
+                                <td>${p.tipo}</td>
                                 <td>
-                                    <button class = "btn-edit-point" data-id = "${p.code}">Editar</button>
-                                    <button class = "btn-delete-point" data-id = "${p.code}">Borrar</button>
+                                    <button class = "btn-edit-point" data-id = "${p.codigo}">Editar</button>
+                                    <button class = "btn-delete-point" data-id = "${p.codigo}">Borrar</button>
                                 </td>
                             </tr>
                         `).join('')}
@@ -41,14 +41,12 @@ export class PointsView {
     
     bindEvents() {
 
-        const deleteButtons = this.container.querySelectorAll('.btn-delete-point');
-        deleteButtons.forEach(btn => {
+        this.container.querySelectorAll('.btn-delete-point').forEach(btn => {
             btn.addEventListener('click', async (e) => {
-                const code = e.target.getAttribute('data-id');
-                if (confirm(`¿Seguro que deseas eliminar el punto ${code}?`)) {
+                const puntoId = e.target.getAttribute('data-id');
+                if (confirm(`¿Seguro que deseas eliminar el punto ${puntoId}?`)) {
                     try {
-                        const point = this.pointController.findPointByCode(code);
-                        await this.pointController.deletePoint(point.pointId);
+                        await this.pointController.deletePoint(puntoId);
                         alert("Punto eliminado");
                         this.render();
                     } catch (error) {
@@ -58,19 +56,18 @@ export class PointsView {
             });
         });
 
-        const editButtons = this.container.querySelectorAll('.btn-edit-point');
-        editButtons.forEach(btn => {
+
+        this.container.querySelectorAll('.btn-edit-point').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const code = e.target.getAttribute('data-id');
-                this.renderEditForm(code);
+                this.renderEditForm(e.target.getAttribute('data-id'));
             });
         });
 
         document.getElementById('btn-new-point').addEventListener('click', () => {
-            console.log("Mostrar formulario de creación");
             this.renderCreateForm();
         });
     }
+
 
     bindCreateEvents() {
 
@@ -80,8 +77,8 @@ export class PointsView {
 
         document.getElementById('btn-save-new-point').addEventListener('click', async () => {
             const newPointData = {
-                code: document.getElementById('new-point-code').value.trim(),
-                type: document.getElementById('new-point-type').value
+                codigo: document.getElementById('new-point-code').value.trim(),
+                tipo: document.getElementById('new-point-type').value
             };
 
             try {
@@ -90,12 +87,12 @@ export class PointsView {
                 this.render();
             } catch (error) {
                 alert(error.message);
-                return;
             }
         });
     }
 
-    bindEditEvents(pointId) {
+
+    bindEditEvents(puntoId) {
 
         document.getElementById('btn-cancel-edit').addEventListener('click', () => {
             this.render();
@@ -103,12 +100,12 @@ export class PointsView {
 
         document.getElementById('btn-save-edit').addEventListener('click', async () => {
             const updatedData = {
-                code: document.getElementById('edit-code').value.trim(),
-                type: document.getElementById('edit-type').value
+                codigo: document.getElementById('edit-code').value.trim(),
+                tipo: document.getElementById('edit-type').value
             };
 
             try {
-                await this.pointController.updatePoint(pointId, updatedData);
+                await this.pointController.updatePoint(puntoId, updatedData);
                 alert("Punto actualizado con éxito");
                 this.render();
             } catch (error) {
@@ -117,32 +114,31 @@ export class PointsView {
         });
     }
 
-    renderEditForm(code){
-        const point = this.pointController.findPointByCode(code);
+    renderEditForm(codigo){
+        const point = this.pointController.findPointByCode(codigo);
         if (!point) return;
 
-        const formHtml = `
+        this.container.innerHTML = `
             <div class= "form-edit-card">
-                <h3>Editando Punto: ${point.code}</h3>
+                <h3>Editando Punto: ${point.codigo}</h3>
                 <label>Tipo:
                     <select id="edit-type">
-                        <option value="PUERTA" ${point.type === 'PUERTA' ? 'selected' : ''}>Puerta</option>
-                        <option value="VIA" ${point.type === 'VIA' ? 'selected' : ''}>Vía</option>
+                        <option value="PUERTA" ${point.tipo === 'PUERTA' ? 'selected' : ''}>Puerta</option>
+                        <option value="VIA" ${point.tipo === 'VIA' ? 'selected' : ''}>Vía</option>
                     </select>
                 </label>
                 <label>Código:
-                    <input type="text" id="edit-code" value="${point.code}">
+                    <input type="text" id="edit-code" value="${point.codigo}">
                 </label>
                 <button id="btn-save-edit">Guardar Cambios</button>
                 <button id="btn-cancel-edit">Cancelar</button>
             </div>
         `;
-        this.container.innerHTML = formHtml;
-        this.bindEditEvents(point.pointId);
+        this.bindEditEvents(point.puntoId);
     }
 
     renderCreateForm(){
-        const formHtml = `
+        this.container.innerHTML = `
             <div class= "gestor-panel">
                 <h3>Crear Nuevo Punto</h3>
                 <div class = "form-container">
@@ -166,8 +162,7 @@ export class PointsView {
                 </div>
             </div>
         `;
-
-        this.container.innerHTML = formHtml;
+        
         this.bindCreateEvents();
     }
 }

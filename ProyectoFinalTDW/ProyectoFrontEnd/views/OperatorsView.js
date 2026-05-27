@@ -24,14 +24,14 @@ export class OperatorsView {
                     <tbody>
                         ${operators.map(op => `
                             <tr>
-                                <td>${op.operatorId}</td>
-                                <td>${op.name}</td>
-                                <td>${op.acronym}</td>
+                                <td>${op.id}</td>
+                                <td>${op.nombre}</td>
+                                <td>${op.siglas}</td>
                                 <td><span class = "color-box" style = "background-color: ${op.color};"></span> ${op.color}</td>
                                 <td><a href="${op.urlIcono}" target = "_blank">Ver Icono</a></td>
                                 <td>
-                                    <button class = "btn-edit-operator" data-id = "${op.operatorId}">Editar</button>
-                                    <button class = "btn-delete-operator" data-id = "${op.operatorId}">Borrar</button>
+                                    <button class = "btn-edit-operator" data-id = "${op.id}">Editar</button>
+                                    <button class = "btn-delete-operator" data-id = "${op.id}">Borrar</button>
                                 </td>   
                             </tr>
                         `).join('')}
@@ -45,8 +45,7 @@ export class OperatorsView {
 
     bindEvents() {
 
-        const deleteButtons = this.container.querySelectorAll('.btn-delete-operator');
-        deleteButtons.forEach(btn => {
+        this.container.querySelectorAll('.btn-delete-operator').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const id = Number(e.target.getAttribute('data-id'));
                 if (confirm(`¿Seguro que deseas eliminar el operador ${id}?`)) {
@@ -61,16 +60,14 @@ export class OperatorsView {
             });
         });
 
-        const editButtons = this.container.querySelectorAll('.btn-edit-operator');
-        editButtons.forEach(btn => {
+
+        this.container.querySelectorAll('.btn-edit-operator').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const id = Number(e.target.getAttribute('data-id'));
-                this.renderEditForm(id);
+                this.renderEditForm(Number(e.target.getAttribute('data-id')));
             });
         });
 
         document.getElementById('btn-new-operator').addEventListener('click', () => {
-            console.log("Mostrar formulario de creación");
             this.renderCreateForm();
         });
     }
@@ -83,8 +80,8 @@ export class OperatorsView {
 
         document.getElementById('btn-save-new-operator').addEventListener('click', async () => {
             const newOperatorData = {
-                name: document.getElementById('new-operator-name').value.trim(),
-                acronym: document.getElementById('new-operator-acronym').value.trim(),
+                nombre: document.getElementById('new-operator-name').value.trim(),
+                siglas: document.getElementById('new-operator-acronym').value.trim(),
                 color: document.getElementById('new-operator-color').value,
                 urlIcono: document.getElementById('new-operator-urlIcono').value.trim()
             };
@@ -95,7 +92,6 @@ export class OperatorsView {
                 this.render();
             } catch (error) {
                 alert(error.message);
-                return;
             }
         });
     }
@@ -108,8 +104,8 @@ export class OperatorsView {
 
         document.getElementById('btn-save-edit').addEventListener('click', async () => {
             const updatedData = {
-                name: document.getElementById('edit-code').value.trim(),
-                acronym: document.getElementById('edit-acronym').value.trim(),
+                nombre: document.getElementById('edit-code').value.trim(),
+                siglas: document.getElementById('edit-acronym').value.trim(),
                 color: document.getElementById('edit-color').value,
                 urlIcono: document.getElementById('edit-urlIcono').value.trim()
             };
@@ -126,7 +122,7 @@ export class OperatorsView {
 
 
     renderCreateForm(){
-        const formHtml = `
+        this.container.innerHTML = `
             <div class= "gestor-panel">
                 <h3>Crear Nuevo Operador</h3>
                 <div class = "form-container">
@@ -158,7 +154,6 @@ export class OperatorsView {
             </div>
         `;
 
-        this.container.innerHTML = formHtml;
         this.bindCreateEvents();
     }
 
@@ -166,14 +161,14 @@ export class OperatorsView {
         const operator = this.operatorController.findOperatorById(operatorId);
         if (!operator) return;
 
-        const formHtml = `
+        this.container.innerHTML = `
             <div class = "form-edit-card">
-                <h3>Editando Operador: ${operator.operatorId} - ${operator.name}</h3>
+                <h3>Editando Operador: ${operator.id} - ${operator.nombre}</h3>
                 <label>Nombre:
-                    <input type = "text" id = "edit-code" value="${operator.name}">
+                    <input type = "text" id = "edit-code" value="${operator.nombre}">
                 </label>
                 <label>Acrónimo:
-                    <input type = "text" id = "edit-acronym" value = "${operator.acronym}">
+                    <input type = "text" id = "edit-acronym" value = "${operator.siglas}">
                 </label>
                 <label>Color:
                     <input type = "color" id = "edit-color" value = "${operator.color}">
@@ -186,9 +181,8 @@ export class OperatorsView {
                 <button id="btn-cancel-edit">Cancelar</button>
             </div>
         `;
-
-        this.container.innerHTML = formHtml;
-        this.bindEditEvents(operator.operatorId);
+        
+        this.bindEditEvents(operator.id);
     }
 
 }
