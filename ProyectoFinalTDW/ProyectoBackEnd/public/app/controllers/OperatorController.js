@@ -12,7 +12,7 @@ export class OperatorController {
     }
 
     async createOperator(data){
-        return await this.addOperator({
+        return await this.operators.addOperator({
             nombre: data.nombre,
             siglas: data.siglas,
             color: data.color,

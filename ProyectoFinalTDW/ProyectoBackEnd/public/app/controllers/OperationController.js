@@ -45,14 +45,14 @@ export class OperationController {
 
     async createOperation(data) {
         const payload = {
-            tipo: this.validType(data.type),
+            tipo: this.validType(data.tipo),
             codigo: data.codigo,
-            sentido: this.validDirection(data.direction),
+            sentido: this.validDirection(data.sentido),
             origen: data.origen,
             destino: data.destino,
             horaProgramada: data.horaProgramada,
             horaEstimada: data.horaEstimada,
-            estado: this.validState(data.state),
+            estado: this.validState(data.estado),
             operadorId: data.operadorId,
             puntoId: data.puntoId
         };
@@ -83,7 +83,7 @@ export class OperationController {
             payload.estado = this.validState(updatedData.estado);
         }
 
-        return await this.operations.updateOperation(operacionId, payload);
+        return await this.operations.updateOperation(operationId, payload);
     }
 
     getOperationsList() {

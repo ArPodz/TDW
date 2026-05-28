@@ -8,15 +8,15 @@ export class InformationController {
 
         const {direction, search, state, sort } = configuration;
 
-        let data = this.operationController.getOperationsList().filter(op => op.direction === direction);
+        let data = this.operationController.getOperationsList().filter(op => op.sentido?.toUpperCase() === direction);
 
         if (search) {
             const query = search.toLowerCase();
-            data = data.filter(op => op.code.toLowerCase().includes(query));
+            data = data.filter(op => op.codigo.toLowerCase().includes(query));
         }
 
         if (state !== "ALL") {
-            data = data.filter(op => op.state === state);
+            data = data.filter(op => op.estado === state);
         }
 
         data.sort((a, b) => {
@@ -30,8 +30,8 @@ export class InformationController {
         return data;
     }
 
-    getOperatorInfo(operatorId) {
-        return this.operatorController.findOperatorById(operatorId);
+    getOperatorInfo(operadorId) {
+        return this.operatorController.findOperatorById(operadorId);
     }
 
 }

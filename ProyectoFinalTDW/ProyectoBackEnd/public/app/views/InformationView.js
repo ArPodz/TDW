@@ -62,7 +62,7 @@ export class InformationView {
 
     generateTableHtml(data) {
         const locHeader = this.currentTab === 'SALIDA' ? 'Destino' : 'Origen';
-        const locKey = this.currentTab === 'SALIDA' ? 'destination' : 'origin';
+        const locKey = this.currentTab === 'SALIDA' ? 'destino' : 'origen';
 
         return `
             <table class="table">
@@ -86,20 +86,20 @@ export class InformationView {
                 </thead>
                 <tbody>
                     ${data.length > 0 ? data.map(op => {
-                        const operator = this.informationController.getOperatorInfo(op.operatorId);
+                        const operator = this.informationController.getOperatorInfo(op.operadorId);
                         return `
-                            <tr class="info-row" data-id="${op.operationId}" style="cursor:pointer">
-                                <td><strong>${op.estimatedTime}</strong></td>
-                                <td>${op.code}</td>
+                            <tr class="info-row" data-id="${op.operacionId}" style="cursor:pointer">
+                                <td><strong>${op.horaEstimada}</strong></td>
+                                <td>${op.codigo}</td>
                                 <td>${op[locKey]}</td>
                                 <td>
-                                    <span class="color-box" style="background-color: ${operator?.color || '#ccc'}"></span>
-                                    ${operator?.acronym || 'N/A'}
+                                    <span class="color-box" style="background-color: ${op?.operador?.operador?.color || '#ccc'}"></span>
+                                    ${op?.operador?.operador?.siglas || 'N/A'}
                                 </td>
-                                <td>${op.pointId || '---'}</td>
+                                <td>${op.punto?.punto?.codigo || '---'}</td>
                                 <td>
-                                    <span class="state-badge state-${op.state.toLowerCase()}">
-                                        ${op.state}
+                                    <span class="state-badge state-${op.estado.toUpperCase()}">
+                                        ${op.estado}
                                     </span>
                                 </td>
                             </tr>
@@ -153,16 +153,16 @@ export class InformationView {
         const sortOperator = document.getElementById('sort-operator');
 
         if (sortTime) {
-            sortTime.addEventListener('click', () => this.handleSort('estimatedTime'));
+            sortTime.addEventListener('click', () => this.handleSort('horaEstimada'));
         }
         
         if (sortCode) {
-            sortCode.addEventListener('click', () => this.handleSort('code'));
+            sortCode.addEventListener('click', () => this.handleSort('codigo'));
         }
 
         if (sortLocation) {
             sortLocation.addEventListener('click', () => {
-                const key = this.currentTab === 'SALIDA' ? 'destination' : 'origin';
+                const key = this.currentTab === 'SALIDA' ? 'destino' : 'origen';
                 this.handleSort(key);
             });
         }
@@ -174,36 +174,35 @@ export class InformationView {
         const rows = this.container.querySelectorAll('.info-row');
         rows.forEach(row => {
             row.addEventListener('click', () => {
-                const operationId = row.getAttribute('data-id');
-                this.showDetail(operationId);
+                const operacionId = row.getAttribute('data-id');
+                this.showDetail(operacionId);
             });
         });
     }
 
     showDetail(id) {
-        const op = this.informationController.operationController.getOperationsList().find(o => o.operationId === id);
+        const op = this.informationController.operationController.getOperationsList().find(o => o.operacionId === id);
         if (!op) return;
 
-        const operator = this.informationController.getOperatorInfo(op.operatorId);
 
         alert(`
             DETALLE COMPLETO DE LA OPERACIÓN
             ----------------------------------
-            Código: ${op.code}
-            Tipo: ${op.type}
-            Dirección: ${op.direction}
-            Estado: ${op.state}
+            Código: ${op.codigo}
+            Tipo: ${op.tipo}
+            Dirección: ${op.sentido}
+            Estado: ${op.estado}
             
-            Origen: ${op.origin}
-            Destino: ${op.destination}
+            Origen: ${op.origen}
+            Destino: ${op.destino}
             
-            Hora Programada: ${op.scheduledTime}
-            Hora Estimada: ${op.estimatedTime}
+            Hora Programada: ${op.horaProgramada}
+            Hora Estimada: ${op.horaEstimada}
             
-            Operador: ${operator?.name || 'No asignado'} (${operator?.acronym || 'N/A'})
-            Puerta/Vía Asignada: ${op.pointId || 'Pendiente'}
+            Operador: ${op.operador?.operador?.nombre || 'No asignado'} (${op.operador?.operador?.siglas || 'N/A'})
+            Puerta/Vía Asignada: ${op.punto?.punto?.codigo || 'Pendiente'}
             ----------------------------------
-            ID Interno: ${op.operationId}
+            ID Interno: ${op.operacionId}
         `);
     }
 

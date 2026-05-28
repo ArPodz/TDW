@@ -33,8 +33,8 @@ export class PointController {
     }
 
     async createPoint(data) {
-        const validatedCode = this.validCode(data.code);
-        const validatedType = this.validType(data.type);
+        const validatedCode = this.validCode(data.codigo);
+        const validatedType = this.validType(data.tipo);
 
         return await this.spots.addPoint({
             tipo: validatedType,

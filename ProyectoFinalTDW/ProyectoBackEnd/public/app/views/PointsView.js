@@ -27,7 +27,7 @@ export class PointsView {
                                 <td>${p.tipo}</td>
                                 <td>
                                     <button class = "btn-edit-point" data-id = "${p.codigo}">Editar</button>
-                                    <button class = "btn-delete-point" data-id = "${p.codigo}">Borrar</button>
+                                    <button class = "btn-delete-point" data-id = "${p.puntoId}">Borrar</button>
                                 </td>
                             </tr>
                         `).join('')}
@@ -43,7 +43,7 @@ export class PointsView {
 
         this.container.querySelectorAll('.btn-delete-point').forEach(btn => {
             btn.addEventListener('click', async (e) => {
-                const puntoId = e.target.getAttribute('data-id');
+                const puntoId = Number(e.target.getAttribute('data-id'));
                 if (confirm(`¿Seguro que deseas eliminar el punto ${puntoId}?`)) {
                     try {
                         await this.pointController.deletePoint(puntoId);

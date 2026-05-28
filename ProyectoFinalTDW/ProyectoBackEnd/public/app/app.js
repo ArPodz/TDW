@@ -27,15 +27,21 @@ async function init() {
     const operatorController = new OperatorController(api);
     const pointController = new PointController(api);
 
+    try {
+        await Promise.all([
+            operationController.initialize(),
+            operatorController.initialize(),
+            pointController.initialize()
+        ]);
+        console.log("✅ Repositorios publicos inicializados.");
+        } catch (e) {
+            console.warn("⚠️ Error en carga inicial:", e.message);
+        }
+
     if (api.isLoggedIn()) {
         try {
-            await Promise.all([
-                userController.initialize(),
-                operationController.initialize(),
-                operatorController.initialize(),
-                pointController.initialize()
-            ]);
-            console.log("✅ Repositorios inicializados.");
+            userController.initialize();
+        console.log("✅ Repositorios privados inicializados.");
         } catch (e) {
             console.warn("⚠️ Error en carga inicial:", e.message);
         }

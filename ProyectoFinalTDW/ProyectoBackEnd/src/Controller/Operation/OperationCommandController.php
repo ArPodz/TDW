@@ -196,8 +196,8 @@ class OperationCommandController
         if (isset($data['destino'])) {
             $element->setDestino($data['destino']);
         }
-        if (isset($data['horaProgramada'])) {
-            $element->setHoraProgramada(new \DateTime($data['horaProgramada']));
+        if (isset($data['horaEstimada'])) {
+            $element->setHoraEstimada(new \DateTime($data['horaEstimada']));
         }
         if (isset($data['estado'])) {
             $element->setEstado($data['estado']);

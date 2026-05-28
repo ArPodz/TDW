@@ -40,7 +40,7 @@ export class OperationsView {
                                 <td>${o.horaEstimada}</td>
                                 <td>${o.estado}</td>
                                 <td>${o.operador?.operador?.nombre ?? o.operadorId ?? '-'}</td>
-                                <td>${o.punto?.codigo ?? o.puntoId ?? '-'}</td>
+                                <td>${o.punto?.punto?.codigo ?? o.puntoId ?? '-'}</td>
                                 <td>
                                     <button class = "btn-edit-operation" data-id = "${o.codigo}">Editar</button>
                                     <button class = "btn-delete-operation" data-id = "${o.codigo}">Borrar</button>
@@ -98,14 +98,19 @@ export class OperationsView {
 
         document.getElementById('btn-save-new-operation').addEventListener('click', async () => {
 
+            const formatDateTime = (value) => {
+                if (!value) return null;
+                return value.replace('T', ' ') + ':00';
+            };
+
             const newOperationData = {
                 tipo: document.getElementById('new-operation-type').value.trim(),
                 codigo: document.getElementById('new-operation-code').value.trim(),
                 sentido: document.getElementById('new-operation-direction').value.trim(),
                 origen: document.getElementById('new-operation-origin').value.trim(),
                 destino: document.getElementById('new-operation-destination').value.trim(),
-                horaProgramada: document.getElementById('new-operation-scheduledTime').value,
-                horaEstimada: document.getElementById('new-operation-estimatedTime').value,
+                horaProgramada: formatDateTime(document.getElementById('new-operation-scheduledTime').value),
+                horaEstimada: formatDateTime(document.getElementById('new-operation-estimatedTime').value),
                 estado: document.getElementById('new-operation-state').value.trim(),
                 operadorId: parseInt(document.getElementById('new-operation-operatorId').value),
                 puntoId: parseInt(document.getElementById('new-operation-pointId').value)
