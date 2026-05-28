@@ -427,6 +427,9 @@ input[type="color"] {
     margin-top: 1rem !important;
 }
 
+.feedback.success { color: green; font-size: 0.85rem; }
+.feedback.error   { color: red;   font-size: 0.85rem; }
+
 /* ----------------------------------------------------------- */
 
 @keyframes fadeIn {

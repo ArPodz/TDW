@@ -59,6 +59,45 @@ class User implements JsonSerializable, Stringable
     )]
     protected Role $role;
 
+    #[ORM\Column(
+        name: 'nombre',
+        type: 'string',
+        length: 60,
+        nullable: true
+    )]
+    protected ?string $nombre = null;
+
+    #[ORM\Column(
+        name: 'apellidos',
+        type: 'string',
+        length: 120,
+        nullable: true
+    )]
+    protected ?string $apellidos = null;
+
+    #[ORM\Column(
+        name: 'fecha_nacimiento',
+        type: 'date',
+        length: 120,
+        nullable: true
+    )]
+    protected ?DateTime $fechaNacimiento = null;
+
+    #[ORM\Column(
+        name: 'telefono',
+        type: 'string',
+        length: 20,
+        nullable: true
+    )]
+    protected ?string $telefono = null;
+
+    #[ORM\Column(
+        name: 'urls',
+        type: 'text',
+        nullable: true
+    )]
+    protected ?string $urls = null;
+
     /**
      * User constructor.
      *
@@ -195,6 +234,58 @@ class User implements JsonSerializable, Stringable
         );
         return $roles;
     }
+
+    public function getNombre(): ?string
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre(?string $nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    public function getApellidos(): ?string
+    {
+        return $this->apellidos;
+    }
+
+    public function setApellidos(?string $apellidos): void
+    {
+        $this->apellidos = $apellidos;
+    }
+
+    public function getFechaNacimiento(): ?DateTime
+    {
+        return $this->fechaNacimiento;
+    }
+
+    public function setFechaNacimiento(?DateTime $fechaNacimiento): void
+    {
+        $this->fechaNacimiento = $fechaNacimiento;
+    }
+
+    public function getTelefono(): ?string
+    {
+        return $this->telefono;
+    }
+
+    public function setTelefono(?string $telefono): void
+    {
+        $this->telefono = $telefono;
+    }
+
+    public function getUrls(): ?string
+    {
+        return $this->urls;
+    }
+
+    public function setUrls(?string $urls): void
+    {
+        $this->urls = $urls;
+    }
+    
+        
 
     /** @see Stringable */
     public function __toString(): string

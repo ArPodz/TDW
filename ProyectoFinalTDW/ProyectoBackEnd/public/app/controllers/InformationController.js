@@ -16,7 +16,7 @@ export class InformationController {
         }
 
         if (state !== "ALL") {
-            data = data.filter(op => op.estado === state);
+            data = data.filter(op => op.estado?.toUpperCase() === state);
         }
 
         data.sort((a, b) => {

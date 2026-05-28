@@ -13,6 +13,7 @@ use TDW\IPanel\Model\Punto;
 use TDW\IPanel\Utility\Error;
 use TDW\IPanel\Enum\TipoOperacion;
 use TDW\IPanel\Enum\SentidoOperacion;
+use TDW\IPanel\Enum\EstadoOperacion; 
 
 class OperationCommandController
 {
@@ -64,7 +65,10 @@ class OperationCommandController
                 $req_data['origen'] ?? '',
                 $req_data['destino'] ?? '',
                 $operador,
-                $punto
+                $punto,
+                EstadoOperacion::PROGRAMADO,
+                !empty($req_data['horaProgramada']) ? new \DateTime($req_data['horaProgramada']) : null,
+                !empty($req_data['horaEstimada'])   ? new \DateTime($req_data['horaEstimada'])   : null
             );
 
             $this->updateElement($element, $req_data);

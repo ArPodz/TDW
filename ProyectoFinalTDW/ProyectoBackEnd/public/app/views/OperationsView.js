@@ -32,13 +32,13 @@ export class OperationsView {
                             <tr>
                                 <td>${o.operacionId}</td>
                                 <td>${o.codigo}</td>
-                                <td>${o.tipo}</td>
-                                <td>${o.sentido}</td>
+                                <td>${o.tipo.toUpperCase()}</td>
+                                <td>${o.sentido.toUpperCase()}</td>
                                 <td>${o.origen}</td>
                                 <td>${o.destino}</td>
                                 <td>${o.horaProgramada}</td>
                                 <td>${o.horaEstimada}</td>
-                                <td>${o.estado}</td>
+                                <td>${o.estado.toUpperCase()}</td>
                                 <td>${o.operador?.operador?.nombre ?? o.operadorId ?? '-'}</td>
                                 <td>${o.punto?.punto?.codigo ?? o.puntoId ?? '-'}</td>
                                 <td>

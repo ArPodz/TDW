@@ -21,8 +21,9 @@
             <nav>
                 <a href = "index.html">Inicio</a>
                 <a href = "templates/information.html" id = "nav-board">Información Vuelos y Trenes</a>
-                <a href = "templates/operations.html">Administración de Operaciones</a>
-                <a href = "templates/users.html">Gestor de Usuarios</a>
+                <a href = "templates/operations.html" data-require-role="GESTOR">Administración de Operaciones</a>
+                <a href = "templates/users.html" data-require-role="GESTOR">Gestor de Usuarios</a>
+                <a href = "templates/profile.html" data-require-auth="true">Mi Perfil</a>
                 <span id = "user-data" style ="display: none; color: white; margin-right: 10px;"></span>
                 <a href = "templates/login.html" id = "login-link">Login</a>
             </nav>

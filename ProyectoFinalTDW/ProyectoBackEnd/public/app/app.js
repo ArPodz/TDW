@@ -40,7 +40,7 @@ async function init() {
 
     if (api.isLoggedIn()) {
         try {
-            userController.initialize();
+            await userController.initialize();
         console.log("✅ Repositorios privados inicializados.");
         } catch (e) {
             console.warn("⚠️ Error en carga inicial:", e.message);
@@ -66,7 +66,7 @@ async function init() {
     if (registerView.registerForm) {
         registerView.bindEmailCheck(async (email) => {
             const exists = await userController.checkEmailExists(email);
-            registerView.setEmailStatus(exists);
+            registerView.setEmailFeedback(exists);
         });
 
         registerView.bindFormSubmit(async () => {

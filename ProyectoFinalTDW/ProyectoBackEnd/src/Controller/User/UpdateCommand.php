@@ -106,6 +106,29 @@ class UpdateCommand
             }
         }
 
+        if(array_key_exists('nombre', $req_data)) {
+            $userToModify->setNombre($req_data['nombre'] ?: null);
+        }
+
+        if(array_key_exists('apellidos', $req_data)) {
+            $userToModify->setApellidos($req_data['apellidos'] ?: null);
+        }
+
+        if(array_key_exists('fechaNacimiento', $req_data) && !empty($req_data['fechaNacimiento'])) {
+            try {
+                $userToModify->setFechaNacimiento(new DateTime($req_data['fechaNacimiento']));
+            } catch (Throwable) { 
+            }
+        }
+
+        if(array_key_exists('telefono', $req_data)) {
+            $userToModify->setTelefono($req_data['telefono'] ?: null);
+        }
+
+        if(array_key_exists('urls', $req_data)) {
+            $userToModify->setUrls($req_data['urls'] ?: null);
+        }
+
         $this->entityManager->flush();
         $this->entityManager->commit();
 
