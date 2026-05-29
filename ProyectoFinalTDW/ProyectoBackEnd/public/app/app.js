@@ -12,6 +12,7 @@ import { UserManagementView } from "./views/UserManagementView.js";
 import { OperationsView } from "./views/OperationsView.js";
 import { PointsView } from "./views/PointsView.js"; 
 import { OperatorsView } from "./views/OperatorsView.js";
+import { ProfileView } from './views/ProfileView.js';
 
 import { InformationController } from "./controllers/InformationController.js";
 import { InformationView } from "./views/InformationView.js";
@@ -50,13 +51,24 @@ async function init() {
 
     const actualizarInterfazSesion = () => {
         const activeUser = userController.activeSession.getUser();
+
+        const authLinks = document.querySelectorAll('[data-require-auth]');
+        const gestorLinks = document.querySelectorAll('[data-require-role="GESTOR"]');
         if (activeUser) {
             SessionView.renderSession(activeUser.email, activeUser.rol, () => {
                 userController.logoutUser();
                 window.location.href = "index.html"; 
             });
+
+            authLinks.forEach(link => link.style.display = '');
+
+            const isGestor = activeUser.rol === 'GESTOR';
+            gestorLinks.forEach(link => link.style.display = isGestor ? '' : 'none');
+
         } else {
             SessionView.renderGuest();
+            authLinks.forEach(link => link.style.display = 'none');
+            gestorLinks.forEach(link => link.style.display = 'none');
         }
     };
 
@@ -109,6 +121,17 @@ async function init() {
                 window.location.href = "templates/login.html";
             }
         );
+    }
+
+    const profileContainer = document.getElementById('profile-container');
+    if (profileContainer) {
+        const activeUser = userController.activeSession.getUser();
+        if (!activeUser) {
+            window.location.href = 'templates/login.html';
+            return;
+        }
+        const profileView = new ProfileView(userController, 'profile-container');
+        await profileView.render();
     }
 
 

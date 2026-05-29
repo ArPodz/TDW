@@ -19,6 +19,7 @@ use ReflectionObject;
 use Stringable;
 use TDW\IPanel\Enum\Role;
 use ValueError;
+use Datetime;
 
 #[ORM\Entity, ORM\Table(name: 'users')]
 class User implements JsonSerializable, Stringable

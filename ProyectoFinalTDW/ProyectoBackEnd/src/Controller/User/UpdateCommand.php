@@ -17,6 +17,7 @@ use TDW\IPanel\Controller\TraitController;
 use TDW\IPanel\Model\User;
 use TDW\IPanel\Utility\Error;
 use Throwable;
+use DateTime;
 
 /**
  * Class UpdateCommand
@@ -115,10 +116,7 @@ class UpdateCommand
         }
 
         if(array_key_exists('fechaNacimiento', $req_data) && !empty($req_data['fechaNacimiento'])) {
-            try {
-                $userToModify->setFechaNacimiento(new DateTime($req_data['fechaNacimiento']));
-            } catch (Throwable) { 
-            }
+            $userToModify->setFechaNacimiento(new \DateTime($req_data['fechaNacimiento']));
         }
 
         if(array_key_exists('telefono', $req_data)) {
