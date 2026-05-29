@@ -44,7 +44,7 @@ export class InformationView {
                         <option value = "PROGRAMADO" ${this.filters.state === 'PROGRAMADO' ? 'selected' : ''}>Programado</option>
                         <option value = "EN CURSO" ${this.filters.state === 'EN CURSO' ? 'selected' : ''}>En curso</option>
                         <option value = "RETRASADO" ${this.filters.state === 'RETRASADO' ? 'selected' : ''}>Retrasado</option>
-                        <option value = "LLEGADO" ${this.filters.state === 'LLEGADO' ? 'selected' : ''}>Completado</option>
+                        <option value = "LLEGADO" ${this.filters.state === 'LLEGADO' ? 'selected' : ''}>Llegado</option>
                         <option value = "CANCELADO" ${this.filters.state === 'CANCELADO' ? 'selected' : ''}>Cancelado</option>
                         <option value = "EMBARCANDO" ${this.filters.state === 'EMBARCANDO' ? 'selected' : ''}>Embarcando</option>
                     </select>

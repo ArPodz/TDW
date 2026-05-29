@@ -17,8 +17,7 @@ export class ProfileView {
         let userData = {};
 
         try {
-            const data = await this.userController.users.api.get(`users/${activeUser.id}`);
-            userData = data?.user ?? data;
+            userData = await this.userController.getUserById(activeUser.id);
         } catch (error) {
             this.container.innerHTML = `<p class = "status error">Error al cargar perfil: ${error.message}</p>`;
             return;
@@ -31,7 +30,7 @@ export class ProfileView {
                 <h2>Mi Perfil</h2>
                 <p class = "auth-subtitle">Modifica tu información personal</p>
 
-                <div class = "form-constainer">
+                <div class = "form-container">
                     <div class = "form-group">
                         <label for = "profile-email">EMAIL:</label>
                         <input type = "email" id = "profile-email" value = "${userData.email ?? ''}" required />

@@ -125,6 +125,11 @@ export class UserController {
             }
         }
     }
+
+    async getUserById(userId) {
+        const data = await this.users.api.get(`users/${userId}`);
+        return data?.user ?? data;
+    }
 }
 
 

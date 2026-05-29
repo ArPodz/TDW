@@ -100,9 +100,9 @@ export class OperationsView {
 
             const formatDateTime = (value) => {
                 if (!value) return null;
-                return value.replace('T', ' ') + ':00';
+                return value.replace('T', ' ');
             };
-
+                        
             const newOperationData = {
                 tipo: document.getElementById('new-operation-type').value.trim(),
                 codigo: document.getElementById('new-operation-code').value.trim(),
