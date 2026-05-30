@@ -39,7 +39,7 @@ export class ApiService {
         });
 
         if (!response.ok) {
-            throw new Error('Error en el inicio de sesión, email o contraseña incorrectos');
+            throw new Error('Error en el inicio de sesión, email o contraseña incorrectos, o cuenta inactiva.');
         }
 
         const {access_token} = await response.json();

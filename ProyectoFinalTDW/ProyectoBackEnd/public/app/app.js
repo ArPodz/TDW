@@ -79,6 +79,7 @@ async function init() {
         registerView.bindEmailCheck(async (email) => {
             const exists = await userController.checkEmailExists(email);
             registerView.setEmailFeedback(exists);
+            return exists;
         });
 
         registerView.bindFormSubmit(async () => {

@@ -39,18 +39,20 @@ export class UsersRepository {
         return createdUser;
     }
 
+
     async emailExists(email) {
         try {
             await this.api.get(`users/email/${encodeURIComponent(email)}`, false);
             return true;
         } catch (error) {
-            if(error.message === 'Recurso no encontrado'){
+            if(error.message.includes('Recurso no encontrado')){
                 return false;
             } else {
                 throw error;
             }
         }
     }
+ 
 
     async updateUser(id, fields){
         const data = await this.api.put(`users/${id}`, fields);
