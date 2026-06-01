@@ -149,7 +149,7 @@ export class ApiService {
                 throw new Error('Sesión no válida, por favor inicia sesión de nuevo');
             case 403: throw new Error('No tienes permiso para realizar esta acción');
             case 404: throw new Error('Recurso no encontrado');
-            case 409: throw new Error('El recurso ya existe');
+            case 409: throw new Error('No se puede realizar la operación: el recurso tiene datos asociados o ya existe');
             case 422: throw new Error(msg || 'Datos incompletos o inválidos');
             default: throw new Error(`Error ${response.status}.`);
         }

@@ -176,11 +176,13 @@ class OperatorCommandController
             return Error::createResponse($response, StatusCode::STATUS_NOT_FOUND);
         }
 
-        $this->entityManager->remove($element);
-        $this->entityManager->flush();
-
-        return $response
-            ->withStatus(StatusCode::STATUS_NO_CONTENT);  // 204
+        try {
+            $this->entityManager->remove($element);
+            $this->entityManager->flush();
+            return $response->withStatus(StatusCode::STATUS_NO_CONTENT);
+        } catch (\Exception $e) {
+            return Error::createResponse($response, StatusCode::STATUS_CONFLICT); // 409
+        }
     }
 
     /**

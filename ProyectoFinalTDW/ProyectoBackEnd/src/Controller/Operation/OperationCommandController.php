@@ -164,11 +164,19 @@ class OperationCommandController
         try {
             if (isset($req_data['operadorId'])) {
                 $operador = $this->entityManager->getRepository(Operador::class)->find($req_data['operadorId']);
-                if ($operador) $element->setOperador($operador);
+                if (!$operador) {
+                    $this->entityManager->rollback();
+                    return Error::createResponse($response, StatusCode::STATUS_BAD_REQUEST);
+                }
+                $element->setOperador($operador);
             }
             if (isset($req_data['puntoId'])) {
                 $punto = $this->entityManager->getRepository(Punto::class)->find($req_data['puntoId']);
-                if ($punto) $element->setPunto($punto);
+                if (!$punto) {
+                    $this->entityManager->rollback();
+                    return Error::createResponse($response, StatusCode::STATUS_BAD_REQUEST);
+                }
+                $element->setPunto($punto);
             }
 
             $this->updateElement($element, $req_data);
