@@ -125,7 +125,7 @@ export class Router {
         
         const handleRoleChange = async (userId, newRole) => {
             try {
-                await this.userController.updateUserRole(userId, newRole);
+                await this.userController.updateUserRol(userId, newRole);
                 userManagementView.updateTable(this.userController.getUsersList(), handleRoleChange, handleDeleteUser);
             } catch (error) { 
                 userManagementView.setStatus(error.message, true); 

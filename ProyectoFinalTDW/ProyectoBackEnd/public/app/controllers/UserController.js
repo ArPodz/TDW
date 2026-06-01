@@ -1,6 +1,7 @@
 // import { UserFactory } from "../factories/UserFactory.js";
 import { UsersRepository } from "../repositories/UsersRepository.js";
 import { getSessionInstance } from "../models/Session.js";
+import { UserValidator } from "../core/UserValidator.js";
 
 export class UserController {
 
@@ -9,47 +10,14 @@ export class UserController {
         this.users = new UsersRepository(api);
     }
 
-    validPassword(password){
-        if(password.length < 8){
-            throw new Error("Password debe tener al menos 8 carácteres");
-        } else if (!/\d/.test(password)){
-            throw new Error("Password debe contener al menos un número");
-        } else {
-            return true;
-        }
-    }
-
-    validEmail(email){
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(regex.test(email)){
-            return true;
-        } else {
-            throw new Error("Email no valido");
-        }
-    }
-
-    validRol(rol){
-        const auxRol = rol
-        .trim()
-        .toUpperCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-
-        if(auxRol === "PUBLICO" || auxRol === "GESTOR" || auxRol === "INACTIVO"){
-            return auxRol;
-        } else {
-            throw new Error("Rol tiene que ser PUBLICO, GESTOR O INACTIVO");
-        }
-    }
-
 
     async registerUser(data) {
         if (data.password !== data.confirmPassword) {
             throw new Error("Las contraseñas no coinciden");
         }
 
-        this.validEmail(data.email);
-        this.validPassword(data.password);
+        UserValidator.validEmail(data.email);
+        UserValidator.validPassword(data.password);
 
         const exists = await this.users.emailExists(data.email);
         if (exists) {
@@ -68,8 +36,8 @@ export class UserController {
     
 
     async loginUser(data){
-        this.validEmail(data.email);
-        this.validPassword(data.password);
+        UserValidator.validEmail(data.email);
+        UserValidator.validPassword(data.password);
 
         await this.users.api.login(data.email, data.password);
 
@@ -82,7 +50,7 @@ export class UserController {
 
 
     async updateUserRol(userId, newRol){
-        const normalizedRol = this.validRol(newRol);
+        const normalizedRol = UserValidator.validRol(newRol);
 
         this.validLastGestor(userId, normalizedRol);
  
@@ -91,13 +59,13 @@ export class UserController {
 
     async updateUser(userId, fields){
         if(fields.email){
-            this.validEmail(fields.email);
+            UserValidator.validEmail(fields.email);
         }
         if(fields.password){
-            this.validPassword(fields.password);
+            UserValidator.validPassword(fields.password);
         }
         if(fields.role){
-            fields.role = this.validRol(fields.role);
+            fields.role = UserValidator.validRol(fields.role);
         }
 
         return await this.users.updateUser(userId, fields);

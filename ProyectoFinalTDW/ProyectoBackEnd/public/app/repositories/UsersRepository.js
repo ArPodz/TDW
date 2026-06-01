@@ -97,6 +97,11 @@ export class UsersRepository {
         this.users = this.users.filter(u => u.id !== id);
     }
 
+    async getUserById(userId) {
+        const data = await this.api.get(`users/${userId}`);
+        return data?.user ?? data;
+    }
+
     getUsers() {
         return this.users;
     }

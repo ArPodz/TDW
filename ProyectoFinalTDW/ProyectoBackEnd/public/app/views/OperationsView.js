@@ -169,7 +169,7 @@ export class OperationsView {
                     </select>
                 </label>
                 <label>Hora Estimada:
-                    <input type = "time" id = "edit-estimatedTime" value = "${operation.horaEstimada || ''}">
+                    <input type = "datetime-local" id = "edit-estimatedTime" value = "${operation.horaEstimada || ''}">
                 </label>
                 <label>ID Operador:
                     <input type = "number" id = "edit-operatorId" value = "${operation.operadorId}">
