@@ -1,6 +1,6 @@
 export class UserValidator {
 
-    staticvalidPassword(password){
+    static validPassword(password){
         if(password.length < 8){
             throw new Error("Password debe tener al menos 8 carácteres");
         } else if (!/\d/.test(password)){
@@ -10,7 +10,7 @@ export class UserValidator {
         }
     }
 
-    staticvalidEmail(email){
+    static validEmail(email){
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(regex.test(email)){
             return true;
